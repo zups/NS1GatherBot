@@ -1,7 +1,7 @@
-package org.ns1.gather.api;
+package org.ns1.gather.command;
 
-public class LeaveCommandImpl implements ICommand {
-    private String name = "leave";
+public class PickCommandImpl implements ICommand {
+    private String name = "pick";
 
     @Override
     public boolean isItMe(String name) {
@@ -13,6 +13,6 @@ public class LeaveCommandImpl implements ICommand {
 
     @Override
     public String run() {
-        return "mie lähen";
+        return "minut on pickattu apua";
     }
 }

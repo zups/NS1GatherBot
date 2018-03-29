@@ -1,15 +1,17 @@
 package org.ns1.gather;
 
+import com.vdurmont.emoji.Emoji;
+import com.vdurmont.emoji.EmojiLoader;
+import com.vdurmont.emoji.EmojiManager;
 import org.ns1.gather.util.Utils;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventSubscriber;
+import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.*;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
+import sx.blah.discord.util.*;
 
 import java.util.Optional;
 
@@ -32,6 +34,7 @@ public class Main {
         IUser user = message.getAuthor();
         IChannel channel = message.getChannel();
 
+
         if (user.isBot()) return;
 
         String command = message.getContent();
@@ -40,7 +43,11 @@ public class Main {
             commands.execute(command.substring(1))
                     .ifPresent(result -> channel.sendMessage(result));
         }
+
+        channel.sendMessage("moro", Utils.coolEmbed(message.getGuild()));
+
     }
+
 
     private static void setToken(String token) {
         TOKEN = token;

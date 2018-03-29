@@ -1,4 +1,4 @@
-package org.ns1.gather.api;
+package org.ns1.gather.command;
 
 public class JoinCommandImpl implements ICommand {
 

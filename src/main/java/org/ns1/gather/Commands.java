@@ -1,6 +1,6 @@
 package org.ns1.gather;
 
-import org.ns1.gather.api.*;
+import org.ns1.gather.command.*;
 
 import java.util.Arrays;
 import java.util.List;
