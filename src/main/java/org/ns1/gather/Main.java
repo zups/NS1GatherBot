@@ -4,6 +4,7 @@ import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiLoader;
 import com.vdurmont.emoji.EmojiManager;
 import org.ns1.gather.util.Utils;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -35,12 +36,13 @@ public class Main {
         IChannel channel = message.getChannel();
 
 
+
         if (user.isBot()) return;
 
         String command = message.getContent();
 
         if (command.startsWith(PREFIX)) {
-            commands.execute(command.substring(1))
+            commands.execute(command.substring(1), user)
                     .ifPresent(result -> channel.sendMessage(result));
         }
 
@@ -60,6 +62,7 @@ public class Main {
 
     public static void main(String[] args) throws DiscordException, RateLimitException {
         System.out.println("Logging bot in...");
+
         readTokenFromFileAndSetIt();
 
         client = new ClientBuilder().withToken(TOKEN).build();

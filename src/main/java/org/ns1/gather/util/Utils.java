@@ -90,7 +90,7 @@ public class Utils {
         embed.appendField(stars,stars, false);
 
         embed.appendField("First map:", "ns_origin", true);
-        embed.appendField("Second map:", "ns_veil", true);
+        embed.appendField("Second map(if wanted):", "ns_veil", true);
         embed.withImage("https://i.imgur.com/PF8E8o9.gif");
 
         return embed.build();

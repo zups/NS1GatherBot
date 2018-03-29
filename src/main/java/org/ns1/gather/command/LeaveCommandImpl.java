@@ -1,5 +1,7 @@
 package org.ns1.gather.command;
 
+import sx.blah.discord.handle.obj.IUser;
+
 public class LeaveCommandImpl implements ICommand {
     private String name = "leave";
 
@@ -12,7 +14,7 @@ public class LeaveCommandImpl implements ICommand {
     }
 
     @Override
-    public String run() {
+    public String run(IUser user) {
         return "mie lähen";
     }
 }
