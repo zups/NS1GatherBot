@@ -1,11 +1,14 @@
 package org.ns1.gather.util;
 
 import com.vdurmont.emoji.Emoji;
+import com.vdurmont.emoji.EmojiLoader;
 import com.vdurmont.emoji.EmojiManager;
+import com.vdurmont.emoji.EmojiParser;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
+import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IEmoji;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.util.EmbedBuilder;
@@ -52,22 +55,43 @@ public class Utils {
         Emoji star = EmojiManager.getForAlias(":eight_pointed_black_star:");
 
         IEmoji fade = guild.getEmojiByName("fade");
+        IEmoji skulk = guild.getEmojiByName("skulk");
+        IEmoji gorge = guild.getEmojiByName("gorge");
+        IEmoji onos = guild.getEmojiByName("onos");
+        IEmoji lerk = guild.getEmojiByName("lerk");
+        IEmoji commander = guild.getEmojiByName("commander");
+
+       // Emoji commander = ReactionEmoji.of("commander", 428946828487295008L);
 
 
 
+        StringBuilder kissamies = new StringBuilder();
+        kissamies.append(blueSmall.getUnicode() + "Tane" + fade + "\n");
+        kissamies.append(blueSmall.getUnicode() + "zups" + skulk + fade + "\n");
+        kissamies.append(blueSmall.getUnicode() + "zh" + commander + skulk + "\n");
+        kissamies.append(blueSmall.getUnicode() + "EisTee" + gorge + "\n");
+        kissamies.append(blueSmall.getUnicode() + "kingyo" + lerk + "\n");
+        kissamies.append(blueSmall.getUnicode() + "mulkmulkmulk" + lerk + onos);
 
-        //embed.appendField(tyhja, heart.getUnicode(), false);
 
-        embed.appendField(blueLarge.getUnicode() + "Marines",
-                blueSmall.getUnicode() + "Tane" + "\n" +
-                        blueSmall.getUnicode() + "zups\nkissa\nmarsupilami\njuha\nzuha", true);
-        embed.appendField(orangeLarge.getUnicode() + "Aliens", orangeSmall.getUnicode() + "Tane" + "\n" + orangeSmall.getUnicode() + "zups\nkissa\nmarsupilami\njuha\nzuha", true);
+        StringBuilder koiramies = new StringBuilder();
+        koiramies.append(orangeSmall.getUnicode() + "Jiriki" + commander + "\n");
+        koiramies.append(orangeSmall.getUnicode() + "ADHD" + fade + skulk + "\n");
+        koiramies.append(orangeSmall.getUnicode() + "vartija" + skulk + fade + "\n");
+        koiramies.append(orangeSmall.getUnicode() + "skipjack" + lerk + "\n");
+        koiramies.append(orangeSmall.getUnicode() + "larks tongue in aspic" + skulk + gorge + "\n");
+        koiramies.append(orangeSmall.getUnicode() + "x-man" + commander + gorge);
 
-        embed.appendField(tyhja, star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode(), false);
+        embed.appendField(blueLarge.getUnicode() + "Marines",kissamies.toString(), true);
+        embed.appendField(orangeLarge.getUnicode() + "Aliens", koiramies.toString(), true);
+
+        String stars = star.getUnicode() + star.getUnicode() +star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode();
+
+        embed.appendField(stars,stars, false);
 
         embed.appendField("First map:", "ns_origin", true);
         embed.appendField("Second map:", "ns_veil", true);
-        embed.withImage("https://i.imgur.com/SDSJlAh.gif");
+        embed.withImage("https://i.imgur.com/PF8E8o9.gif");
 
         return embed.build();
     }
