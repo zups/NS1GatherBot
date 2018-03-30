@@ -1,7 +1,7 @@
 package org.ns1.gatherbot.gather;
 
 
-import org.ns1.gatherbot.Commands;
+import org.ns1.gatherbot.command.Commands;
 import org.ns1.gatherbot.command.JoinCommandImpl;
 import org.ns1.gatherbot.command.LeaveCommandImpl;
 import org.ns1.gatherbot.command.ListCommandImpl;

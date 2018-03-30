@@ -1,6 +1,5 @@
-package org.ns1.gatherbot;
+package org.ns1.gatherbot.command;
 
-import org.ns1.gatherbot.command.*;
 import org.ns1.gatherbot.datastructure.Players;
 import sx.blah.discord.handle.obj.IUser;
 import java.util.List;
