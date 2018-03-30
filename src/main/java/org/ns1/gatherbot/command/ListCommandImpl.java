@@ -1,6 +1,9 @@
-package org.ns1.gather.command;
+package org.ns1.gatherbot.command;
 
+import org.ns1.gatherbot.datastructure.Players;
 import sx.blah.discord.handle.obj.IUser;
+
+import java.util.Optional;
 
 public class ListCommandImpl implements ICommand {
     private String name = "list";
@@ -16,5 +19,10 @@ public class ListCommandImpl implements ICommand {
     @Override
     public String run(IUser user) {
         return "apua ketä täällä pelaa!!";
+    }
+
+    @Override
+    public Optional<String> run(IUser user, Players players) {
+        return Optional.of(players.printPlayers());
     }
 }

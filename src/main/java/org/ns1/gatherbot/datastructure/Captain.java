@@ -1,4 +1,4 @@
-package org.ns1.gather.datastructure;
+package org.ns1.gatherbot.datastructure;
 
 public class Captain {
     private Player captain;

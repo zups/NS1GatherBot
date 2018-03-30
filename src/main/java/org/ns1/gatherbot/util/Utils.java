@@ -1,14 +1,11 @@
-package org.ns1.gather.util;
+package org.ns1.gatherbot.util;
 
 import com.vdurmont.emoji.Emoji;
-import com.vdurmont.emoji.EmojiLoader;
 import com.vdurmont.emoji.EmojiManager;
-import com.vdurmont.emoji.EmojiParser;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
-import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IEmoji;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.util.EmbedBuilder;
@@ -38,7 +35,7 @@ public class Utils {
         return token;
     }
 
-
+//    channel.sendMessage("moro", Utils.coolEmbed(message.getGuild()));
     public static EmbedObject coolEmbed(IGuild guild) {
         EmbedBuilder embed = new EmbedBuilder();
         String tyhja = "\u200B";

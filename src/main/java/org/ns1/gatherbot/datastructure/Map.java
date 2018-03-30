@@ -1,4 +1,4 @@
-package org.ns1.gather.datastructure;
+package org.ns1.gatherbot.datastructure;
 
 public class Map {
     private String kuva = "kuva polkunta tai suoraan objektina";
