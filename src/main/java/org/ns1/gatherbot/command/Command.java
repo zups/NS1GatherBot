@@ -6,7 +6,7 @@ import org.ns1.gatherbot.datastructure.Players;
 
 import java.util.Optional;
 
-public interface ICommand {
+public interface Command {
 
     boolean isItMe(String name);
 

@@ -1,16 +1,13 @@
 package org.ns1.gatherbot.command;
 
-import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
-import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.datastructure.Players;
 
 import java.util.Optional;
 
-public class LeaveCommandImpl implements ICommand {
-    private String name = "leave";
+public class PickCommand implements Command {
+    private String name = "pick";
 
     @Override
     public boolean isItMe(String name) {
@@ -22,13 +19,11 @@ public class LeaveCommandImpl implements ICommand {
 
     @Override
     public String run(User user) {
-        return "mie lähen";
+        return "minut on pickattu apua";
     }
 
     @Override
     public Optional<String> run(Message message, Players players) {
-        User user = message.getAuthor();
-        MessageChannel channel = message.getChannel();
-        return players.removePlayer(new Player(user));
+        return null;
     }
 }

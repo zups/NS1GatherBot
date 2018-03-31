@@ -14,7 +14,7 @@ public class Gather {
     private JDA jda;
     private Lifeforms lifeformEmojis;
 
-    private List<IGatherPhase> phases;
+    private List<GatherPhase> phases;
 
     public Gather(JDA jda) {
         this.jda = jda;

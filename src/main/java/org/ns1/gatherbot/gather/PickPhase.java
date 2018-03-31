@@ -1,6 +1,6 @@
 package org.ns1.gatherbot.gather;
 
-public class PickPhase implements IGatherPhase {
+public class PickPhase implements GatherPhase {
     private boolean isDone = false;
 
     @Override

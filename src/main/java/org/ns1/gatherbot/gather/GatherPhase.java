@@ -1,6 +1,6 @@
 package org.ns1.gatherbot.gather;
 
-public interface IGatherPhase {
+public interface GatherPhase {
 
     public void start();
 

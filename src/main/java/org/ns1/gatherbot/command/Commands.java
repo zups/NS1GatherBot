@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class Commands {
-    private List<ICommand> commands;
+    private List<Command> commands;
 
-    public Commands(List<ICommand> commands) {
+    public Commands(List<Command> commands) {
         this.commands = commands;
     }
 

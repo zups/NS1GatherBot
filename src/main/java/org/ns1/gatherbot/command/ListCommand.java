@@ -6,8 +6,8 @@ import org.ns1.gatherbot.datastructure.Players;
 
 import java.util.Optional;
 
-public class PickCommandImpl implements ICommand {
-    private String name = "pick";
+public class ListCommand implements Command {
+    private String name = "list";
 
     @Override
     public boolean isItMe(String name) {
@@ -19,11 +19,12 @@ public class PickCommandImpl implements ICommand {
 
     @Override
     public String run(User user) {
-        return "minut on pickattu apua";
+        return "apua ketä täällä pelaa!!";
     }
 
     @Override
     public Optional<String> run(Message message, Players players) {
-        return null;
+        return Optional.of(players.printPlayers());
     }
 }
+

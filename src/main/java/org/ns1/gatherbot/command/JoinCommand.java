@@ -11,12 +11,12 @@ import org.ns1.gatherbot.datastructure.Players;
 
 import java.util.Optional;
 
-public class JoinCommandImpl implements ICommand {
+public class JoinCommand implements Command {
     private String name = "join";
     private Lifeforms lifeforms;
     private JDA jda;
 
-    public JoinCommandImpl(Lifeforms lifeforms, JDA jda) {
+    public JoinCommand(Lifeforms lifeforms, JDA jda) {
         this.lifeforms = lifeforms;
         this.jda = jda;
     }
