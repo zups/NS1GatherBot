@@ -1,7 +1,11 @@
 package org.ns1.gatherbot.datastructure;
 
+import com.vdurmont.emoji.Emoji;
+import com.vdurmont.emoji.EmojiManager;
+
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.StringJoiner;
 
 public class Players {
     private HashSet<Player> players = new HashSet<>();
@@ -28,6 +32,15 @@ public class Players {
     }
 
     public String printPlayers() {
-        return players.toString();
+        Emoji blueSmall = EmojiManager.getForAlias(":small_blue_diamond:");
+        StringJoiner joiner = new StringJoiner(blueSmall.getUnicode());
+
+        players.forEach(p -> joiner.add(p.toString()));
+
+        return "**Players "+ this.printStatus() +":**\n" + joiner.toString();
+    }
+
+    public String printStatus() {
+        return "[" + players.size() + "/" + this.maxPlayers + "]";
     }
 }

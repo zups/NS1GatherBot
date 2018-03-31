@@ -1,5 +1,6 @@
 package org.ns1.gatherbot.command;
 
+import com.vdurmont.emoji.EmojiManager;
 import org.ns1.gatherbot.datastructure.Lifeforms;
 import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.datastructure.Players;
@@ -41,9 +42,9 @@ public class JoinCommandImpl implements ICommand {
         Optional<String> result = players.addPlayer(new Player(user));
 
         if (result.isPresent()) {
-            channel.sendMessage(players.printPlayers());
             IMessage mesetys = channel.sendMessage(user.mention() + " Please select what you'd wanna do by clicking the smileys!");
             addReactionsInOrder(mesetys);
+            channel.sendMessage(players.printPlayers());
         }
         return result;
     }
