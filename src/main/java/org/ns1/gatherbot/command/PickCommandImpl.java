@@ -1,6 +1,8 @@
 package org.ns1.gatherbot.command;
 
 import org.ns1.gatherbot.datastructure.Players;
+import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 
 import java.util.Optional;
@@ -22,7 +24,7 @@ public class PickCommandImpl implements ICommand {
     }
 
     @Override
-    public Optional<String> run(IUser user, Players players) {
+    public Optional<String> run(IMessage message, Players players) {
         return null;
     }
 }

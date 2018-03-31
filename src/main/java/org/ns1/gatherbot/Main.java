@@ -22,6 +22,7 @@ public class Main {
     public void onReady(ReadyEvent event) {
         this.gather = new Gather(client);
         gather.executeGather();
+        client.getDispatcher().unregisterListener(Main.class);
         System.out.println("Bot is now ready!");
     }
 

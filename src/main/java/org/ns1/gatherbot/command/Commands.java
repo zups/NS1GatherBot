@@ -1,6 +1,7 @@
 package org.ns1.gatherbot.command;
 
 import org.ns1.gatherbot.datastructure.Players;
+import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 import java.util.List;
 import java.util.Optional;
@@ -12,18 +13,18 @@ public class Commands {
         this.commands = commands;
     }
 
-    public Optional<String> execute(String name, IUser user, Players players) {
+    public Optional<String> execute(String name, IMessage message, Players players) {
 
-        StringBuilder message = new StringBuilder();
+        StringBuilder returnMessage = new StringBuilder();
         commands.stream()
                 .filter(c -> c.isItMe(name))
-                .map(c -> c.run(user, players))
+                .map(c -> c.run(message, players))
                 .findFirst()
                 .ifPresent(optMessage -> optMessage
-                        .ifPresent(mes -> message.append(mes)));
+                        .ifPresent(mes -> returnMessage.append(mes)));
 
-        if (!message.toString().isEmpty()) {
-            return Optional.of(message.toString());
+        if (!returnMessage.toString().isEmpty()) {
+            return Optional.of(returnMessage.toString());
         }
 
         return Optional.empty();

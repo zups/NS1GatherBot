@@ -5,7 +5,9 @@ import org.ns1.gatherbot.command.Commands;
 import org.ns1.gatherbot.command.JoinCommandImpl;
 import org.ns1.gatherbot.command.LeaveCommandImpl;
 import org.ns1.gatherbot.command.ListCommandImpl;
+import org.ns1.gatherbot.datastructure.Lifeforms;
 import org.ns1.gatherbot.datastructure.Players;
+import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
@@ -22,11 +24,19 @@ public class JoinPhase implements IGatherPhase {
     private boolean hasStarted = false;
     private Players players = new Players();
     private final String PREFIX = ".";
-    private Commands commands = new Commands(Arrays.asList(
-            new JoinCommandImpl(),
-            new LeaveCommandImpl(),
-            new ListCommandImpl()
-    ));
+    private Lifeforms lifeformsEmojis;
+    private Commands commands;
+    private IDiscordClient client;
+
+    public JoinPhase(Lifeforms lifeforms, IDiscordClient client) {
+        this.lifeformsEmojis = lifeforms;
+        this.client = client;
+        this.commands = new Commands(Arrays.asList(
+                new JoinCommandImpl(lifeformsEmojis, client),
+                new LeaveCommandImpl(),
+                new ListCommandImpl()
+        ));
+    }
 
     @Override
     public void start() {
@@ -49,7 +59,7 @@ public class JoinPhase implements IGatherPhase {
         String command = message.getContent();
 
         if (command.startsWith(PREFIX)) {
-            commands.execute(command.substring(1), user, players)
+            commands.execute(command.substring(1), message, players)
                     .ifPresent(result -> channel.sendMessage(result));
         }
     }

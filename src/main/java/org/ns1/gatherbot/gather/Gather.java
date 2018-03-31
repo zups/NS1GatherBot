@@ -12,16 +12,19 @@ public class Gather {
     private List<Map> maps = new ArrayList<>();
     private List<Team> teams = new ArrayList<>();
     private IDiscordClient client;
+    private Lifeforms lifeformEmojis;
 
-    private List<IGatherPhase> phases = Arrays.asList(
-            new JoinPhase(),
-            new VotePhase(),
-            new PickPhase(),
-            new PrintPhase()
-            );
+    private List<IGatherPhase> phases;
 
     public Gather(IDiscordClient client) {
         this.client = client;
+        this.lifeformEmojis = new Lifeforms(client.getGuilds().get(0));
+        this.phases = Arrays.asList(
+                new JoinPhase(lifeformEmojis, client),
+                new VotePhase(),
+                new PickPhase(),
+                new PrintPhase()
+        );
     }
 
     public void executeGather() {
