@@ -1,9 +1,8 @@
 package org.ns1.gatherbot.command;
 
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.User;
 import org.ns1.gatherbot.datastructure.Players;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IUser;
 
 import java.util.Optional;
 
@@ -19,12 +18,12 @@ public class PickCommandImpl implements ICommand {
     }
 
     @Override
-    public String run(IUser user) {
+    public String run(User user) {
         return "minut on pickattu apua";
     }
 
     @Override
-    public Optional<String> run(IMessage message, Players players) {
+    public Optional<String> run(Message message, Players players) {
         return null;
     }
 }

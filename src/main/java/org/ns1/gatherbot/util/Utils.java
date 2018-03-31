@@ -2,13 +2,15 @@ package org.ns1.gatherbot.util;
 
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Emote;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import sx.blah.discord.api.internal.json.objects.EmbedObject;
-import sx.blah.discord.handle.obj.IEmoji;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.util.EmbedBuilder;
+import org.ns1.gatherbot.datastructure.Lifeforms;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -36,12 +38,12 @@ public class Utils {
     }
 
 //    channel.sendMessage("moro", Utils.coolEmbed(message.getGuild()));
-    public static EmbedObject coolEmbed(IGuild guild) {
+    public static MessageEmbed coolEmbed(JDA jda) {
+        Lifeforms lifeforms = new Lifeforms(jda);
         EmbedBuilder embed = new EmbedBuilder();
         String tyhja = "\u200B";
 
-
-        embed.withTitle("Gather #1");
+        embed.setTitle("Gather #1");
 
         Emoji orangeSmall = EmojiManager.getForAlias(":small_orange_diamond:");
         Emoji blueSmall = EmojiManager.getForAlias(":small_blue_diamond:");
@@ -51,12 +53,12 @@ public class Utils {
 
         Emoji star = EmojiManager.getForAlias(":eight_pointed_black_star:");
 
-        IEmoji fade = guild.getEmojiByName("fade");
-        IEmoji skulk = guild.getEmojiByName("skulk");
-        IEmoji gorge = guild.getEmojiByName("gorge");
-        IEmoji onos = guild.getEmojiByName("onos");
-        IEmoji lerk = guild.getEmojiByName("lerk");
-        IEmoji commander = guild.getEmojiByName("commander");
+        Emote fade = lifeforms.getEmote("fade").get();
+        Emote skulk = lifeforms.getEmote("skulk").get();
+        Emote gorge = lifeforms.getEmote("gorge").get();
+        Emote onos = lifeforms.getEmote("onos").get();
+        Emote lerk = lifeforms.getEmote("lerk").get();
+        Emote commander = lifeforms.getEmote("commander").get();
 
        // Emoji commander = ReactionEmoji.of("commander", 428946828487295008L);
 
@@ -79,16 +81,16 @@ public class Utils {
         koiramies.append(orangeSmall.getUnicode() + "larks tongue in aspic" + skulk + gorge + "\n");
         koiramies.append(orangeSmall.getUnicode() + "x-man" + commander + gorge);
 
-        embed.appendField(blueLarge.getUnicode() + "Marines",kissamies.toString(), true);
-        embed.appendField(orangeLarge.getUnicode() + "Aliens", koiramies.toString(), true);
+        embed.addField(blueLarge.getUnicode() + "Marines",kissamies.toString(), true);
+        embed.addField(orangeLarge.getUnicode() + "Aliens", koiramies.toString(), true);
 
         String stars = star.getUnicode() + star.getUnicode() +star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode();
 
-        embed.appendField(stars,stars, false);
+        embed.addField(stars,stars, false);
 
-        embed.appendField("First map:", "ns_origin", true);
-        embed.appendField("Second map(if wanted):", "ns_veil", true);
-        embed.withImage("https://i.imgur.com/PF8E8o9.gif");
+        embed.addField("First map:", "ns_origin", true);
+        embed.addField("Second map(if wanted):", "ns_veil", true);
+        embed.setImage("https://i.imgur.com/PF8E8o9.gif");
 
         return embed.build();
     }
