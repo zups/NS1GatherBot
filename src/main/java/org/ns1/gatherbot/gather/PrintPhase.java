@@ -1,6 +1,6 @@
 package org.ns1.gatherbot.gather;
 
-public class PrintPhase implements IGatherPhase {
+public class PrintPhase implements GatherPhase {
     private boolean isDone = false;
 
     @Override

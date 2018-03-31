@@ -1,13 +1,15 @@
 package org.ns1.gatherbot.command;
 
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
+import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.datastructure.Players;
 
 import java.util.Optional;
 
-public class ListCommandImpl implements ICommand {
-    private String name = "list";
+public class LeaveCommand implements Command {
+    private String name = "leave";
 
     @Override
     public boolean isItMe(String name) {
@@ -19,12 +21,13 @@ public class ListCommandImpl implements ICommand {
 
     @Override
     public String run(User user) {
-        return "apua ketä täällä pelaa!!";
+        return "mie lähen";
     }
 
     @Override
     public Optional<String> run(Message message, Players players) {
-        return Optional.of(players.printPlayers());
+        User user = message.getAuthor();
+        MessageChannel channel = message.getChannel();
+        return players.removePlayer(new Player(user));
     }
 }
-

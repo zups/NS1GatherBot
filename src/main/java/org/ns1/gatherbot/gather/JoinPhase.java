@@ -8,15 +8,15 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.ns1.gatherbot.command.Commands;
-import org.ns1.gatherbot.command.JoinCommandImpl;
-import org.ns1.gatherbot.command.LeaveCommandImpl;
-import org.ns1.gatherbot.command.ListCommandImpl;
+import org.ns1.gatherbot.command.JoinCommand;
+import org.ns1.gatherbot.command.LeaveCommand;
+import org.ns1.gatherbot.command.ListCommand;
 import org.ns1.gatherbot.datastructure.Lifeforms;
 import org.ns1.gatherbot.datastructure.Players;
 
 import java.util.Arrays;
 
-public class JoinPhase extends ListenerAdapter implements IGatherPhase {
+public class JoinPhase extends ListenerAdapter implements GatherPhase {
     private boolean isDone = false;
     private boolean hasStarted = false;
     private Players players = new Players();
@@ -29,9 +29,9 @@ public class JoinPhase extends ListenerAdapter implements IGatherPhase {
         this.lifeformsEmojis = lifeforms;
         this.jda = jda;
         this.commands = new Commands(Arrays.asList(
-                new JoinCommandImpl(lifeformsEmojis, jda),
-                new LeaveCommandImpl(),
-                new ListCommandImpl()
+                new JoinCommand(lifeformsEmojis, jda),
+                new LeaveCommand(),
+                new ListCommand()
         ));
     }
 
