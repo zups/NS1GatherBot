@@ -1,10 +1,11 @@
 package org.ns1.gatherbot.command;
 
+import net.dv8tion.jda.core.entities.Channel;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.User;
 import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.datastructure.Players;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IUser;
 
 import java.util.Optional;
 
@@ -20,14 +21,14 @@ public class LeaveCommandImpl implements ICommand {
     }
 
     @Override
-    public String run(IUser user) {
+    public String run(User user) {
         return "mie lähen";
     }
 
     @Override
-    public Optional<String> run(IMessage message, Players players) {
-        IUser user = message.getAuthor();
-        IChannel channel = message.getChannel();
+    public Optional<String> run(Message message, Players players) {
+        User user = message.getAuthor();
+        MessageChannel channel = message.getChannel();
         return players.removePlayer(new Player(user));
     }
 }

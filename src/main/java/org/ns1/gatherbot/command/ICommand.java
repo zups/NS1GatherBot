@@ -1,8 +1,8 @@
 package org.ns1.gatherbot.command;
 
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.User;
 import org.ns1.gatherbot.datastructure.Players;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IUser;
 
 import java.util.Optional;
 
@@ -10,8 +10,8 @@ public interface ICommand {
 
     boolean isItMe(String name);
 
-    String run(IUser user);
+    String run(User user);
 
-    Optional<String> run(IMessage message, Players players);
+    Optional<String> run(Message message, Players players);
 
 }

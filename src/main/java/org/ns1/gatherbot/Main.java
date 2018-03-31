@@ -1,28 +1,29 @@
 package org.ns1.gatherbot;
 
+import net.dv8tion.jda.core.AccountType;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.events.ReadyEvent;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
+import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.ns1.gatherbot.gather.Gather;
 import org.ns1.gatherbot.util.Utils;
-import sx.blah.discord.api.ClientBuilder;
-import sx.blah.discord.api.IDiscordClient;
-import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.handle.impl.events.ReadyEvent;
-import sx.blah.discord.util.*;
 
+import javax.security.auth.login.LoginException;
 import java.util.Optional;
 
-public class Main {
+public class Main extends ListenerAdapter {
 
     private static String TOKEN = "empty";
     private static final String PREFIX = ".";
-    private static IDiscordClient client;
     private Gather gather;
 
 
-    @EventSubscriber
+    @Override
     public void onReady(ReadyEvent event) {
-        this.gather = new Gather(client);
+        this.gather = new Gather(event.getJDA());
         gather.executeGather();
-        client.getDispatcher().unregisterListener(Main.class);
+        event.getJDA().removeEventListener(Main.class);
         System.out.println("Bot is now ready!");
     }
 
@@ -36,14 +37,13 @@ public class Main {
         token.ifPresent(c -> setToken(c));
     }
 
-    public static void main(String[] args) throws DiscordException, RateLimitException {
+    public static void main(String[] args) throws LoginException, RateLimitedException, InterruptedException {
         System.out.println("Logging bot in...");
 
         readTokenFromFileAndSetIt();
 
-        client = new ClientBuilder().withToken(TOKEN).build();
-        client.getDispatcher().registerListener(new Main());
-        client.login();
-
+        JDABuilder builder = new JDABuilder(AccountType.BOT).setToken(TOKEN);
+        builder.addEventListener(new Main());
+        builder.buildBlocking();
     }
 }

@@ -1,7 +1,7 @@
 package org.ns1.gatherbot.gather;
 
+import net.dv8tion.jda.core.JDA;
 import org.ns1.gatherbot.datastructure.*;
-import sx.blah.discord.api.IDiscordClient;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,16 +11,16 @@ public class Gather {
     private List<Captain> captains = new ArrayList<>();
     private List<Map> maps = new ArrayList<>();
     private List<Team> teams = new ArrayList<>();
-    private IDiscordClient client;
+    private JDA jda;
     private Lifeforms lifeformEmojis;
 
     private List<IGatherPhase> phases;
 
-    public Gather(IDiscordClient client) {
-        this.client = client;
-        this.lifeformEmojis = new Lifeforms(client.getGuilds().get(0));
+    public Gather(JDA jda) {
+        this.jda = jda;
+        this.lifeformEmojis = new Lifeforms(jda);
         this.phases = Arrays.asList(
-                new JoinPhase(lifeformEmojis, client),
+                new JoinPhase(lifeformEmojis, jda),
                 new VotePhase(),
                 new PickPhase(),
                 new PrintPhase()
@@ -28,7 +28,7 @@ public class Gather {
     }
 
     public void executeGather() {
-        client.getDispatcher().registerListener(phases.get(0));
+        jda.addEventListener(phases.get(0));
     }
 
 

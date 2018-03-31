@@ -1,15 +1,15 @@
 package org.ns1.gatherbot.datastructure;
 
-import sx.blah.discord.handle.obj.IUser;
+import net.dv8tion.jda.core.entities.User;
 
 public class Player {
-    private IUser user;
+    private User user;
 
-    public Player(IUser user) {
+    public Player(User user) {
         this.user = user;
     }
 
-    public IUser getUser() {
+    public User getUser() {
         return this.user;
     }
 

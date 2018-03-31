@@ -1,33 +1,36 @@
 package org.ns1.gatherbot.datastructure;
 
-import sx.blah.discord.handle.obj.IEmoji;
-import sx.blah.discord.handle.obj.IGuild;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Emote;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
 public class Lifeforms {
-    private IGuild guild;
-    private List<IEmoji> lifeformEmojis;
+    private JDA jda;
+    private List<Emote> lifeformEmotes;
 
-    public Lifeforms(IGuild guild) {
-        this.guild = guild;
-        this.lifeformEmojis = Arrays.asList(
-                guild.getEmojiByName("fade"),
-                guild.getEmojiByName("skulk"),
-                guild.getEmojiByName("gorge"),
-                guild.getEmojiByName("onos"),
-                guild.getEmojiByName("lerk"),
-                guild.getEmojiByName("commander")
+    public Lifeforms(JDA jda) {
+        this.jda = jda;
+        this.lifeformEmotes = Arrays.asList(
+                jda.getEmotesByName("fade", true).get(0),
+                jda.getEmotesByName("skulk", true).get(0),
+                jda.getEmotesByName("gorge", true).get(0),
+                jda.getEmotesByName("onos", true).get(0),
+                jda.getEmotesByName("lerk", true).get(0),
+                jda.getEmotesByName("commander", true).get(0)
         );
     }
 
-    public Optional<IEmoji> getEmoji(String alias) {
-        return lifeformEmojis.stream()
+    public Optional<Emote> getEmote(String alias) {
+        return lifeformEmotes.stream()
                 .filter(emoji -> emoji.getName().equals(alias))
                 .findFirst();
+    }
+
+    public List<Emote> getAllEmotes() {
+        return this.lifeformEmotes;
     }
 
 }

@@ -1,26 +1,24 @@
 package org.ns1.gatherbot.command;
 
-import com.vdurmont.emoji.EmojiManager;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.User;
 import org.ns1.gatherbot.datastructure.Lifeforms;
 import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.datastructure.Players;
-import sx.blah.discord.api.IDiscordClient;
-import sx.blah.discord.handle.impl.obj.Message;
-import sx.blah.discord.handle.impl.obj.Reaction;
-import sx.blah.discord.handle.obj.*;
-import sx.blah.discord.util.RequestBuffer;
-import sx.blah.discord.util.RequestBuilder;
 
 import java.util.Optional;
 
 public class JoinCommandImpl implements ICommand {
     private String name = "join";
     private Lifeforms lifeforms;
-    private IDiscordClient client;
+    private JDA jda;
 
-    public JoinCommandImpl(Lifeforms lifeforms, IDiscordClient client) {
+    public JoinCommandImpl(Lifeforms lifeforms, JDA jda) {
         this.lifeforms = lifeforms;
-        this.client = client;
+        this.jda = jda;
     }
 
     public boolean isItMe(String name) {
@@ -31,48 +29,22 @@ public class JoinCommandImpl implements ICommand {
     }
 
     @Override
-    public String run(IUser user) {
+    public String run(User user) {
         return null;
     }
 
     @Override
-    public Optional<String> run(IMessage message, Players players) {
-        IUser user = message.getAuthor();
-        IChannel channel = message.getChannel();
+    public Optional<String> run(Message message, Players players) {
+        User user = message.getAuthor();
+        MessageChannel channel = message.getChannel();
         Optional<String> result = players.addPlayer(new Player(user));
-
+        MessageBuilder builder = new MessageBuilder();
+        Message mese = builder.append(user.getName() + " Please select what you'd wanna do by clicking the smileys!").build();
         if (result.isPresent()) {
-            IMessage mesetys = channel.sendMessage(user.mention() + " Please select what you'd wanna do by clicking the smileys!");
-            addReactionsInOrder(mesetys);
-            channel.sendMessage(players.printPlayers());
+            channel.sendMessage(mese).queue();
+            lifeforms.getAllEmotes().forEach(emo -> message.addReaction(emo).queue());
+            channel.sendMessage(players.printPlayers()).queue();
         }
         return result;
-    }
-
-    private void addReactionsInOrder(IMessage message) {
-
-//        RequestBuilder builder = new RequestBuilder(client);
-        RequestBuffer.request(() -> message.addReaction(emoji("commander"))).get();
-        RequestBuffer.request(() -> message.addReaction(emoji("skulk"))).get();
-        RequestBuffer.request(() -> message.addReaction(emoji("fade"))).get();
-        RequestBuffer.request(() -> message.addReaction(emoji("lerk"))).get();
-        RequestBuffer.request(() -> message.addReaction(emoji("gorge"))).get();
-        RequestBuffer.request(() -> message.addReaction(emoji("onos"))).get();
-
-
-//        builder.shouldBufferRequests(true);
-//        builder.setAsync(true);
-//        builder.doAction(() -> {
-//            message.addReaction(emoji("skulk"));
-//            message.addReaction(emoji("fade"));
-//            message.addReaction(emoji("lerk"));
-//            message.addReaction(emoji("gorge"));
-//            message.addReaction(emoji("onos"));
-//            return true;
-//        }).execute();
-    }
-
-    private IEmoji emoji(String alias) {
-        return lifeforms.getEmoji(alias).get();
     }
 }
