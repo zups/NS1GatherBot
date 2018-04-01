@@ -20,7 +20,7 @@ public class Players {
                 return Optional.empty();
             }
         }
-        return Optional.of("Gather is full.");
+        return Optional.empty();
     }
 
     public Optional<String> removePlayer(Player player) {

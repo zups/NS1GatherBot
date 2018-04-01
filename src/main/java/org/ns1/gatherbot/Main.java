@@ -1,7 +1,6 @@
 package org.ns1.gatherbot;
 
 import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
@@ -26,7 +25,9 @@ public class Main extends ListenerAdapter {
     public static void main(String[] args) throws LoginException, RateLimitedException, InterruptedException {
         System.out.println("Logging bot in...");
         String tokenPath = "src\\main\\resources\\token.json";
-        Optional<String> token = Utils.readToken(tokenPath);
+        Optional<String> token = Utils.readFieldFromJson(tokenPath, "token");
+
+        Utils.mapEmbed();
 
         if (!token.isPresent()) {
             System.out.println("Could not read token from: " + tokenPath);
@@ -37,5 +38,6 @@ public class Main extends ListenerAdapter {
         JDABuilder builder = new JDABuilder(AccountType.BOT).setToken(token.get());
         builder.addEventListener(new Main());
         builder.buildBlocking();
+
     }
 }

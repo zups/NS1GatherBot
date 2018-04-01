@@ -5,12 +5,12 @@ import com.vdurmont.emoji.EmojiManager;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Emote;
-import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.ns1.gatherbot.datastructure.Lifeforms;
+import org.ns1.gatherbot.datastructure.Maps;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import java.util.Optional;
 
 public class Utils {
 
-    public static Optional<String> readToken(String filepath) {
+    public static Optional<String> readFieldFromJson(String filepath, String fieldName) {
         JSONParser parser = new JSONParser();
         Optional<String> token = Optional.empty();
 
@@ -27,14 +27,43 @@ public class Utils {
             Object obj = parser.parse(is);
 
             JSONObject jsonObject = (JSONObject) obj;
-
-            token = Optional.of((String) jsonObject.get("token"));
+            token = Optional.of((String) jsonObject.get(fieldName));
 
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
 
         return token;
+    }
+
+    public static Optional<JSONObject> readJson(String filepath) {
+        JSONParser parser = new JSONParser();
+        Optional<String> token = Optional.empty();
+        Optional<JSONObject> jsonObject = Optional.empty();
+
+        try (Reader is = new FileReader(filepath)) {
+            Object obj = parser.parse(is);
+
+            jsonObject = Optional.of((JSONObject) obj);
+
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+        }
+
+        return jsonObject;
+    }
+
+    public static MessageEmbed mapEmbed() {
+        EmbedBuilder embed = new EmbedBuilder();
+
+        embed.setTitle("Maps:");
+
+
+        Optional<JSONObject> mapsJson = readJson("src\\main\\resources\\maps.json");
+
+        Maps maps = new Maps(mapsJson.get());
+
+        return embed.build();
     }
 
 //    channel.sendMessage("moro", Utils.coolEmbed(message.getGuild()));
