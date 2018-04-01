@@ -5,9 +5,11 @@ import org.json.simple.JSONArray;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.StringJoiner;
 
 public class Maps {
     private List<Map> maps = new ArrayList<>();
+    private int mapNumbers = 1;
 
     public Maps(HashMap<String, JSONArray> maps) {
         parseMaps(maps.get("maps"));
@@ -15,11 +17,17 @@ public class Maps {
 
     private void parseMaps (JSONArray maps) {
         maps.forEach(map -> {
-            this.maps.add(new Map(map.toString()));
+            this.maps.add(new Map(map.toString(), mapNumbers));
+            mapNumbers++;
         });
     }
 
-    public List<Map> getMaps() {
-        return this.maps;
+    @Override
+    public String toString() {
+        StringJoiner joiner = new StringJoiner("\n");
+
+        this.maps.forEach(map -> joiner.add(map.getName()));
+
+        return joiner.toString();
     }
 }

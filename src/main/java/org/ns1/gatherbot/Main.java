@@ -20,14 +20,13 @@ public class Main extends ListenerAdapter {
         gather.executeGather();
         event.getJDA().removeEventListener(Main.class);
         System.out.println("Bot is now ready!");
+
     }
 
     public static void main(String[] args) throws LoginException, RateLimitedException, InterruptedException {
         System.out.println("Logging bot in...");
         String tokenPath = "src\\main\\resources\\token.json";
         Optional<String> token = Utils.readFieldFromJson(tokenPath, "token");
-
-        Utils.mapEmbed();
 
         if (!token.isPresent()) {
             System.out.println("Could not read token from: " + tokenPath);
@@ -38,6 +37,5 @@ public class Main extends ListenerAdapter {
         JDABuilder builder = new JDABuilder(AccountType.BOT).setToken(token.get());
         builder.addEventListener(new Main());
         builder.buildBlocking();
-
     }
 }

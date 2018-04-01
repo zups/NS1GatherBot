@@ -21,19 +21,18 @@ public class Utils {
 
     public static Optional<String> readFieldFromJson(String filepath, String fieldName) {
         JSONParser parser = new JSONParser();
-        Optional<String> token = Optional.empty();
+        Optional<String> field = Optional.empty();
 
         try (Reader is = new FileReader(filepath)) {
             Object obj = parser.parse(is);
-
             JSONObject jsonObject = (JSONObject) obj;
-            token = Optional.of((String) jsonObject.get(fieldName));
+            field = Optional.of((String) jsonObject.get(fieldName));
 
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
 
-        return token;
+        return field;
     }
 
     public static Optional<JSONObject> readJson(String filepath) {
@@ -43,9 +42,7 @@ public class Utils {
 
         try (Reader is = new FileReader(filepath)) {
             Object obj = parser.parse(is);
-
             jsonObject = Optional.of((JSONObject) obj);
-
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
@@ -56,17 +53,16 @@ public class Utils {
     public static MessageEmbed mapEmbed() {
         EmbedBuilder embed = new EmbedBuilder();
 
-        embed.setTitle("Maps:");
-
 
         Optional<JSONObject> mapsJson = readJson("src\\main\\resources\\maps.json");
 
         Maps maps = new Maps(mapsJson.get());
 
+        embed.addField("Maps:",maps.toString(),false);
+
         return embed.build();
     }
 
-//    channel.sendMessage("moro", Utils.coolEmbed(message.getGuild()));
     public static MessageEmbed coolEmbed(JDA jda) {
         Lifeforms lifeforms = new Lifeforms(jda);
         EmbedBuilder embed = new EmbedBuilder();
@@ -90,8 +86,6 @@ public class Utils {
         Emote commander = lifeforms.getEmote("commander").get();
 
        // Emoji commander = ReactionEmoji.of("commander", 428946828487295008L);
-
-
 
         StringBuilder kissamies = new StringBuilder();
         kissamies.append(blueSmall.getUnicode() + "Tane" + fade + "\n");
