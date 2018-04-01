@@ -9,5 +9,5 @@ log/
 target/
 dependency-reduced-pom.xml
 
-#config
-*.json
+#token
+token.json

@@ -19,7 +19,7 @@ import java.util.Optional;
 
 public class Utils {
 
-    public static Optional<String> readConfig(String filepath) {
+    public static Optional<String> readToken(String filepath) {
         JSONParser parser = new JSONParser();
         Optional<String> token = Optional.empty();
 
