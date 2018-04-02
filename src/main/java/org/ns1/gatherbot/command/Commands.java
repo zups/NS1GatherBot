@@ -1,5 +1,6 @@
 package org.ns1.gatherbot.command;
 
+import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import org.ns1.gatherbot.datastructure.Players;
@@ -18,7 +19,7 @@ public class Commands {
         StringBuilder returnMessage = new StringBuilder();
         commands.stream()
                 .filter(c -> c.isItMe(name))
-                .map(c -> c.run(message, players))
+                .map(c -> c.run(message))
                 .findFirst()
                 .ifPresent(optMessage -> optMessage
                         .ifPresent(mes -> returnMessage.append(mes)));
@@ -36,7 +37,24 @@ public class Commands {
         commands.stream()
                 .filter(c -> c.isItMe(name))
                 .map(c -> c.run(user))
-                .findFirst().ifPresent(mes -> message.append(mes));
+                .findFirst()
+                .ifPresent(mes -> message.append(mes));
+
+        if (!message.toString().isEmpty()) {
+            return Optional.of(message.toString());
+        }
+
+        return Optional.empty();
+    }
+
+
+
+    public Optional<String> execute(String name, User user, Emote emote) {
+
+        StringBuilder message = new StringBuilder();
+        commands.stream()
+                .filter(c -> c.isItMe(name))
+                .findFirst().ifPresent(c -> c.run(user, emote));
 
         if (!message.toString().isEmpty()) {
             return Optional.of(message.toString());

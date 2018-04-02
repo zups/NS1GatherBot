@@ -1,6 +1,7 @@
 package org.ns1.gatherbot.command;
 
 import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -10,14 +11,16 @@ import org.ns1.gatherbot.datastructure.Players;
 
 import java.util.Optional;
 
-public class    JoinCommand implements Command {
+public class JoinCommand implements Command {
     private String name = "join";
     private Lifeforms lifeforms;
+    private Players players;
     private JDA jda;
 
-    public JoinCommand(Lifeforms lifeforms, JDA jda) {
+    public JoinCommand(Lifeforms lifeforms, JDA jda, Players players) {
         this.lifeforms = lifeforms;
         this.jda = jda;
+        this.players = players;
     }
 
     public boolean isItMe(String name) {
@@ -33,10 +36,16 @@ public class    JoinCommand implements Command {
     }
 
     @Override
-    public Optional<String> run(Message message, Players players) {
+    public Optional<String> run(User user, Emote emote) {
+        return null;
+    }
+
+    @Override
+    public Optional<String> run(Message message) {
         User user = message.getAuthor();
         MessageChannel channel = message.getChannel();
-        Optional<String> result = players.addPlayer(new Player(user));
+        Player player = new Player(user);
+        Optional<String> result = players.addPlayer(player);
 
         if (result.isPresent()) {
             channel.sendMessage(user.getName() + " Please select what you'd wanna do by clicking the smileys!")

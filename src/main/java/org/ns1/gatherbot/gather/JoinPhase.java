@@ -2,15 +2,15 @@ package org.ns1.gatherbot.gather;
 
 
 import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import org.ns1.gatherbot.command.Commands;
-import org.ns1.gatherbot.command.JoinCommand;
-import org.ns1.gatherbot.command.LeaveCommand;
-import org.ns1.gatherbot.command.ListCommand;
+import org.ns1.gatherbot.command.*;
 import org.ns1.gatherbot.datastructure.Lifeforms;
 import org.ns1.gatherbot.datastructure.Players;
 
@@ -29,9 +29,10 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
         this.lifeformsEmojis = lifeforms;
         this.jda = jda;
         this.commands = new Commands(Arrays.asList(
-                new JoinCommand(lifeformsEmojis, jda),
-                new LeaveCommand(),
-                new ListCommand()
+                new JoinCommand(lifeformsEmojis, jda, players),
+                new LeaveCommand(players),
+                new ListCommand(players),
+                new PickRoleCommand(players, lifeforms)
         ));
     }
 
@@ -59,6 +60,31 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
             commands.execute(command.substring(1), message, players)
                     .ifPresent(result -> channel.sendMessage(result).queue());
         }
+    }
+
+    @Override
+    public void onMessageReactionAdd(MessageReactionAddEvent event) {
+        User user = event.getUser();
+        Emote emote = event.getReactionEmote().getEmote();
+        MessageChannel channel = event.getChannel();
+
+        if (user.isBot()) return;
+
+        commands.execute("roles", user, emote)
+                .ifPresent(result -> channel.sendMessage(result).queue());
+
+    }
+
+    @Override
+    public void onMessageReactionRemove(MessageReactionRemoveEvent event) {
+        User user = event.getUser();
+        Emote emote = event.getReactionEmote().getEmote();
+        MessageChannel channel = event.getChannel();
+
+        if (user.isBot()) return;
+
+        commands.execute("roles", user, emote)
+                .ifPresent(result -> channel.sendMessage(result).queue());
     }
 
     @Override

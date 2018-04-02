@@ -1,5 +1,6 @@
 package org.ns1.gatherbot.command;
 
+import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import org.ns1.gatherbot.datastructure.Players;
@@ -12,6 +13,8 @@ public interface Command {
 
     String run(User user);
 
-    Optional<String> run(Message message, Players players);
+    Optional<String> run(Message message);
+
+    Optional<String> run(User user, Emote emote);
 
 }

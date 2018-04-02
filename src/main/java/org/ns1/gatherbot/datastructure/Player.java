@@ -1,9 +1,16 @@
 package org.ns1.gatherbot.datastructure;
 
+import com.vdurmont.emoji.EmojiManager;
+import net.dv8tion.jda.core.entities.Emote;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
+
+import java.util.HashSet;
+
 
 public class Player {
     private User user;
+    private HashSet<Emote> roles = new HashSet<>();
 
     public Player(User user) {
         this.user = user;
@@ -13,9 +20,20 @@ public class Player {
         return this.user;
     }
 
+    public void updateRoles(Emote role) {
+        if (roles.contains(role)) {
+            roles.remove(role);
+        } else {
+            roles.add(role);
+        }
+    }
+
     @Override
     public String toString() {
-        return user.getName();
+        StringBuilder builder = new StringBuilder();
+        roles.forEach(role -> builder.append(role.getAsMention()));
+
+        return user.getName() + builder.toString();
     }
 
     @Override

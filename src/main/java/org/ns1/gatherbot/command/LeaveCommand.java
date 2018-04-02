@@ -1,5 +1,6 @@
 package org.ns1.gatherbot.command;
 
+import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -10,6 +11,11 @@ import java.util.Optional;
 
 public class LeaveCommand implements Command {
     private String name = "leave";
+    private Players players;
+
+    public LeaveCommand(Players players) {
+        this.players = players;
+    }
 
     @Override
     public boolean isItMe(String name) {
@@ -25,7 +31,12 @@ public class LeaveCommand implements Command {
     }
 
     @Override
-    public Optional<String> run(Message message, Players players) {
+    public Optional<String> run(User user, Emote emote) {
+        return null;
+    }
+
+    @Override
+    public Optional<String> run(Message message) {
         User user = message.getAuthor();
         MessageChannel channel = message.getChannel();
         return players.removePlayer(new Player(user));

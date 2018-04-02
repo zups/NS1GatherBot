@@ -2,6 +2,8 @@ package org.ns1.gatherbot.datastructure;
 
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
+import net.dv8tion.jda.core.entities.Emote;
+import net.dv8tion.jda.core.entities.User;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -38,6 +40,13 @@ public class Players {
         players.forEach(p -> joiner.add(p.toString()));
 
         return "**Players "+ this.printStatus() +":**\n" + joiner.toString();
+    }
+
+    public void updateRoles(User user, Emote role) {
+        players.stream()
+                .filter(player -> player.equals(new Player(user)))
+                .findFirst()
+                .ifPresent(plr -> plr.updateRoles(role));
     }
 
     public String printStatus() {
