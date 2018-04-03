@@ -15,6 +15,7 @@ import org.ns1.gatherbot.datastructure.Lifeforms;
 import org.ns1.gatherbot.datastructure.Players;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public class JoinPhase extends ListenerAdapter implements GatherPhase {
     private boolean isDone = false;
@@ -67,10 +68,12 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
         User user = event.getUser();
         Emote emote = event.getReactionEmote().getEmote();
         MessageChannel channel = event.getChannel();
+        String messageId = event.getMessageId();
+        channel.getMessageById(event.getMessageId()).queue();
 
         if (user.isBot()) return;
 
-        commands.execute("roles", user, emote)
+        commands.execute("roles", user, Optional.ofNullable(emote), messageId)
                 .ifPresent(result -> channel.sendMessage(result).queue());
 
     }
@@ -80,10 +83,11 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
         User user = event.getUser();
         Emote emote = event.getReactionEmote().getEmote();
         MessageChannel channel = event.getChannel();
+        String messageId = event.getMessageId();
 
         if (user.isBot()) return;
 
-        commands.execute("roles", user, emote)
+        commands.execute("roles", user, Optional.ofNullable(emote), messageId)
                 .ifPresent(result -> channel.sendMessage(result).queue());
     }
 

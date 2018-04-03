@@ -36,7 +36,7 @@ public class JoinCommand implements Command {
     }
 
     @Override
-    public Optional<String> run(User user, Emote emote) {
+    public Optional<String> run(User user, Emote emote, String messageId) {
         return null;
     }
 
@@ -44,16 +44,17 @@ public class JoinCommand implements Command {
     public Optional<String> run(Message message) {
         User user = message.getAuthor();
         MessageChannel channel = message.getChannel();
-        Player player = new Player(user);
-        Optional<String> result = players.addPlayer(player);
+        Optional<Player> player = players.addPlayer(new Player(user));
 
-        if (result.isPresent()) {
+        if (player.isPresent()) {
             channel.sendMessage(user.getName() + " Please select what you'd wanna do by clicking the smileys!")
                     .queue(mes -> {
                         lifeforms.getAllEmotes().forEach(emote -> mes.addReaction(emote).queue());
+                        player.get().setRoleMessage(mes.getId());
                     });
             channel.sendMessage(players.printPlayers()).queue();
         }
-        return result;
+        return Optional.empty();
     }
+
 }

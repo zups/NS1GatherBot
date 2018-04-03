@@ -49,12 +49,13 @@ public class Commands {
 
 
 
-    public Optional<String> execute(String name, User user, Emote emote) {
-
+    public Optional<String> execute(String name, User user, Optional<Emote> emote, String messageId) {
         StringBuilder message = new StringBuilder();
-        commands.stream()
+
+        emote.ifPresent(emo -> commands.stream()
                 .filter(c -> c.isItMe(name))
-                .findFirst().ifPresent(c -> c.run(user, emote));
+                .findFirst().ifPresent(c -> c.run(user, emo, messageId))
+        );
 
         if (!message.toString().isEmpty()) {
             return Optional.of(message.toString());

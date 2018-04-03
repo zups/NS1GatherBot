@@ -11,3 +11,6 @@ dependency-reduced-pom.xml
 
 #token
 token.json
+
+#personal
+todo.txt

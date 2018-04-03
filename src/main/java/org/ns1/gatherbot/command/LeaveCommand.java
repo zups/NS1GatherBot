@@ -31,7 +31,7 @@ public class LeaveCommand implements Command {
     }
 
     @Override
-    public Optional<String> run(User user, Emote emote) {
+    public Optional<String> run(User user, Emote emote, String messageId) {
         return null;
     }
 

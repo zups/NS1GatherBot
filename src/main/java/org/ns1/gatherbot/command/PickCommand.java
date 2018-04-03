@@ -23,12 +23,12 @@ public class PickCommand implements Command {
     }
 
     @Override
-    public Optional<String> run(User user, Emote emote) {
+    public Optional<String> run(Message message) {
         return null;
     }
 
     @Override
-    public Optional<String> run(Message message) {
+    public Optional<String> run(User user, Emote emote, String messageId) {
         return null;
     }
 }

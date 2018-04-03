@@ -36,9 +36,9 @@ public class PickRoleCommand implements Command {
     }
 
     @Override
-    public Optional<String> run(User user, Emote emote) {
+    public Optional<String> run(User user, Emote emote, String messageId) {
         lifeforms.getEmote(emote.getName())
-                .ifPresent(emo -> players.updateRoles(user, emote));
+                .ifPresent(emo -> players.updateRoles(user, emote, messageId));
 
         return Optional.empty();
     }

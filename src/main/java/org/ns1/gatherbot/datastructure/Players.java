@@ -13,11 +13,11 @@ public class Players {
     private HashSet<Player> players = new HashSet<>();
     private int maxPlayers = 12;
 
-    public Optional<String> addPlayer(Player player) {
+    public Optional<Player> addPlayer(Player player) {
         if (players.size() < maxPlayers) {
             boolean added = players.add(player);
             if (added) {
-                return Optional.of("Added " + player.getUser().getName());
+                return Optional.of(player);
             } else {
                 return Optional.empty();
             }
@@ -42,11 +42,11 @@ public class Players {
         return "**Players "+ this.printStatus() +":**\n" + joiner.toString();
     }
 
-    public void updateRoles(User user, Emote role) {
+    public void updateRoles(User user, Emote role, String messageId) {
         players.stream()
                 .filter(player -> player.equals(new Player(user)))
                 .findFirst()
-                .ifPresent(plr -> plr.updateRoles(role));
+                .ifPresent(plr -> plr.updateRoles(role, messageId));
     }
 
     public String printStatus() {

@@ -15,6 +15,6 @@ public interface Command {
 
     Optional<String> run(Message message);
 
-    Optional<String> run(User user, Emote emote);
+    Optional<String> run(User user, Emote emote, String messageId);
 
 }
