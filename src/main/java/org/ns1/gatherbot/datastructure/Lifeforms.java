@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.entities.Emote;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Lifeforms {
     private JDA jda;
@@ -14,13 +15,18 @@ public class Lifeforms {
     public Lifeforms(JDA jda) {
         this.jda = jda;
         this.lifeformEmotes = Arrays.asList(
-                jda.getEmotesByName("fade", true).get(0),
+                jda.getEmotesByName("commander", true).get(0),
                 jda.getEmotesByName("skulk", true).get(0),
                 jda.getEmotesByName("gorge", true).get(0),
-                jda.getEmotesByName("onos", true).get(0),
                 jda.getEmotesByName("lerk", true).get(0),
-                jda.getEmotesByName("commander", true).get(0)
+                jda.getEmotesByName("fade", true).get(0),
+                jda.getEmotesByName("onos", true).get(0),
+                jda.getEmotesByName("marine", true).get(0),
+                jda.getEmotesByName("captain", true).get(0)
         );
+
+
+
     }
 
     public Optional<Emote> getEmote(String alias) {

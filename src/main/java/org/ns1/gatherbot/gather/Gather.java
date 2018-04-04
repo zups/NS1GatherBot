@@ -24,13 +24,14 @@ public class Gather {
         this.lifeformEmojis = new Lifeforms(jda);
         this.phases = Arrays.asList(
                 new JoinPhase(lifeformEmojis, jda),
-                new VotePhase(),
+                new VotePhase(jda),
                 new PickPhase(),
                 new PrintPhase()
         );
     }
 
     public void executeGather() {
+        //phases.get(1).start();
         jda.addEventListener(phases.get(0));
     }
 

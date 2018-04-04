@@ -1,10 +1,7 @@
 package org.ns1.gatherbot.datastructure;
 
-import com.vdurmont.emoji.EmojiManager;
 import net.dv8tion.jda.core.entities.Emote;
-import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
-
 import java.util.HashSet;
 
 
@@ -40,7 +37,9 @@ public class Player {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        roles.forEach(role -> builder.append(role.getAsMention()));
+        roles.stream().sorted(
+                (Emote emo1, Emote emo2) -> emo1.getName().compareTo(emo2.getName()))
+        .forEach(role -> builder.append(role.getAsMention()));
 
         return user.getName() + builder.toString();
     }
