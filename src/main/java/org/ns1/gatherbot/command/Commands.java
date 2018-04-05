@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import org.ns1.gatherbot.datastructure.Players;
+
 import java.util.List;
 import java.util.Optional;
 

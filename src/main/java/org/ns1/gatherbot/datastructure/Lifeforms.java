@@ -6,7 +6,6 @@ import net.dv8tion.jda.core.entities.Emote;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class Lifeforms {
     private JDA jda;

@@ -1,7 +1,6 @@
 package org.ns1.gatherbot.command;
 
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -11,33 +10,20 @@ import org.ns1.gatherbot.datastructure.Players;
 
 import java.util.Optional;
 
-public class JoinCommand implements Command {
-    private String name = "join";
+public class JoinCommand extends AbstractCommand {
     private Lifeforms lifeforms;
     private Players players;
     private JDA jda;
 
     public JoinCommand(Lifeforms lifeforms, JDA jda, Players players) {
+        super("join");
         this.lifeforms = lifeforms;
         this.jda = jda;
         this.players = players;
     }
 
     public boolean isItMe(String name) {
-        if (this.name.equals(name)) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public String run(User user) {
-        return null;
-    }
-
-    @Override
-    public Optional<String> run(User user, Emote emote, String messageId) {
-        return null;
+        return super.isItMe(name);
     }
 
     @Override

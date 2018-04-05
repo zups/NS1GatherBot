@@ -6,29 +6,29 @@ import net.dv8tion.jda.core.entities.User;
 
 import java.util.Optional;
 
-public class PickCommand extends AbstractCommand {
+public abstract class AbstractCommand implements Command {
+    private String name;
 
-    public PickCommand() {
-        super("pick");
+    public AbstractCommand(String name) {
+        this.name = name;
     }
-
-    @Override
+    
     public boolean isItMe(String name) {
-        return super.isItMe(name);
+        if (this.name.equals(name)) {
+            return true;
+        }
+        return false;
     }
 
-    @Override
     public String run(User user) {
-        return "minut on pickattu apua";
+        return null;
     }
 
-    @Override
     public Optional<String> run(Message message) {
-        return null;
+        return Optional.empty();
     }
 
-    @Override
     public Optional<String> run(User user, Emote emote, String messageId) {
-        return null;
+        return Optional.empty();
     }
 }
