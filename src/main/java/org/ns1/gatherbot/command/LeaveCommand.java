@@ -1,5 +1,6 @@
 package org.ns1.gatherbot.command;
 
+import org.ns1.gatherbot.datastructure.ParameterWrapper;
 import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.datastructure.Players;
 import java.util.Optional;
@@ -18,7 +19,7 @@ public class LeaveCommand extends AbstractCommand {
     }
 
     @Override
-    public Optional<String> run() {
-        return players.removePlayer(new Player(super.getUser()));
+    public Optional<String> run(ParameterWrapper parameters) {
+        return players.removePlayer(new Player(parameters.getUser()));
     }
 }

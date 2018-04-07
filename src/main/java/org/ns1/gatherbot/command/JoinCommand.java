@@ -1,6 +1,7 @@
 package org.ns1.gatherbot.command;
 
 import org.ns1.gatherbot.datastructure.Lifeforms;
+import org.ns1.gatherbot.datastructure.ParameterWrapper;
 import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.datastructure.Players;
 import java.util.Optional;
@@ -20,16 +21,16 @@ public class JoinCommand extends AbstractCommand {
     }
 
     @Override
-    public Optional<String> run() {
-        Optional<Player> player = players.addPlayer(new Player(super.getUser()));
+    public Optional<String> run(ParameterWrapper parameters) {
+        Optional<Player> player = players.addPlayer(new Player(parameters.getUser()));
 
         if (player.isPresent()) {
-            super.getChannel().sendMessage(super.getUser().getName() + " Please select what you'd wanna do by clicking the smileys!")
+            parameters.getChannel().sendMessage(parameters.getUser().getName() + " Please select what you'd wanna do by clicking the smileys!")
                     .queue(mes -> {
                         lifeforms.getAllEmotes().forEach(emote -> mes.addReaction(emote).queue());
                         player.get().setRoleMessage(mes.getId());
                     });
-            super.getChannel().sendMessage(players.printPlayers()).queue();
+            parameters.getChannel().sendMessage(players.printPlayers()).queue();
         }
         return Optional.empty();
     }

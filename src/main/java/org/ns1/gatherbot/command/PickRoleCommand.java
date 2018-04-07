@@ -1,6 +1,7 @@
 package org.ns1.gatherbot.command;
 
 import org.ns1.gatherbot.datastructure.Lifeforms;
+import org.ns1.gatherbot.datastructure.ParameterWrapper;
 import org.ns1.gatherbot.datastructure.Players;
 import java.util.Optional;
 
@@ -20,9 +21,9 @@ public class PickRoleCommand extends AbstractCommand {
     }
 
     @Override
-    public Optional<String> run() {
-        lifeforms.getEmote(super.getEmote().getName())
-                .ifPresent(emo -> players.updateRoles(super.getUser(), super.getEmote(), super.getMessageId().getMessageId()));
+    public Optional<String> run(ParameterWrapper parameters) {
+        lifeforms.getEmote(parameters.getEmote().getName())
+                .ifPresent(emo -> players.updateRoles(parameters.getUser(), parameters.getEmote(), parameters.getMessageId().getMessageId()));
 
         return Optional.empty();
     }

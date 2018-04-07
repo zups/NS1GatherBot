@@ -1,5 +1,7 @@
 package org.ns1.gatherbot.command;
 
+import org.ns1.gatherbot.datastructure.ParameterWrapper;
+
 import java.util.Optional;
 
 public class PickCommand extends AbstractCommand {
@@ -14,7 +16,7 @@ public class PickCommand extends AbstractCommand {
     }
 
     @Override
-    public Optional<String> run() {
+    public Optional<String> run(ParameterWrapper parameters) {
         return Optional.empty();
     }
 

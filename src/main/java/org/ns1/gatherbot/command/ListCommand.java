@@ -1,5 +1,6 @@
 package org.ns1.gatherbot.command;
 
+import org.ns1.gatherbot.datastructure.ParameterWrapper;
 import org.ns1.gatherbot.datastructure.Players;
 import java.util.Optional;
 
@@ -17,7 +18,7 @@ public class ListCommand extends AbstractCommand {
     }
 
     @Override
-    public Optional<String> run() {
+    public Optional<String> run(ParameterWrapper parameters) {
         return Optional.of(players.printPlayers());
     }
 }

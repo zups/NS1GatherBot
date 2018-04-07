@@ -14,6 +14,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.ns1.gatherbot.command.*;
 import org.ns1.gatherbot.datastructure.Lifeforms;
 import org.ns1.gatherbot.datastructure.MessageId;
+import org.ns1.gatherbot.datastructure.ParameterWrapper;
 import org.ns1.gatherbot.datastructure.Players;
 
 import java.util.Arrays;
@@ -56,8 +57,8 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
         if (status.equalsIgnoreCase("offline")) {
             commands.findCommand("leave")
                     .ifPresent(command -> {
-                        command.update(Arrays.asList(user, channel));
-                        command.run().ifPresent(mes -> channel.sendMessage(mes).queue());
+                        command.run(new ParameterWrapper(Arrays.asList(user, channel)))
+                                .ifPresent(mes -> channel.sendMessage(mes).queue());
                     });
         }
     }
@@ -74,8 +75,8 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
         if (commandName.startsWith(PREFIX)) {
             commands.findCommand(commandName.substring(1))
                     .ifPresent(command -> {
-                        command.update(Arrays.asList(message, user, channel));
-                        command.run().ifPresent(mes -> channel.sendMessage(mes).queue());
+                        command.run(new ParameterWrapper(Arrays.asList(message, user, channel)))
+                                .ifPresent(mes -> channel.sendMessage(mes).queue());
                     });
         }
 
@@ -104,8 +105,7 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
 
         commands.findCommand("roles")
                 .ifPresent(command -> {
-                    command.update(Arrays.asList(new MessageId(messageId), user, channel, emote));
-                    command.run();
+                    command.run(new ParameterWrapper(Arrays.asList(new MessageId(messageId), user, channel, emote)));
                 });
     }
 

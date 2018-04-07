@@ -1,13 +1,13 @@
 package org.ns1.gatherbot.command;
 
-import java.util.List;
+import org.ns1.gatherbot.datastructure.ParameterWrapper;
+
 import java.util.Optional;
 
 public interface Command {
 
     boolean isItMe(String name);
 
-    Optional<String> run();
+    Optional<String> run(ParameterWrapper parameters);
 
-    void update(List<Object> parameters);
 }
