@@ -3,23 +3,26 @@ package org.ns1.gatherbot.gather;
 import io.reactivex.Observable;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import org.ns1.gatherbot.datastructure.Players;
 
 import java.util.concurrent.TimeUnit;
 
-public class VotePhase implements GatherPhase {
+public class VotePhase extends ListenerAdapter implements GatherPhase {
     private boolean isDone = false;
+    private Players players;
     private JDA jda;
     private int time = 20;
 
-    public VotePhase(JDA jda) {
+    public VotePhase(JDA jda, Players players) {
         this.jda = jda;
+        this.players = players;
     }
 
     private int returnTime() {
         return this.time = this.time - 5;
     }
 
-    @Override
     public void start() {
         StringBuilder mesId = new StringBuilder();
         MessageChannel channel = jda.getTextChannels().get(0);
@@ -35,12 +38,7 @@ public class VotePhase implements GatherPhase {
     }
 
     @Override
-    public void execute() {
+    public void nextPhase(JDA jda) {
 
-    }
-
-    @Override
-    public void done() {
-        this.isDone = true;
     }
 }

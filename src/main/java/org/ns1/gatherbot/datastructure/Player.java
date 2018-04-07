@@ -2,7 +2,6 @@ package org.ns1.gatherbot.datastructure;
 
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.User;
-
 import java.util.Comparator;
 import java.util.HashSet;
 

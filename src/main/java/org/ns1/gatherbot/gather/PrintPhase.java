@@ -1,20 +1,11 @@
 package org.ns1.gatherbot.gather;
 
+import net.dv8tion.jda.core.JDA;
+
 public class PrintPhase implements GatherPhase {
-    private boolean isDone = false;
 
     @Override
-    public void start() {
-
-    }
-
-    @Override
-    public void execute() {
-
-    }
-
-    @Override
-    public void done() {
+    public void nextPhase(JDA jda) {
 
     }
 }

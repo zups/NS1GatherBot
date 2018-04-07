@@ -9,7 +9,8 @@ public class Map {
         this.mapNumber = mapNumber;
     }
 
-    public String getName() {
+    @Override
+    public String toString() {
         return "**" + mapNumber + ")** " +this.name;
     }
 }

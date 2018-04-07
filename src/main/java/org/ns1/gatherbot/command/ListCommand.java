@@ -1,8 +1,6 @@
 package org.ns1.gatherbot.command;
 
-import net.dv8tion.jda.core.entities.Message;
 import org.ns1.gatherbot.datastructure.Players;
-
 import java.util.Optional;
 
 public class ListCommand extends AbstractCommand {
@@ -19,8 +17,7 @@ public class ListCommand extends AbstractCommand {
     }
 
     @Override
-    public Optional<String> run(Message message) {
+    public Optional<String> run() {
         return Optional.of(players.printPlayers());
     }
 }
-

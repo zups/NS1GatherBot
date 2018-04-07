@@ -1,9 +1,5 @@
 package org.ns1.gatherbot.command;
 
-import net.dv8tion.jda.core.entities.Emote;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.User;
-
 import java.util.Optional;
 
 public class PickCommand extends AbstractCommand {
@@ -18,17 +14,8 @@ public class PickCommand extends AbstractCommand {
     }
 
     @Override
-    public String run(User user) {
-        return "minut on pickattu apua";
+    public Optional<String> run() {
+        return Optional.empty();
     }
 
-    @Override
-    public Optional<String> run(Message message) {
-        return null;
-    }
-
-    @Override
-    public Optional<String> run(User user, Emote emote, String messageId) {
-        return null;
-    }
 }

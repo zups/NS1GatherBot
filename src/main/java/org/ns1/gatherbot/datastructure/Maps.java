@@ -1,7 +1,6 @@
 package org.ns1.gatherbot.datastructure;
 
 import org.json.simple.JSONArray;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +25,7 @@ public class Maps {
     public String toString() {
         StringJoiner joiner = new StringJoiner("\n");
 
-        this.maps.forEach(map -> joiner.add(map.getName()));
+        this.maps.forEach(map -> joiner.add(map.toString()));
 
         return joiner.toString();
     }

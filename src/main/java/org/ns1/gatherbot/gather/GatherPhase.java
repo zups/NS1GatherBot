@@ -1,11 +1,9 @@
 package org.ns1.gatherbot.gather;
 
+import net.dv8tion.jda.core.JDA;
+
 public interface GatherPhase {
 
-    public void start();
-
-    public void execute();
-
-    public void done();
+    void nextPhase(JDA jda);
 
 }

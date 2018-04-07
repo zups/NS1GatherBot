@@ -1,15 +1,10 @@
 package org.ns1.gatherbot.command;
 
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.User;
 import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.datastructure.Players;
-
 import java.util.Optional;
 
 public class LeaveCommand extends AbstractCommand {
-    private String name = "leave";
     private Players players;
 
     public LeaveCommand(Players players) {
@@ -23,9 +18,7 @@ public class LeaveCommand extends AbstractCommand {
     }
 
     @Override
-    public Optional<String> run(Message message) {
-        User user = message.getAuthor();
-        MessageChannel channel = message.getChannel();
-        return players.removePlayer(new Player(user));
+    public Optional<String> run() {
+        return players.removePlayer(new Player(super.getUser()));
     }
 }

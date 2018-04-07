@@ -1,10 +1,7 @@
 package org.ns1.gatherbot.command;
 
-import net.dv8tion.jda.core.entities.Emote;
-import net.dv8tion.jda.core.entities.User;
 import org.ns1.gatherbot.datastructure.Lifeforms;
 import org.ns1.gatherbot.datastructure.Players;
-
 import java.util.Optional;
 
 public class PickRoleCommand extends AbstractCommand {
@@ -23,9 +20,9 @@ public class PickRoleCommand extends AbstractCommand {
     }
 
     @Override
-    public Optional<String> run(User user, Emote emote, String messageId) {
-        lifeforms.getEmote(emote.getName())
-                .ifPresent(emo -> players.updateRoles(user, emote, messageId));
+    public Optional<String> run() {
+        lifeforms.getEmote(super.getEmote().getName())
+                .ifPresent(emo -> players.updateRoles(super.getUser(), super.getEmote(), super.getMessageId().getMessageId()));
 
         return Optional.empty();
     }

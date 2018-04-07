@@ -6,7 +6,6 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.User;
-
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.StringJoiner;
@@ -44,6 +43,10 @@ public class Players {
         embed.addField("Players:", joiner.toString(), false);
 
         return embed.build();
+    }
+
+    public boolean isFull() {
+        return players.size() == maxPlayers;
     }
 
     public String printPlayers() {

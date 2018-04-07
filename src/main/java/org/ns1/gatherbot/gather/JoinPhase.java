@@ -9,42 +9,57 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
+import net.dv8tion.jda.core.events.user.update.UserUpdateOnlineStatusEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.ns1.gatherbot.command.*;
 import org.ns1.gatherbot.datastructure.Lifeforms;
+import org.ns1.gatherbot.datastructure.MessageId;
 import org.ns1.gatherbot.datastructure.Players;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 public class JoinPhase extends ListenerAdapter implements GatherPhase {
+    private final String PREFIX = ".";
     private boolean isDone = false;
     private boolean hasStarted = false;
-    private Players players = new Players();
-    private final String PREFIX = ".";
+    private Players players;
     private Lifeforms lifeformsEmojis;
     private Commands commands;
     private JDA jda;
 
-    public JoinPhase(Lifeforms lifeforms, JDA jda) {
+    public JoinPhase(Lifeforms lifeforms, Players players) {
         this.lifeformsEmojis = lifeforms;
-        this.jda = jda;
+        this.players = players;
         this.commands = new Commands(Arrays.asList(
-                new JoinCommand(lifeformsEmojis, jda, players),
-                new LeaveCommand(players),
-                new ListCommand(players),
-                new PickRoleCommand(players, lifeforms)
+                new JoinCommand(lifeformsEmojis, this.players),
+                new LeaveCommand(this.players),
+                new ListCommand(this.players),
+                new PickRoleCommand(this.players, this.lifeformsEmojis)
         ));
     }
 
     @Override
-    public void start() {
-        this.hasStarted = true;
+    public void nextPhase(JDA jda) {
+        jda.removeEventListener(this);
+        //tässä kohtaa timeri, että vika pelaaja kerkeää laittaa
+        //lifeforminsa myös! 20sec, mmm. HUOM metodien välissä!! Ettei turhia joineja voi tai dunno hehe
+        jda.addEventListener(new VotePhase(this.jda, this.players));
     }
 
     @Override
-    public void execute() {
+    public void onUserUpdateOnlineStatus(UserUpdateOnlineStatusEvent event) {
+        String status = event.getNewOnlineStatus().getKey();
+        User user = event.getUser();
+        MessageChannel channel = event.getGuild()
+                .getTextChannelsByName("general", true).get(0);
 
+        if (status.equalsIgnoreCase("offline")) {
+            commands.findCommand("leave")
+                    .ifPresent(command -> {
+                        command.update(Arrays.asList(user, channel));
+                        command.run().ifPresent(mes -> channel.sendMessage(mes).queue());
+                    });
+        }
     }
 
     @Override
@@ -55,11 +70,18 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
 
         if (user.isBot()) return;
 
-        String command = message.getContentDisplay();
+        String commandName = message.getContentDisplay();
 
-        if (command.startsWith(PREFIX)) {
-            commands.execute(command.substring(1), message, players)
-                    .ifPresent(result -> channel.sendMessage(result).queue());
+        if (commandName.startsWith(PREFIX)) {
+            commands.findCommand(commandName.substring(1))
+                    .ifPresent(command -> {
+                        command.update(Arrays.asList(message, user, channel));
+                        command.run().ifPresent(mes -> channel.sendMessage(mes).queue());
+                    });
+        }
+
+        if (players.isFull()) {
+            this.nextPhase(this.jda);
         }
     }
 
@@ -68,14 +90,14 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
         User user = event.getUser();
         Emote emote = event.getReactionEmote().getEmote();
         MessageChannel channel = event.getChannel();
-        String messageId = event.getMessageId();
-        channel.getMessageById(event.getMessageId()).queue();
 
         if (user.isBot()) return;
 
-        commands.execute("roles", user, Optional.ofNullable(emote), messageId)
-                .ifPresent(result -> channel.sendMessage(result).queue());
-
+        commands.findCommand("roles")
+                .ifPresent(command -> {
+                    command.update(Arrays.asList(new MessageId(event.getMessageId()), user, channel, emote));
+                    command.run();
+                });
     }
 
     @Override
@@ -87,12 +109,10 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
 
         if (user.isBot()) return;
 
-        commands.execute("roles", user, Optional.ofNullable(emote), messageId)
-                .ifPresent(result -> channel.sendMessage(result).queue());
-    }
-
-    @Override
-    public void done() {
-        this.isDone = true;
+        commands.findCommand("roles")
+                .ifPresent(command -> {
+                    command.update(Arrays.asList(new MessageId(messageId), user, channel, emote));
+                    command.run();
+                });
     }
 }

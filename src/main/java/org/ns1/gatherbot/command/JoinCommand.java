@@ -1,24 +1,17 @@
 package org.ns1.gatherbot.command;
 
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.User;
 import org.ns1.gatherbot.datastructure.Lifeforms;
 import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.datastructure.Players;
-
 import java.util.Optional;
 
 public class JoinCommand extends AbstractCommand {
     private Lifeforms lifeforms;
     private Players players;
-    private JDA jda;
 
-    public JoinCommand(Lifeforms lifeforms, JDA jda, Players players) {
+    public JoinCommand(Lifeforms lifeforms, Players players) {
         super("join");
         this.lifeforms = lifeforms;
-        this.jda = jda;
         this.players = players;
     }
 
@@ -27,20 +20,17 @@ public class JoinCommand extends AbstractCommand {
     }
 
     @Override
-    public Optional<String> run(Message message) {
-        User user = message.getAuthor();
-        MessageChannel channel = message.getChannel();
-        Optional<Player> player = players.addPlayer(new Player(user));
+    public Optional<String> run() {
+        Optional<Player> player = players.addPlayer(new Player(super.getUser()));
 
         if (player.isPresent()) {
-            channel.sendMessage(user.getName() + " Please select what you'd wanna do by clicking the smileys!")
+            super.getChannel().sendMessage(super.getUser().getName() + " Please select what you'd wanna do by clicking the smileys!")
                     .queue(mes -> {
                         lifeforms.getAllEmotes().forEach(emote -> mes.addReaction(emote).queue());
                         player.get().setRoleMessage(mes.getId());
                     });
-            channel.sendMessage(players.printPlayers()).queue();
+            super.getChannel().sendMessage(players.printPlayers()).queue();
         }
         return Optional.empty();
     }
-
 }

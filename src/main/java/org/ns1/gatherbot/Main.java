@@ -7,7 +7,6 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.ns1.gatherbot.gather.Gather;
 import org.ns1.gatherbot.util.Utils;
-
 import javax.security.auth.login.LoginException;
 import java.util.Optional;
 
@@ -17,7 +16,7 @@ public class Main extends ListenerAdapter {
     @Override
     public void onReady(ReadyEvent event) {
         this.gather = new Gather(event.getJDA());
-        gather.executeGather();
+        //gather.executeGather();
         event.getJDA().removeEventListener(Main.class);
         System.out.println("Bot is now ready!");
 
