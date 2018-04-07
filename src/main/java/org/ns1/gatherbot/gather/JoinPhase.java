@@ -1,12 +1,12 @@
 package org.ns1.gatherbot.gather;
 
-
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.events.message.react.GenericMessageReactionEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.core.events.user.update.UserUpdateOnlineStatusEvent;
@@ -67,10 +67,9 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
         Message message = event.getMessage();
         User user = message.getAuthor();
         MessageChannel channel = message.getChannel();
+        String commandName = message.getContentDisplay();
 
         if (user.isBot()) return;
-
-        String commandName = message.getContentDisplay();
 
         if (commandName.startsWith(PREFIX)) {
             commands.findCommand(commandName.substring(1))
@@ -87,21 +86,15 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
 
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent event) {
-        User user = event.getUser();
-        Emote emote = event.getReactionEmote().getEmote();
-        MessageChannel channel = event.getChannel();
-
-        if (user.isBot()) return;
-
-        commands.findCommand("roles")
-                .ifPresent(command -> {
-                    command.update(Arrays.asList(new MessageId(event.getMessageId()), user, channel, emote));
-                    command.run();
-                });
+        updateReactions(event);
     }
 
     @Override
     public void onMessageReactionRemove(MessageReactionRemoveEvent event) {
+        updateReactions(event);
+    }
+
+    private void updateReactions(GenericMessageReactionEvent event) {
         User user = event.getUser();
         Emote emote = event.getReactionEmote().getEmote();
         MessageChannel channel = event.getChannel();
@@ -115,4 +108,5 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
                     command.run();
                 });
     }
+
 }
