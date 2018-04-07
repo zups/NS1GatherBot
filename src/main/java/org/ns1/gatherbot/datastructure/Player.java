@@ -1,9 +1,9 @@
 package org.ns1.gatherbot.datastructure;
 
-import net.dv8tion.jda.core.entities.Emote;
-import net.dv8tion.jda.core.entities.User;
 import java.util.Comparator;
 import java.util.HashSet;
+import net.dv8tion.jda.core.entities.Emote;
+import net.dv8tion.jda.core.entities.User;
 
 
 public class Player {
@@ -40,7 +40,7 @@ public class Player {
         StringBuilder builder = new StringBuilder();
         roles.stream().sorted(
                 Comparator.comparing(Emote::getName))
-        .forEach(role -> builder.append(role.getAsMention()));
+                .forEach(role -> builder.append(role.getAsMention()));
 
         return user.getName() + builder.toString();
     }

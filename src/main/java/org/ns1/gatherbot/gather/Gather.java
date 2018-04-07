@@ -1,9 +1,9 @@
 package org.ns1.gatherbot.gather;
 
-import net.dv8tion.jda.core.JDA;
-import org.ns1.gatherbot.datastructure.*;
 import java.util.ArrayList;
 import java.util.List;
+import net.dv8tion.jda.core.JDA;
+import org.ns1.gatherbot.datastructure.*;
 
 public class Gather {
     private List<Captain> captains = new ArrayList<>();
@@ -16,7 +16,7 @@ public class Gather {
 
 //    private List<GatherPhase> phases;
 
-    public  Gather(JDA jda) {
+    public Gather(JDA jda) {
         this.jda = jda;
         this.lifeformEmojis = new Lifeforms(jda);
         this.phase = new JoinPhase(lifeformEmojis, players);

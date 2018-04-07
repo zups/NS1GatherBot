@@ -11,6 +11,6 @@ public class Map {
 
     @Override
     public String toString() {
-        return "**" + mapNumber + ")** " +this.name;
+        return "**" + mapNumber + ")** " + this.name;
     }
 }

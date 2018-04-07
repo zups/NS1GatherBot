@@ -1,8 +1,8 @@
 package org.ns1.gatherbot.command;
 
+import java.util.Optional;
 import org.ns1.gatherbot.datastructure.ParameterWrapper;
 import org.ns1.gatherbot.datastructure.Players;
-import java.util.Optional;
 
 public class ListCommand extends AbstractCommand {
     private Players players;

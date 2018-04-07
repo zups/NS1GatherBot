@@ -1,8 +1,7 @@
 package org.ns1.gatherbot.command;
 
-import org.ns1.gatherbot.datastructure.ParameterWrapper;
-
 import java.util.Optional;
+import org.ns1.gatherbot.datastructure.ParameterWrapper;
 
 public class PickCommand extends AbstractCommand {
 

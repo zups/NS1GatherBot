@@ -1,12 +1,11 @@
 package org.ns1.gatherbot.gather;
 
 import io.reactivex.Observable;
+import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.ns1.gatherbot.datastructure.Players;
-
-import java.util.concurrent.TimeUnit;
 
 public class VotePhase extends ListenerAdapter implements GatherPhase {
     private boolean isDone = false;

@@ -1,10 +1,10 @@
 package org.ns1.gatherbot.datastructure;
 
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.Emote;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Emote;
 
 public class Lifeforms {
     private JDA jda;
@@ -22,7 +22,6 @@ public class Lifeforms {
                 jda.getEmotesByName("marine", true).get(0),
                 jda.getEmotesByName("captain", true).get(0)
         );
-
 
 
     }

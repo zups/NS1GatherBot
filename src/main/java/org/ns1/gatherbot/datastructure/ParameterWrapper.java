@@ -1,11 +1,10 @@
 package org.ns1.gatherbot.datastructure;
 
+import java.util.List;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
-
-import java.util.List;
 
 public class ParameterWrapper {
 

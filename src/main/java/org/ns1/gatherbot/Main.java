@@ -1,5 +1,7 @@
 package org.ns1.gatherbot;
 
+import java.util.Optional;
+import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.events.ReadyEvent;
@@ -7,8 +9,6 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.ns1.gatherbot.gather.Gather;
 import org.ns1.gatherbot.util.Utils;
-import javax.security.auth.login.LoginException;
-import java.util.Optional;
 
 public class Main extends ListenerAdapter {
     private Gather gather;

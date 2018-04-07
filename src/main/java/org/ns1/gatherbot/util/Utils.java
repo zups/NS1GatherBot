@@ -2,6 +2,10 @@ package org.ns1.gatherbot.util;
 
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.Optional;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Emote;
@@ -11,10 +15,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.ns1.gatherbot.datastructure.Lifeforms;
 import org.ns1.gatherbot.datastructure.Maps;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.Optional;
 
 
 public class Utils {
@@ -58,7 +58,7 @@ public class Utils {
 
         Maps maps = new Maps(mapsJson.get());
 
-        embed.addField("Maps:",maps.toString(),false);
+        embed.addField("Maps:", maps.toString(), false);
 
         return embed.build();
     }
@@ -85,7 +85,7 @@ public class Utils {
         Emote lerk = lifeforms.getEmote("lerk").get();
         Emote commander = lifeforms.getEmote("commander").get();
 
-       // Emoji commander = ReactionEmoji.of("commander", 428946828487295008L);
+        // Emoji commander = ReactionEmoji.of("commander", 428946828487295008L);
 
         StringBuilder kissamies = new StringBuilder();
         kissamies.append(blueSmall.getUnicode() + "Tane" + fade + "\n");
@@ -104,12 +104,12 @@ public class Utils {
         koiramies.append(orangeSmall.getUnicode() + "larks tongue in aspic" + skulk + gorge + "\n");
         koiramies.append(orangeSmall.getUnicode() + "x-man" + commander + gorge);
 
-        embed.addField(blueLarge.getUnicode() + "Marines",kissamies.toString(), true);
+        embed.addField(blueLarge.getUnicode() + "Marines", kissamies.toString(), true);
         embed.addField(orangeLarge.getUnicode() + "Aliens", koiramies.toString(), true);
 
-        String stars = star.getUnicode() + star.getUnicode() +star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode();
+        String stars = star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode() + star.getUnicode();
 
-        embed.addField(stars,stars, false);
+        embed.addField(stars, stars, false);
 
         embed.addField("First map:", "ns_origin", true);
         embed.addField("Second map(if wanted):", "ns_veil", true);
