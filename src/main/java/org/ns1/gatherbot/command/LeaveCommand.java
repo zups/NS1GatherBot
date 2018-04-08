@@ -14,11 +14,6 @@ public class LeaveCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean isItMe(String name) {
-        return super.isItMe(name);
-    }
-
-    @Override
     public Optional<String> run(ParameterWrapper parameters) {
         return players.removePlayer(new Player(parameters.getUser()));
     }

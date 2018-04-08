@@ -3,6 +3,7 @@ package org.ns1.gatherbot.datastructure;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import net.dv8tion.jda.client.managers.EmoteManager;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Emote;
 

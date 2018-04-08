@@ -1,6 +1,9 @@
 package org.ns1.gatherbot.gather;
 
+import io.reactivex.Observable;
 import java.util.Arrays;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
@@ -42,8 +45,12 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
     public void nextPhase(JDA jda) {
         jda.removeEventListener(this);
         //tässä kohtaa timeri, että vika pelaaja kerkeää laittaa
-        //lifeforminsa myös! 20sec, mmm. HUOM metodien välissä!! Ettei turhia joineja voi tai dunno hehe
-        jda.addEventListener(new VotePhase(this.jda, this.players));
+        //lifeforminsa myös! 20sec, mmm. HUOM metodien välissä!!
+        Observable.timer(20, TimeUnit.SECONDS)
+                .subscribe(
+                        onNext -> {
+                            jda.addEventListener(new VotePhase(this.jda, this.players));
+                        });
     }
 
     @Override

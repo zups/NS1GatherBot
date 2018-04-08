@@ -78,12 +78,12 @@ public class Utils {
 
         Emoji star = EmojiManager.getForAlias(":eight_pointed_black_star:");
 
-        Emote fade = lifeforms.getEmote("fade").get();
-        Emote skulk = lifeforms.getEmote("skulk").get();
-        Emote gorge = lifeforms.getEmote("gorge").get();
-        Emote onos = lifeforms.getEmote("onos").get();
-        Emote lerk = lifeforms.getEmote("lerk").get();
-        Emote commander = lifeforms.getEmote("commander").get();
+        String fade = lifeforms.getEmote("fade").get().getAsMention();
+        String skulk = lifeforms.getEmote("skulk").get().getAsMention();
+        String gorge = lifeforms.getEmote("gorge").get().getAsMention();
+        String onos = lifeforms.getEmote("onos").get().getAsMention();
+        String lerk = lifeforms.getEmote("lerk").get().getAsMention();
+        String commander = lifeforms.getEmote("commander").get().getAsMention();
 
         // Emoji commander = ReactionEmoji.of("commander", 428946828487295008L);
 

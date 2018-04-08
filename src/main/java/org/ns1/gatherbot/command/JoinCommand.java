@@ -16,10 +16,6 @@ public class JoinCommand extends AbstractCommand {
         this.players = players;
     }
 
-    public boolean isItMe(String name) {
-        return super.isItMe(name);
-    }
-
     @Override
     public Optional<String> run(ParameterWrapper parameters) {
         Optional<Player> player = players.addPlayer(new Player(parameters.getUser()));
