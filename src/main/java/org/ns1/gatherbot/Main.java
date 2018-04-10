@@ -4,6 +4,8 @@ import java.util.Optional;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
@@ -15,7 +17,8 @@ public class Main extends ListenerAdapter {
 
     @Override
     public void onReady(ReadyEvent event) {
-        this.gather = new Gather(event.getJDA());
+        TextChannel channel = event.getJDA().getTextChannelsByName("gather", true).get(0);
+        new Gather(event.getJDA(), channel);
         //gather.executeGather();
         event.getJDA().removeEventListener(Main.class);
         System.out.println("Bot is now ready!");

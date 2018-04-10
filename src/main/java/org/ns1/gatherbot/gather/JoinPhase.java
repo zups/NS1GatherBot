@@ -5,10 +5,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.Emote;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.react.GenericMessageReactionEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
@@ -23,16 +20,14 @@ import org.ns1.gatherbot.datastructure.Players;
 
 public class JoinPhase extends ListenerAdapter implements GatherPhase {
     private final String PREFIX = ".";
-    private boolean isDone = false;
-    private boolean hasStarted = false;
-    private Players players;
-    private Lifeforms lifeformsEmojis;
-    private Commands commands;
-    private JDA jda;
+    private final Players players = new Players(1);
+    private final Lifeforms lifeformsEmojis;
+    private final Commands commands;
+    private final TextChannel channel;
 
-    public JoinPhase(Lifeforms lifeforms, Players players) {
+    public JoinPhase(Lifeforms lifeforms, TextChannel channel) {
         this.lifeformsEmojis = lifeforms;
-        this.players = players;
+        this.channel = channel;
         this.commands = new Commands(Arrays.asList(
                 new JoinCommand(lifeformsEmojis, this.players),
                 new LeaveCommand(this.players),
@@ -43,13 +38,18 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
 
     @Override
     public void nextPhase(JDA jda) {
-        jda.removeEventListener(this);
+        this.channel.sendMessage("**Gather starting!**").queue();
+        this.channel.sendMessage(players.printPlayersHighlight()).queue();
+        this.channel.sendMessage("`Voting for captains and maps starts in 20seconds!`").queue();
         //tässä kohtaa timeri, että vika pelaaja kerkeää laittaa
         //lifeforminsa myös! 20sec, mmm. HUOM metodien välissä!!
-        Observable.timer(20, TimeUnit.SECONDS)
+        Observable.timer(10, TimeUnit.SECONDS)
                 .subscribe(
                         onNext -> {
-                            jda.addEventListener(new VotePhase(this.jda, this.players));
+                            if (this.players.isFull()) {
+                                jda.removeEventListener(this);
+                                jda.addEventListener(new VotePhase(jda, this.players, this.channel));
+                            }
                         });
     }
 
@@ -76,7 +76,7 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
         MessageChannel channel = message.getChannel();
         String commandName = message.getContentDisplay();
 
-        if (user.isBot()) return;
+        if (user.isBot() || !channel.getName().equals(this.channel.getName())) return;
 
         if (commandName.startsWith(PREFIX)) {
             commands.findCommand(commandName.substring(1))
@@ -87,7 +87,7 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
         }
 
         if (players.isFull()) {
-            this.nextPhase(this.jda);
+            this.nextPhase(event.getJDA());
         }
     }
 
@@ -107,7 +107,7 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
         MessageChannel channel = event.getChannel();
         String messageId = event.getMessageId();
 
-        if (user.isBot()) return;
+        if (user.isBot()|| !channel.getName().equals(this.channel.getName())) return;
 
         commands.findCommand("roles")
                 .ifPresent(command -> {

@@ -10,6 +10,7 @@ public class Player {
     private User user;
     private HashSet<Emote> roles = new HashSet<>();
     private String roleMessageId;
+    private Emote number;
 
     public Player(User user) {
         this.user = user;
@@ -35,6 +36,19 @@ public class Player {
         }
     }
 
+    public Emote getNumber() {
+        return number;
+    }
+
+    public boolean isWillingToCaptain() {
+        return roles.stream()
+                .anyMatch(role -> role.getName().equals("captain"));
+    }
+
+    public void setNumber(Emote number) {
+            this.number = number;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -53,7 +67,7 @@ public class Player {
     @Override
     public boolean equals(Object obj) {
         Player player = (Player) obj;
-        if (player.hashCode() == this.hashCode()) {
+        if (player.hashCode() == this.user.hashCode()) {
             return true;
         }
         return false;
