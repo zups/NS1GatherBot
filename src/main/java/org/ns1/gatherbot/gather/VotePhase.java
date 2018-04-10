@@ -21,18 +21,15 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
     }
 
     public void start() {
-        StringBuilder id = new StringBuilder();
         players.sortAndAssignNumbers(numberEmojis);
         if (players.isThereMoreThanTwoWillingToCaptain()) {
-            channel.sendMessage(players.captainsEmbedded()).queue(mes -> {
+            channel.sendMessage(players.captainsEmbedded()).queue(mes ->
                 players.getPlayersWillingToCaptain()
-                        .forEach(player -> mes.addReaction(player.getNumber()).queue());
-            });
+                        .forEach(player -> mes.addReaction(player.getNumber()).queue()));
         } else {
-            channel.sendMessage(players.playersEmbedded()).queue(mes -> {
+            channel.sendMessage(players.playersEmbedded()).queue(mes ->
                 players.getPlayers()
-                        .forEach(player -> mes.addReaction(player.getNumber()).queue());
-            });
+                        .forEach(player -> mes.addReaction(player.getNumber()).queue()));
         }
     }
 

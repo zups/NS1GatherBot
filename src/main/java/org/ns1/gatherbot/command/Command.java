@@ -1,7 +1,7 @@
 package org.ns1.gatherbot.command;
 
 import java.util.Optional;
-import org.ns1.gatherbot.datastructure.ParameterWrapper;
+import org.ns1.gatherbot.util.ParameterWrapper;
 
 public interface Command {
 

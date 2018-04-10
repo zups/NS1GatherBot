@@ -1,4 +1,4 @@
-package org.ns1.gatherbot.datastructure;
+package org.ns1.gatherbot.util;
 
 public class MessageId {
     private String messageId;

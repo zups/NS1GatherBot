@@ -2,7 +2,7 @@ package org.ns1.gatherbot.command;
 
 import java.util.Optional;
 import org.ns1.gatherbot.emoji.LifeformEmojis;
-import org.ns1.gatherbot.datastructure.ParameterWrapper;
+import org.ns1.gatherbot.util.ParameterWrapper;
 import org.ns1.gatherbot.datastructure.Players;
 
 public class PickRoleCommand extends AbstractCommand {
