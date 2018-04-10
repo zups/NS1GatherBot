@@ -1,4 +1,4 @@
-package org.ns1.gatherbot.datastructure;
+package org.ns1.gatherbot.emoji;
 
 import java.util.Arrays;
 import java.util.List;

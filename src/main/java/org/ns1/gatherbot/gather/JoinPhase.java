@@ -2,7 +2,6 @@ package org.ns1.gatherbot.gather;
 
 import io.reactivex.Observable;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.*;
@@ -13,7 +12,7 @@ import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.core.events.user.update.UserUpdateOnlineStatusEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.ns1.gatherbot.command.*;
-import org.ns1.gatherbot.datastructure.Lifeforms;
+import org.ns1.gatherbot.emoji.LifeformEmojis;
 import org.ns1.gatherbot.datastructure.MessageId;
 import org.ns1.gatherbot.datastructure.ParameterWrapper;
 import org.ns1.gatherbot.datastructure.Players;
@@ -21,18 +20,18 @@ import org.ns1.gatherbot.datastructure.Players;
 public class JoinPhase extends ListenerAdapter implements GatherPhase {
     private final String PREFIX = ".";
     private final Players players = new Players(1);
-    private final Lifeforms lifeformsEmojis;
+    private final LifeformEmojis lifeformEmojisEmojis;
     private final Commands commands;
     private final TextChannel channel;
 
-    public JoinPhase(Lifeforms lifeforms, TextChannel channel) {
-        this.lifeformsEmojis = lifeforms;
+    public JoinPhase(LifeformEmojis lifeformEmojis, TextChannel channel) {
+        this.lifeformEmojisEmojis = lifeformEmojis;
         this.channel = channel;
         this.commands = new Commands(Arrays.asList(
-                new JoinCommand(lifeformsEmojis, this.players),
+                new JoinCommand(lifeformEmojisEmojis, this.players),
                 new LeaveCommand(this.players),
                 new ListCommand(this.players),
-                new PickRoleCommand(this.players, this.lifeformsEmojis)
+                new PickRoleCommand(this.players, this.lifeformEmojisEmojis)
         ));
     }
 

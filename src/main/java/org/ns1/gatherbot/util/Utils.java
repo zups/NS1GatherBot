@@ -8,12 +8,11 @@ import java.io.Reader;
 import java.util.Optional;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.ns1.gatherbot.datastructure.Lifeforms;
+import org.ns1.gatherbot.emoji.LifeformEmojis;
 import org.ns1.gatherbot.datastructure.Maps;
 
 
@@ -64,7 +63,7 @@ public class Utils {
     }
 
     public static MessageEmbed coolEmbed(JDA jda) {
-        Lifeforms lifeforms = new Lifeforms(jda);
+        LifeformEmojis lifeformEmojis = new LifeformEmojis(jda);
         EmbedBuilder embed = new EmbedBuilder();
         String tyhja = "\u200B";
 
@@ -78,12 +77,12 @@ public class Utils {
 
         Emoji star = EmojiManager.getForAlias(":eight_pointed_black_star:");
 
-        String fade = lifeforms.getEmote("fade").get().getAsMention();
-        String skulk = lifeforms.getEmote("skulk").get().getAsMention();
-        String gorge = lifeforms.getEmote("gorge").get().getAsMention();
-        String onos = lifeforms.getEmote("onos").get().getAsMention();
-        String lerk = lifeforms.getEmote("lerk").get().getAsMention();
-        String commander = lifeforms.getEmote("commander").get().getAsMention();
+        String fade = lifeformEmojis.getEmote("fade").get().getAsMention();
+        String skulk = lifeformEmojis.getEmote("skulk").get().getAsMention();
+        String gorge = lifeformEmojis.getEmote("gorge").get().getAsMention();
+        String onos = lifeformEmojis.getEmote("onos").get().getAsMention();
+        String lerk = lifeformEmojis.getEmote("lerk").get().getAsMention();
+        String commander = lifeformEmojis.getEmote("commander").get().getAsMention();
 
         // Emoji commander = ReactionEmoji.of("commander", 428946828487295008L);
 

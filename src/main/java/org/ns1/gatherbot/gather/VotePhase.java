@@ -1,16 +1,9 @@
 package org.ns1.gatherbot.gather;
 
-import io.reactivex.Observable;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.MessageReaction;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import org.ns1.gatherbot.datastructure.NumberEmojis;
-import org.ns1.gatherbot.datastructure.Player;
+import org.ns1.gatherbot.emoji.NumberEmojis;
 import org.ns1.gatherbot.datastructure.Players;
 
 public class VotePhase extends ListenerAdapter implements GatherPhase {
