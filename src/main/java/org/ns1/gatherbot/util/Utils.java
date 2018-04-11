@@ -12,8 +12,8 @@ import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.ns1.gatherbot.emoji.LifeformEmojis;
 import org.ns1.gatherbot.datastructure.Maps;
+import org.ns1.gatherbot.emoji.LifeformEmojis;
 
 
 public class Utils {

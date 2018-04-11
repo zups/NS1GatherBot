@@ -12,10 +12,11 @@ import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.core.events.user.update.UserUpdateOnlineStatusEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.ns1.gatherbot.command.*;
+import org.ns1.gatherbot.datastructure.Players;
 import org.ns1.gatherbot.emoji.LifeformEmojis;
 import org.ns1.gatherbot.util.MessageId;
 import org.ns1.gatherbot.util.ParameterWrapper;
-import org.ns1.gatherbot.datastructure.Players;
+import org.ns1.gatherbot.util.PrettyPrints;
 
 public class JoinPhase extends ListenerAdapter implements GatherPhase {
     private final String PREFIX = ".";
@@ -38,7 +39,7 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
     @Override
     public void nextPhase(JDA jda) {
         this.channel.sendMessage("**Gather starting!**").queue();
-        this.channel.sendMessage(players.printPlayersHighlight()).queue();
+        this.channel.sendMessage(PrettyPrints.printPlayersHighlight(players.getPlayers())).queue();
         this.channel.sendMessage("`Voting for captains and maps starts in 20seconds!`").queue();
         //tässä kohtaa timeri, että vika pelaaja kerkeää laittaa
         //lifeforminsa myös! 20sec, mmm. HUOM metodien välissä!!
