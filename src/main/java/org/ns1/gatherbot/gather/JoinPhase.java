@@ -30,10 +30,10 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
         this.lifeformEmojisEmojis = lifeformEmojis;
         this.channel = channel;
         this.commands = new Commands(Arrays.asList(
-                new JoinCommand(lifeformEmojisEmojis, this.players),
-                new LeaveCommand(this.players),
-                new ListCommand(this.players),
-                new PickRoleCommand(this.players, this.lifeformEmojisEmojis)
+                new JoinCommand(lifeformEmojisEmojis, players),
+                new LeaveCommand(players),
+                new ListCommand(players),
+                new PickRoleCommand(players, lifeformEmojisEmojis)
         ));
     }
 
@@ -48,9 +48,9 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
         Observable.timer(10, TimeUnit.SECONDS)
                 .subscribe(
                         onNext -> {
-                            if (this.players.isFull()) {
+                            if (players.isFull()) {
                                 jda.removeEventListener(this);
-                                jda.addEventListener(new VotePhase(jda, this.players, this.channel));
+                                jda.addEventListener(new VotePhase(jda, players, channel));
                             } else {
                                 nextPhaseStarting = false;
                             }
@@ -77,7 +77,7 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
         User user = message.getAuthor();
         String commandName = message.getContentDisplay();
 
-        if (user.isBot() || !channel.getName().equals(this.channel.getName())) return;
+        if (user.isBot() || !channel.getName().equals(channel.getName())) return;
 
         if (commandName.startsWith(PREFIX)) {
             commands.findCommand(commandName.substring(1))
@@ -88,7 +88,7 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
         }
 
         if (!nextPhaseStarting && players.isFull()) {
-            this.nextPhase(event.getJDA());
+            nextPhase(event.getJDA());
         }
     }
 
@@ -107,7 +107,7 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
         Emote emote = event.getReactionEmote().getEmote();
         String messageId = event.getMessageId();
 
-        if (user.isBot()|| !channel.getName().equals(this.channel.getName())) return;
+        if (user.isBot()|| !channel.getName().equals(channel.getName())) return;
 
         commands.findCommand("roles")
                 .ifPresent(command -> {

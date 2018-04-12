@@ -22,6 +22,6 @@ public class Team {
     }
 
     public Players getPlayers() {
-        return this.players;
+        return players;
     }
 }

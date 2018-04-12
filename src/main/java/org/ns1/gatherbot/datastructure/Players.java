@@ -37,7 +37,7 @@ public class Players {
     }
 
     public List<Player> getPlayers() {
-        return new ArrayList<>(this.players);
+        return new ArrayList<>(players);
     }
 
     public List<Player> getPlayersWillingToCaptain() {
@@ -61,6 +61,6 @@ public class Players {
     }
 
     public int getMaxPlayers() {
-        return this.maxPlayers;
+        return maxPlayers;
     }
 }

@@ -18,7 +18,7 @@ public class LeaveCommand extends AbstractCommand {
         StringBuilder message = new StringBuilder();
 
         players.removePlayer(new Player(parameters.getUser()))
-                .ifPresent(player -> message.append(player.getUser().getName() + " left."));
+                .ifPresent(player -> message.append(player.getName() + " left."));
 
         return Optional.empty();
     }

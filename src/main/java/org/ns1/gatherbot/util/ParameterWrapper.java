@@ -17,15 +17,15 @@ public class ParameterWrapper {
     public ParameterWrapper(List<Object> objects) {
         objects.forEach(obj -> {
             if (obj instanceof User)
-                this.user = (User) obj;
+                user = (User) obj;
             else if (obj instanceof MessageChannel)
-                this.channel = (MessageChannel) obj;
+                channel = (MessageChannel) obj;
             else if (obj instanceof Message)
-                this.message = (Message) obj;
+                message = (Message) obj;
             else if (obj instanceof Emote)
-                this.emote = Optional.of((Emote) obj);
+                emote = Optional.of((Emote) obj);
             else if (obj instanceof MessageId)
-                this.messageId = (MessageId) obj;
+                messageId = (MessageId) obj;
         });
     }
 

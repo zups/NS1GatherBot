@@ -8,7 +8,7 @@ public abstract class AbstractCommand implements Command {
     }
 
     public boolean isItMe(String name) {
-        if (this.name.equalsIgnoreCase(name)) {
+        if (name.equalsIgnoreCase(name)) {
             return true;
         }
         return false;

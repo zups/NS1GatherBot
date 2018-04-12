@@ -41,7 +41,7 @@ public class NumberEmojis {
     }
 
     public List<Emote> getAllEmotes() {
-        return this.numberEmojis;
+        return numberEmojis;
     }
 
 

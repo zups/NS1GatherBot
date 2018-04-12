@@ -28,13 +28,13 @@ public class Captains {
     public Optional<String> removeCaptain(Captain captain) {
         boolean removed = captains.remove(captain);
         if (removed) {
-            return Optional.of("Removed " + captain.getCaptain().getUser().getName() + " as captain.");
+            return Optional.of("Removed " + captain.getCaptain().getName() + " as captain.");
         }
         return Optional.empty();
     }
 
     public HashSet<Captain> getCaptains() {
-        return this.captains;
+        return captains;
     }
 
 

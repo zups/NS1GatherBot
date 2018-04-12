@@ -27,7 +27,7 @@ public class PrettyPrints {
 
     public static String printPlayersHighlight(List<Player> players) {
         StringJoiner joiner = new StringJoiner(" ");
-        players.forEach(player -> joiner.add(player.getUser().getAsMention()));
+        players.forEach(player -> joiner.add(player.getAsMention()));
 
         return joiner.toString();
     }

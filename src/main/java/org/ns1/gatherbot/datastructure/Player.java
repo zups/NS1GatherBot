@@ -14,13 +14,9 @@ public class Player extends Voteable {
         this.user = user;
     }
 
-    public User getUser() {
-        return user;
-    }
-
     public void initializeRoles(String messageId) {
         if (!roles.isPresent()) {
-            this.roles = Optional.of(new Roles(messageId));
+            roles = Optional.of(new Roles(messageId));
         }
     }
 
@@ -34,6 +30,14 @@ public class Player extends Voteable {
                     .anyMatch(role -> role.getName().equals("captain"));
         }
         return false;
+    }
+
+    public String getAsMention() {
+        return user.getAsMention();
+    }
+
+    public String getName() {
+        return user.getName();
     }
 
     @Override
@@ -54,7 +58,7 @@ public class Player extends Voteable {
     @Override
     public boolean equals(Object obj) {
         Player player = (Player) obj;
-        if (player.hashCode() == this.user.hashCode()) {
+        if (player.hashCode() == user.hashCode()) {
             return true;
         }
         return false;

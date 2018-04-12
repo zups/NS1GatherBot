@@ -8,6 +8,6 @@ public class MessageId {
     }
 
     public String getMessageId() {
-        return this.messageId;
+        return messageId;
     }
 }

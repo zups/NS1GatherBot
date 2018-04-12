@@ -33,7 +33,7 @@ public class Vote {
     }
 
     public Map<Integer, Voteable> getVoteables() {
-        return this.voteables;
+        return voteables;
     }
 
 }

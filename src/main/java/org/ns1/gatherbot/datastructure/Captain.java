@@ -8,7 +8,7 @@ public class Captain {
     }
 
     public Player getCaptain() {
-        return this.captain;
+        return captain;
     }
 
     public boolean isPlayerCaptain(Player player) {

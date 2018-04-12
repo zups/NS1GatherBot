@@ -31,7 +31,7 @@ public class LifeformEmojis {
     }
 
     public List<Emote> getAllEmotes() {
-        return this.lifeformEmotes;
+        return lifeformEmotes;
     }
 
 }

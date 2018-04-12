@@ -29,7 +29,7 @@ public class Maps {
     public String toString() {
         StringJoiner joiner = new StringJoiner("\n");
 
-        this.maps.forEach(map -> joiner.add(map.toString()));
+        maps.forEach(map -> joiner.add(map.toString()));
 
         return joiner.toString();
     }

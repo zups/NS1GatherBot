@@ -11,6 +11,6 @@ public class Map extends Voteable {
 
     @Override
     public String toString() {
-        return this.name;
+        return name;
     }
 }

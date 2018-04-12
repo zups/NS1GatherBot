@@ -12,7 +12,7 @@ public class Roles {
     }
 
     public void updateRoles(Emote role, String messageId) {
-        if (messageId.equals(this.roleMessageId)) {
+        if (messageId.equals(roleMessageId)) {
             if (roles.contains(role)) {
                 roles.remove(role);
             } else {

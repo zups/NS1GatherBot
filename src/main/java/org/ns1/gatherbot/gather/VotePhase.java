@@ -21,7 +21,7 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
         this.players = players;
         this.channel = channel;
         this.numberEmojis = new NumberEmojis(jda);
-        this.start();
+        start();
     }
 
     public void start() {
