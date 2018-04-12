@@ -1,51 +1,47 @@
 package org.ns1.gatherbot.datastructure;
 
 import java.util.Comparator;
-import java.util.HashSet;
+import java.util.Optional;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.User;
 
 
 public class Player extends Voteable {
     private final User user;
-    private final HashSet<Emote> roles = new HashSet<>();
-    private String roleMessageId;
+    private Optional<Roles> roles = Optional.empty();
 
     public Player(User user) {
         this.user = user;
     }
 
     public User getUser() {
-        return this.user;
+        return user;
+    }
+
+    public void initializeRoles(String messageId) {
+        if (!roles.isPresent()) {
+            this.roles = Optional.of(new Roles(messageId));
+        }
     }
 
     public void updateRoles(Emote role, String messageId) {
-        if (messageId.equals(this.roleMessageId)) {
-            if (roles.contains(role)) {
-                roles.remove(role);
-            } else {
-                roles.add(role);
-            }
-        }
-    }
-
-    public void setRoleMessage(String roleMessageId) {
-        if (this.roleMessageId == null) {
-            this.roleMessageId = roleMessageId;
-        }
+        roles.ifPresent(roles -> roles.updateRoles(role, messageId));
     }
 
     public boolean isWillingToCaptain() {
-        return roles.stream()
-                .anyMatch(role -> role.getName().equals("captain"));
+        if (roles.isPresent()) {
+            return roles.get().getRoles().stream()
+                    .anyMatch(role -> role.getName().equals("captain"));
+        }
+        return false;
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        roles.stream().sorted(
-                Comparator.comparing(Emote::getName))
-                .forEach(role -> builder.append(role.getAsMention()));
+        roles.ifPresent( roles -> roles.getRoles().stream()
+                .sorted(Comparator.comparing(Emote::getName))
+                .forEach(role -> builder.append(role.getAsMention())));
 
         return user.getName() + builder.toString();
     }

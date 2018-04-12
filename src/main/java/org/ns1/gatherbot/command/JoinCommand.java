@@ -21,10 +21,10 @@ public class JoinCommand extends AbstractCommand {
         Optional<Player> player = players.addPlayer(new Player(parameters.getUser()));
 
         if (player.isPresent()) {
-            parameters.getChannel().sendMessage(parameters.getUser().getName() + " Please select what you'd wanna do by clicking the smileys!")
+            parameters.getChannel().sendMessage(parameters.getUser().getAsMention() + " please select what you'd wanna do by clicking the emotes!")
                     .queue(mes -> {
                         lifeformEmojis.getAllEmotes().forEach(emote -> mes.addReaction(emote).queue());
-                        player.get().setRoleMessage(mes.getId());
+                        player.get().initializeRoles(mes.getId());
                     });
         }
         return Optional.empty();

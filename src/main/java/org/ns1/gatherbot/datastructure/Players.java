@@ -28,10 +28,10 @@ public class Players {
         return Optional.empty();
     }
 
-    public Optional<String> removePlayer(Player player) {
+    public Optional<Player> removePlayer(Player player) {
         boolean removed = players.remove(player);
         if (removed) {
-            return Optional.of("Removed " + player.getUser().getName());
+            return Optional.of(player);
         }
         return Optional.empty();
     }

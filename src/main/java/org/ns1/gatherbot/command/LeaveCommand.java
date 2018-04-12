@@ -15,6 +15,11 @@ public class LeaveCommand extends AbstractCommand {
 
     @Override
     public Optional<String> run(ParameterWrapper parameters) {
-        return players.removePlayer(new Player(parameters.getUser()));
+        StringBuilder message = new StringBuilder();
+
+        players.removePlayer(new Player(parameters.getUser()))
+                .ifPresent(player -> message.append(player.getUser().getName() + " left."));
+
+        return Optional.empty();
     }
 }
