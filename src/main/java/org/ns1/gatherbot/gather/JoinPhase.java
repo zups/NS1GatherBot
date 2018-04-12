@@ -53,6 +53,7 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
                                 jda.addEventListener(new VotePhase(jda, players, channel));
                             } else {
                                 nextPhaseStarting = false;
+                                channel.sendMessage("Gather canceled because somebody left.").queue();
                             }
                         });
     }
@@ -75,9 +76,10 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
     public void onMessageReceived(MessageReceivedEvent event) {
         Message message = event.getMessage();
         User user = message.getAuthor();
+        MessageChannel channel = event.getChannel();
         String commandName = message.getContentDisplay();
 
-        if (user.isBot() || !channel.getName().equals(channel.getName())) return;
+        if (user.isBot() || !channel.getName().equals(this.channel.getName())) return;
 
         if (commandName.startsWith(PREFIX)) {
             commands.findCommand(commandName.substring(1))
@@ -105,9 +107,10 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
     private void updateReactions(GenericMessageReactionEvent event) {
         User user = event.getUser();
         Emote emote = event.getReactionEmote().getEmote();
+        MessageChannel channel = event.getChannel();
         String messageId = event.getMessageId();
 
-        if (user.isBot()|| !channel.getName().equals(channel.getName())) return;
+        if (user.isBot()|| !channel.getName().equals(this.channel.getName())) return;
 
         commands.findCommand("roles")
                 .ifPresent(command -> {
