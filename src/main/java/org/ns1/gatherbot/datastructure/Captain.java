@@ -1,7 +1,7 @@
 package org.ns1.gatherbot.datastructure;
 
-public class Captain extends Voteable {
-    private Player captain;
+public class Captain {
+    private final Player captain;
 
     public Captain(Player player) {
         this.captain = player;

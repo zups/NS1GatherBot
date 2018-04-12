@@ -6,11 +6,10 @@ import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.User;
 
 
-public class Player {
-    private User user;
-    private HashSet<Emote> roles = new HashSet<>();
+public class Player extends Voteable {
+    private final User user;
+    private final HashSet<Emote> roles = new HashSet<>();
     private String roleMessageId;
-    private Emote number;
 
     public Player(User user) {
         this.user = user;
@@ -36,17 +35,9 @@ public class Player {
         }
     }
 
-    public Emote getNumber() {
-        return number;
-    }
-
     public boolean isWillingToCaptain() {
         return roles.stream()
                 .anyMatch(role -> role.getName().equals("captain"));
-    }
-
-    public void setNumber(Emote number) {
-            this.number = number;
     }
 
     @Override

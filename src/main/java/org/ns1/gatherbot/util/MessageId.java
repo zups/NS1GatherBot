@@ -1,7 +1,7 @@
 package org.ns1.gatherbot.util;
 
 public class MessageId {
-    private String messageId;
+    private final String messageId;
 
     public MessageId(String messageId) {
         this.messageId = messageId;

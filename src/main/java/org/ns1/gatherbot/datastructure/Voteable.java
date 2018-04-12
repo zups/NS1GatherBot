@@ -7,6 +7,10 @@ public abstract class Voteable {
         return ++votes;
     }
 
+    public int unvote() {
+        return --votes;
+    }
 
-
+    @Override
+    public abstract String toString();
 }

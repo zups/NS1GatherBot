@@ -6,7 +6,7 @@ import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.datastructure.Players;
 
 public class LeaveCommand extends AbstractCommand {
-    private Players players;
+    private final Players players;
 
     public LeaveCommand(Players players) {
         super("leave");

@@ -6,8 +6,8 @@ import org.ns1.gatherbot.util.ParameterWrapper;
 import org.ns1.gatherbot.datastructure.Players;
 
 public class PickRoleCommand extends AbstractCommand {
-    private Players players;
-    private LifeformEmojis lifeformEmojis;
+    private final Players players;
+    private final LifeformEmojis lifeformEmojis;
 
     public PickRoleCommand(Players players, LifeformEmojis lifeformEmojis) {
         super("roles");

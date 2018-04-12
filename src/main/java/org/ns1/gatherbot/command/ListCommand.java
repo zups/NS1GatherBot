@@ -6,7 +6,7 @@ import org.ns1.gatherbot.util.ParameterWrapper;
 import org.ns1.gatherbot.util.PrettyPrints;
 
 public class ListCommand extends AbstractCommand {
-    private Players players;
+    private final Players players;
 
     public ListCommand(Players players) {
         super("list");

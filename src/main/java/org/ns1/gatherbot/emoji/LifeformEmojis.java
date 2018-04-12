@@ -3,16 +3,13 @@ package org.ns1.gatherbot.emoji;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import net.dv8tion.jda.client.managers.EmoteManager;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Emote;
 
 public class LifeformEmojis {
-    private JDA jda;
-    private List<Emote> lifeformEmotes;
+    private final List<Emote> lifeformEmotes;
 
     public LifeformEmojis(JDA jda) {
-        this.jda = jda;
         this.lifeformEmotes = Arrays.asList(
                 jda.getEmotesByName("commander", true).get(0),
                 jda.getEmotesByName("skulk", true).get(0),

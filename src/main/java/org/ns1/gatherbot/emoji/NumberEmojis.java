@@ -7,11 +7,9 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Emote;
 
 public class NumberEmojis {
-    private JDA jda;
-    private List<Emote> numberEmojis;
+    private final List<Emote> numberEmojis;
 
     public NumberEmojis(JDA jda) {
-        this.jda = jda;
         this.numberEmojis = Arrays.asList(
                 jda.getEmotesByName("n0", true).get(0),
                 jda.getEmotesByName("n1", true).get(0),
@@ -19,6 +17,7 @@ public class NumberEmojis {
                 jda.getEmotesByName("n3", true).get(0),
                 jda.getEmotesByName("n4", true).get(0),
                 jda.getEmotesByName("n5", true).get(0),
+                jda.getEmotesByName("n6", true).get(0),
                 jda.getEmotesByName("n7", true).get(0),
                 jda.getEmotesByName("n8", true).get(0),
                 jda.getEmotesByName("n9", true).get(0),

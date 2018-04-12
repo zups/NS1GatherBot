@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class Commands {
-    private List<Command> commands;
+    private final List<Command> commands;
 
     public Commands(List<Command> commands) {
         this.commands = commands;

@@ -7,8 +7,8 @@ import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.datastructure.Players;
 
 public class JoinCommand extends AbstractCommand {
-    private LifeformEmojis lifeformEmojis;
-    private Players players;
+    private final LifeformEmojis lifeformEmojis;
+    private final Players players;
 
     public JoinCommand(LifeformEmojis lifeformEmojis, Players players) {
         super("join");

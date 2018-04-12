@@ -49,17 +49,12 @@ public class Utils {
         return jsonObject;
     }
 
-    public static MessageEmbed mapEmbed() {
+    public static Maps readMapsFromJson() {
         EmbedBuilder embed = new EmbedBuilder();
-
 
         Optional<JSONObject> mapsJson = readJson("src\\main\\resources\\maps.json");
 
-        Maps maps = new Maps(mapsJson.get());
-
-        embed.addField("Maps:", maps.toString(), false);
-
-        return embed.build();
+        return new Maps(mapsJson.get());
     }
 
     public static MessageEmbed coolEmbed(JDA jda) {

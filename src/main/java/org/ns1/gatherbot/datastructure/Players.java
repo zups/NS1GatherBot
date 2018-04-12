@@ -4,15 +4,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.User;
-import org.ns1.gatherbot.emoji.NumberEmojis;
 
 public class Players {
-    private HashSet<Player> players = new HashSet<>();
-    private int maxPlayers;
+    private final HashSet<Player> players = new HashSet<>();
+    private final int maxPlayers;
 
     public Players(int maxSize) {
         this.maxPlayers = maxSize;
@@ -47,20 +45,8 @@ public class Players {
                 .filter(player -> player.isWillingToCaptain()).collect(Collectors.toList());
     }
 
-    public boolean isThereMoreThanTwoWillingToCaptain() {
-        return getPlayersWillingToCaptain().size() >= 2;
-    }
-
-    public HashSet<Player> sortAndAssignNumbers(NumberEmojis numberEmojis) {
-        AtomicInteger i = new AtomicInteger(1);
-        HashSet<Player> sortedPlayers = players.stream().sorted()
-                .peek(player -> numberEmojis.getEmoteForNumber(i.getAndIncrement())
-                        .ifPresent(number -> player.setNumber(number))
-                )
-                .collect(Collectors.toCollection(HashSet::new));
-
-        this.players = sortedPlayers;
-        return this.players;
+    public boolean isThereMoreWillingToCaptain(int amount) {
+        return getPlayersWillingToCaptain().size() >= amount;
     }
 
     public void updateRoles(User user, Emote role, String messageId) {

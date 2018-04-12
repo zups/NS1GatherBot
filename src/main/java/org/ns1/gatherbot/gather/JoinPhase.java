@@ -24,6 +24,7 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
     private final LifeformEmojis lifeformEmojisEmojis;
     private final Commands commands;
     private final TextChannel channel;
+    private boolean nextPhaseStarting = false;
 
     public JoinPhase(LifeformEmojis lifeformEmojis, TextChannel channel) {
         this.lifeformEmojisEmojis = lifeformEmojis;
@@ -41,6 +42,7 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
         this.channel.sendMessage("**Gather starting!**").queue();
         this.channel.sendMessage(PrettyPrints.printPlayersHighlight(players.getPlayers())).queue();
         this.channel.sendMessage("`Voting for captains and maps starts in 20seconds!`").queue();
+        this.nextPhaseStarting = true;
         //tässä kohtaa timeri, että vika pelaaja kerkeää laittaa
         //lifeforminsa myös! 20sec, mmm. HUOM metodien välissä!!
         Observable.timer(10, TimeUnit.SECONDS)
@@ -49,6 +51,8 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
                             if (this.players.isFull()) {
                                 jda.removeEventListener(this);
                                 jda.addEventListener(new VotePhase(jda, this.players, this.channel));
+                            } else {
+                                nextPhaseStarting = false;
                             }
                         });
     }
@@ -57,8 +61,6 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
     public void onUserUpdateOnlineStatus(UserUpdateOnlineStatusEvent event) {
         String status = event.getNewOnlineStatus().getKey();
         User user = event.getUser();
-        MessageChannel channel = event.getGuild()
-                .getTextChannelsByName("general", true).get(0);
 
         if (status.equalsIgnoreCase("offline")) {
             commands.findCommand("leave")
@@ -73,7 +75,6 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
     public void onMessageReceived(MessageReceivedEvent event) {
         Message message = event.getMessage();
         User user = message.getAuthor();
-        MessageChannel channel = message.getChannel();
         String commandName = message.getContentDisplay();
 
         if (user.isBot() || !channel.getName().equals(this.channel.getName())) return;
@@ -86,7 +87,7 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
                     });
         }
 
-        if (players.isFull()) {
+        if (!nextPhaseStarting && players.isFull()) {
             this.nextPhase(event.getJDA());
         }
     }
@@ -104,7 +105,6 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
     private void updateReactions(GenericMessageReactionEvent event) {
         User user = event.getUser();
         Emote emote = event.getReactionEmote().getEmote();
-        MessageChannel channel = event.getChannel();
         String messageId = event.getMessageId();
 
         if (user.isBot()|| !channel.getName().equals(this.channel.getName())) return;

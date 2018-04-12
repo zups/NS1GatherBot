@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public class Captains {
     private HashSet<Captain> captains = new HashSet<>();
-    private int maxCaptains;
+    private final int maxCaptains;
 
     public Captains(int maxCaptains) {
         this.maxCaptains = maxCaptains;

@@ -4,21 +4,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringJoiner;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.json.simple.JSONArray;
 
 public class Maps {
-    private List<Map> maps = new ArrayList<>();
-    private int mapNumbers = 1;
+    private final List<Map> maps = new ArrayList<>();
 
     public Maps(HashMap<String, JSONArray> maps) {
         parseMaps(maps.get("maps"));
     }
 
     private void parseMaps(JSONArray maps) {
+        AtomicInteger i = new AtomicInteger(1);
         maps.forEach(map -> {
-            this.maps.add(new Map(map.toString(), mapNumbers));
-            mapNumbers++;
+            this.maps.add(new Map(map.toString(), i.getAndIncrement()));
         });
+    }
+
+    public List<Map> getMaps() {
+        return maps;
     }
 
     @Override

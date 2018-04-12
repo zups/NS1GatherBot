@@ -3,11 +3,13 @@ package org.ns1.gatherbot.util;
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
 import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
 import java.util.concurrent.atomic.AtomicInteger;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.ns1.gatherbot.datastructure.Player;
+import org.ns1.gatherbot.datastructure.Voteable;
 
 public class PrettyPrints {
 
@@ -37,6 +39,17 @@ public class PrettyPrints {
         players.forEach(p -> joiner.add(p.toString()));
 
         return joiner.toString();
+    }
+
+    public static MessageEmbed voteableEmbedded(Map<Integer,Voteable> voteable, String voteableFieldName) {
+        EmbedBuilder embed = new EmbedBuilder();
+        StringJoiner joiner = new StringJoiner("\n");
+
+        voteable.forEach((key, value) -> joiner.add("**" + key + ")** " + value));
+
+        return embed
+                .addField(voteableFieldName, joiner.toString(), false)
+                .build();
     }
 
     public static String printStatus(List<Player> players, int maxPlayers) {
