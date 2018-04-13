@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Vote {
     private final Map<Integer,Voteable> voteables = new TreeMap();
-    private String voteMessageId;
+    private String voteMessageId = "";
 
     public Vote(List<? extends Voteable> voteables) {
         AtomicInteger i = new AtomicInteger(1);
@@ -33,6 +33,10 @@ public class Vote {
         return Optional.of(voteables.get(key).unvote());
     }
 
+    public boolean isThisSameVote(String messageId) {
+        return messageId.equals(voteMessageId);
+    }
+
     public Map<Integer, Voteable> getVoteables() {
         return voteables;
     }
@@ -42,7 +46,7 @@ public class Vote {
     }
 
     public void setVoteMessageId(String voteMessageId) {
-        if (voteMessageId == null) {
+        if (this.voteMessageId.isEmpty()) {
             this.voteMessageId = voteMessageId;
         }
     }

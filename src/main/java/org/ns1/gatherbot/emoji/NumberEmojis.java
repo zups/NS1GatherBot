@@ -37,7 +37,15 @@ public class NumberEmojis {
     }
 
     public Optional<Integer> getNumberForEmote(Emote emote) {
-        return Optional.of(Integer.parseInt(emote.getName().substring(1)));
+        return parseInt(emote);
+    }
+
+    private Optional<Integer> parseInt(Emote emote) {
+        try {
+            return Optional.of(Integer.parseInt(emote.getName().substring(1)));
+        } catch (NumberFormatException e) {
+            return Optional.empty();
+        }
     }
 
     public List<Emote> getAllEmotes() {
