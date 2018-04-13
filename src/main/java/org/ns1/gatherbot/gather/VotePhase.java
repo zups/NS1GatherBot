@@ -13,8 +13,8 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
     private final Players players;
     private final JDA jda;
     private final NumberEmojis numberEmojis;
-    private Vote captains;
-    private Vote maps;
+    private Vote captainsVote;
+    private Vote mapsVote;
 
     public VotePhase(JDA jda, Players players, TextChannel channel) {
         this.jda = jda;
@@ -26,21 +26,27 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
 
     public void start() {
         if (players.isThereMoreWillingToCaptain(2)) {
-            captains = new Vote(players.getPlayersWillingToCaptain());
-            sendVoteAbleEmbeddedMessage(captains, "Players:");
+            captainsVote = new Vote(players.getPlayersWillingToCaptain());
+            captainsVote.setVoteMessageId(sendVoteAbleEmbeddedMessage(captainsVote, "Players:"));
         } else {
-            captains = new Vote(players.getPlayers());
-            sendVoteAbleEmbeddedMessage(captains, "Players:");
+            captainsVote = new Vote(players.getPlayers());
+            captainsVote.setVoteMessageId(sendVoteAbleEmbeddedMessage(captainsVote, "Players:"));
         }
-        maps = new Vote(Utils.readMapsFromJson().getMaps());
-        sendVoteAbleEmbeddedMessage(maps, "Maps:");
+        mapsVote = new Vote(Utils.readMapsFromJson().getMaps());
+        mapsVote.setVoteMessageId(sendVoteAbleEmbeddedMessage(mapsVote, "Maps:"));
     }
 
-    private void sendVoteAbleEmbeddedMessage(Vote vote, String voteableFieldName) {
-        channel.sendMessage(PrettyPrints.voteableEmbedded(vote.getVoteables(), voteableFieldName)).queue(mes ->
+    private String sendVoteAbleEmbeddedMessage(Vote vote, String voteableFieldName) {
+        StringBuilder messageId = new StringBuilder();
+
+        channel.sendMessage(PrettyPrints.voteableEmbedded(vote.getVoteables(), voteableFieldName)).queue(mes -> {
                 vote.getVoteables()
                         .forEach((key, value) -> numberEmojis.getEmoteForNumber(key.intValue())
-                                .ifPresent(emote -> mes.addReaction(emote).queue())));
+                                .ifPresent(emote -> mes.addReaction(emote).queue()));
+                messageId.append(mes.getId());
+        });
+
+        return messageId.toString();
     }
 
     @Override
