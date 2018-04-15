@@ -7,7 +7,8 @@ public class MessageId {
         this.messageId = messageId;
     }
 
-    public String getMessageId() {
+    @Override
+    public String toString() {
         return messageId;
     }
 }

@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
+import org.ns1.gatherbot.datastructure.Player;
 
 public class ParameterWrapper {
     private User user;
@@ -29,6 +30,10 @@ public class ParameterWrapper {
         });
     }
 
+    public Player getPlayer() {
+        return new Player(user);
+    }
+
     public User getUser() {
         return user;
     }
@@ -45,7 +50,7 @@ public class ParameterWrapper {
         return emote;
     }
 
-    public MessageId getMessageId() {
-        return messageId;
+    public String getMessageId() {
+        return messageId.toString();
     }
 }

@@ -10,8 +10,11 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.datastructure.Voteable;
+import org.ns1.gatherbot.emoji.MiscEmojis;
 
 public class PrettyPrints {
+
+    private static String empty = "\u200B";
 
     public static MessageEmbed playersEmbedded(List<Player> players) {
         EmbedBuilder embed = new EmbedBuilder();
@@ -41,14 +44,31 @@ public class PrettyPrints {
         return joiner.toString();
     }
 
-    public static MessageEmbed voteableEmbedded(Map<Integer,Voteable> voteable, String voteableFieldName) {
+    public static MessageEmbed voteableEmbedded(Map<Integer,Voteable> voteable, String voteableFieldName, MiscEmojis emojis) {
         EmbedBuilder embed = new EmbedBuilder();
-        StringJoiner joiner = new StringJoiner("\n");
+        StringJoiner voteables = new StringJoiner("\n");
+        StringJoiner voteAmount = new StringJoiner("\n");
+        StringBuilder voteEmotes = new StringBuilder();
 
-        voteable.forEach((key, value) -> joiner.add("**" + key + ")** " + value));
+        voteable.forEach((key, value) -> {
+            voteables.add("**" + key + ")** " + value +  emojis.getEmote("empty").get().getAsMention());
+        });
+
+        voteable.forEach((key, value) -> {
+            for (int i = 0; i < value.getVotes(); i++) {
+                voteEmotes.append(emojis.getEmote("vote").get().getAsMention());
+            }
+            if (voteEmotes.length() > 0) {
+                voteAmount.add(voteEmotes.toString());
+                voteEmotes.setLength(0);
+            } else {
+                voteAmount.add(emojis.getEmote("empty").get().getAsMention());
+            }
+        });
 
         return embed
-                .addField(voteableFieldName, joiner.toString(), false)
+                .addField(voteableFieldName, voteables.toString(), true)
+                .addField("Votes:", voteAmount.toString(), true)
                 .build();
     }
 

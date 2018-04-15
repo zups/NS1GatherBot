@@ -2,11 +2,7 @@ package org.ns1.gatherbot.gather;
 
 import java.util.Arrays;
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.Emote;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.events.message.react.GenericMessageReactionEvent;
+import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
@@ -15,6 +11,7 @@ import org.ns1.gatherbot.command.UnVoteCommand;
 import org.ns1.gatherbot.command.VoteCommand;
 import org.ns1.gatherbot.datastructure.Players;
 import org.ns1.gatherbot.datastructure.Vote;
+import org.ns1.gatherbot.emoji.MiscEmojis;
 import org.ns1.gatherbot.emoji.NumberEmojis;
 import org.ns1.gatherbot.util.MessageId;
 import org.ns1.gatherbot.util.ParameterWrapper;
@@ -26,36 +23,39 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
     private final Players players;
     private final JDA jda;
     private final NumberEmojis numberEmojis;
+    private final MiscEmojis miscEmojis;
     private Commands commands;
-    private Vote captainsVote;
     private Vote mapsVote;
+    private Vote captainsVote;
 
     public VotePhase(JDA jda, Players players, TextChannel channel) {
         this.jda = jda;
         this.players = players;
         this.channel = channel;
         this.numberEmojis = new NumberEmojis(jda);
+        this.miscEmojis = new MiscEmojis(jda);
 
         start();
 
         this.commands = new Commands(Arrays.asList(
-                new VoteCommand(captainsVote, numberEmojis),
-                new UnVoteCommand(captainsVote, numberEmojis)
+                new VoteCommand(Arrays.asList(captainsVote, mapsVote), numberEmojis, players),
+                new UnVoteCommand(Arrays.asList(captainsVote, mapsVote), numberEmojis, players)
         ));
     }
 
-    public void start() {
+    private void start() {
         if (players.isThereMoreWillingToCaptain(2)) {
             captainsVote = new Vote(players.getPlayersWillingToCaptain());
-            sendVoteAbleEmbeddedMessage(captainsVote, "Players:");
+            sendVoteEmbedded(captainsVote, "Players:");
         } else {
             captainsVote = new Vote(players.getPlayers());
-            sendVoteAbleEmbeddedMessage(captainsVote, "Players:");
+            sendVoteEmbedded(captainsVote, "Players:");
         }
-        mapsVote = new Vote(Utils.readMapsFromJson().getMaps());
-        sendVoteAbleEmbeddedMessage(mapsVote, "Maps:");
 
+        mapsVote = new Vote(Utils.readMapsFromJson().getMaps());
+        sendVoteEmbedded(mapsVote, "Maps:");
     }
+
 
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent event) {
@@ -64,16 +64,14 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
         MessageChannel channel = event.getChannel();
         String messageId = event.getMessageId();
 
-        if (user.isBot()|| !channel.getName().equals(this.channel.getName())) return;
+        if (user.isBot() || !channel.getName().equals(this.channel.getName())) return;
 
         commands.findCommand("vote")
-                .ifPresent(command -> {
-                    command.run(new ParameterWrapper(Arrays.asList(new MessageId(messageId), user, channel, emote)))
-                            .ifPresent(mes -> {
-                                if (!mes.isEmpty())
-                                    channel.sendMessage(mes).queue();
-                            });
-                });
+                .ifPresent(command ->
+                        command.run(new ParameterWrapper(Arrays.asList(emote, user, new MessageId(messageId))))
+                                .ifPresent(didTheCommandRun ->
+                                        this.channel.getMessageById(messageId).queue(messageToBeEdited ->
+                                                messageToBeEdited.editMessage(determineVoteMessageToBeEdited(messageToBeEdited.getId())).queue())));
     }
 
     @Override
@@ -83,28 +81,31 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
         MessageChannel channel = event.getChannel();
         String messageId = event.getMessageId();
 
-        if (user.isBot()|| !channel.getName().equals(this.channel.getName())) return;
+        if (user.isBot() || !channel.getName().equals(this.channel.getName())) return;
 
         commands.findCommand("unvote")
-                .ifPresent(command -> {
-                    command.run(new ParameterWrapper(Arrays.asList(new MessageId(messageId), user, channel, emote)))
-                            .ifPresent(mes -> {
-                                if (!mes.isEmpty())
-                                    channel.sendMessage(mes).queue();
-                            });
-                });
+                .ifPresent(command ->
+                        command.run(new ParameterWrapper(Arrays.asList(emote, user, new MessageId(messageId))))
+                                .ifPresent(didTheCommandRun ->
+                                        this.channel.getMessageById(messageId).queue(messageToBeEdited ->
+                                                messageToBeEdited.editMessage(determineVoteMessageToBeEdited(messageToBeEdited.getId())).queue())));
     }
 
-    private void updateReactions(GenericMessageReactionEvent event) {
-
+    private MessageEmbed determineVoteMessageToBeEdited(String messageId) {
+        if ((mapsVote.isThisSameVote(messageId))) {
+            return PrettyPrints.voteableEmbedded(mapsVote.getVoteables(), "Maps:", miscEmojis);
+        } else if (captainsVote.isThisSameVote(messageId)) {
+            return PrettyPrints.voteableEmbedded(captainsVote.getVoteables(), "Players:", miscEmojis);
+        }
+        return null;
     }
 
-    private void sendVoteAbleEmbeddedMessage(Vote vote, String voteableFieldName) {
-        channel.sendMessage(PrettyPrints.voteableEmbedded(vote.getVoteables(), voteableFieldName)).queue(mes -> {
-                vote.getVoteables()
-                        .forEach((key, value) -> numberEmojis.getEmoteForNumber(key.intValue())
-                                .ifPresent(emote -> mes.addReaction(emote).queue()));
-                vote.setVoteMessageId(mes.getId());
+    private void sendVoteEmbedded(Vote vote, String fieldname) {
+        channel.sendMessage(PrettyPrints.voteableEmbedded(vote.getVoteables(), fieldname, miscEmojis)).queue(mes -> {
+            vote.getVoteables()
+                    .forEach((key, value) -> numberEmojis.getEmoteForNumber(key.intValue())
+                            .ifPresent(emote -> mes.addReaction(emote).queue()));
+            vote.setVoteMessageId(mes.getId());
         });
     }
 

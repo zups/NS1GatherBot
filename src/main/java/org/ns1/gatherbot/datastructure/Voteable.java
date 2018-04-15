@@ -11,6 +11,10 @@ public abstract class Voteable {
         return --votes;
     }
 
+    public int getVotes() {
+        return votes;
+    }
+
     @Override
     public abstract String toString();
 }

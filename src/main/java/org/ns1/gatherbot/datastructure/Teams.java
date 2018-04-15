@@ -1,6 +1,8 @@
 package org.ns1.gatherbot.datastructure;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class Teams {
     public List<Team> teams = new ArrayList<>();

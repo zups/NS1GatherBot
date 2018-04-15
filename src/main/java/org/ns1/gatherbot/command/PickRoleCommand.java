@@ -19,7 +19,7 @@ public class PickRoleCommand extends AbstractCommand {
     public Optional<String> run(ParameterWrapper parameters) {
         parameters.getEmote().ifPresent(emote -> {
             lifeformEmojis.getEmote(parameters.getEmote().get().getName())
-                    .ifPresent(emo -> players.updateRoles(parameters.getUser(), parameters.getEmote().get(), parameters.getMessageId().getMessageId()));
+                    .ifPresent(emo -> players.updateRoles(parameters.getUser(), parameters.getEmote().get(), parameters.getMessageId()));
         });
 
         return Optional.empty();
