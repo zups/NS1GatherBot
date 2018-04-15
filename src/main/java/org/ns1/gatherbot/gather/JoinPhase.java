@@ -20,7 +20,7 @@ import org.ns1.gatherbot.util.PrettyPrints;
 
 public class JoinPhase extends ListenerAdapter implements GatherPhase {
     private final String PREFIX = ".";
-    private final Players players = new Players(1);
+    private final Players players = new Players(2);
     private final LifeformEmojis lifeformEmojisEmojis;
     private final Commands commands;
     private final TextChannel channel;
@@ -39,13 +39,12 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
 
     @Override
     public void nextPhase(JDA jda) {
-        this.channel.sendMessage("**Gather starting!**").queue();
-        this.channel.sendMessage(PrettyPrints.printPlayersHighlight(players.getPlayers())).queue();
-        this.channel.sendMessage("`Voting for captains and maps starts in 20seconds!`").queue();
+        this.channel.sendMessage("**Gather is starting!** " + PrettyPrints.printPlayersHighlight(players.getPlayers())).queue();
+        this.channel.sendMessage("_`Voting for captains and maps starts in 20seconds!`_").queue();
         this.nextPhaseStarting = true;
         //tässä kohtaa timeri, että vika pelaaja kerkeää laittaa
         //lifeforminsa myös! 20sec, mmm. HUOM metodien välissä!!
-        Observable.timer(10, TimeUnit.SECONDS)
+        Observable.timer(5, TimeUnit.SECONDS)
                 .subscribe(
                         onNext -> {
                             if (players.isFull()) {
@@ -53,7 +52,7 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
                                 jda.addEventListener(new VotePhase(jda, players, channel));
                             } else {
                                 nextPhaseStarting = false;
-                                channel.sendMessage("Gather canceled because somebody left.").queue();
+                                channel.sendMessage("Moving on to voting canceled because somebody left.").queue();
                             }
                         });
     }

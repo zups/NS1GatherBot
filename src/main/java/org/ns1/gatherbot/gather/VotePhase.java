@@ -1,7 +1,14 @@
 package org.ns1.gatherbot.gather;
 
+import io.reactivex.Observable;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
@@ -9,6 +16,8 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.ns1.gatherbot.command.Commands;
 import org.ns1.gatherbot.command.UnVoteCommand;
 import org.ns1.gatherbot.command.VoteCommand;
+import org.ns1.gatherbot.datastructure.Map;
+import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.datastructure.Players;
 import org.ns1.gatherbot.datastructure.Vote;
 import org.ns1.gatherbot.emoji.MiscEmojis;
@@ -43,6 +52,13 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
         ));
     }
 
+    @Override
+    public void nextPhase(JDA jda) {
+        List<Player> players = captainsVote.getVoteables().values().stream().map(voteable -> (Player) voteable).collect(Collectors.toList());
+        List<Map> maps = mapsVote.getVoteables().values().stream().map(voteable -> (Map) voteable).collect(Collectors.toList());
+        new PickPhase(jda, players, maps, 2, 2);
+    }
+
     private void start() {
         if (players.isThereMoreWillingToCaptain(2)) {
             captainsVote = new Vote(players.getPlayersWillingToCaptain());
@@ -54,6 +70,19 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
 
         mapsVote = new Vote(Utils.readMapsFromJson().getMaps());
         sendVoteEmbedded(mapsVote, "Maps:");
+
+        Optional.of(jda.getGuilds().get(0).getPublicRole())
+                .ifPresent(role -> channel.putPermissionOverride(role).setDeny(Permission.MESSAGE_WRITE).queue());
+
+        channel.sendMessage("`Channel is muted during voting for 30seconds.`");
+
+        Observable.timer(10, TimeUnit.SECONDS)
+                .subscribe(
+                        onNext -> {
+                            Optional.of(jda.getGuilds().get(0).getPublicRole())
+                                    .ifPresent(role -> channel.putPermissionOverride(role).setAllow(Permission.MESSAGE_WRITE).queue());
+                            nextPhase(jda);
+                        });
     }
 
 
@@ -107,10 +136,5 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
                             .ifPresent(emote -> mes.addReaction(emote).queue()));
             vote.setVoteMessageId(mes.getId());
         });
-    }
-
-    @Override
-    public void nextPhase(JDA jda) {
-
     }
 }
