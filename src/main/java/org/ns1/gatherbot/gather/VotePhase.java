@@ -56,27 +56,28 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
     public void nextPhase(JDA jda) {
         List<Player> players = captainsVote.getVoteables().values().stream().map(voteable -> (Player) voteable).collect(Collectors.toList());
         List<Map> maps = mapsVote.getVoteables().values().stream().map(voteable -> (Map) voteable).collect(Collectors.toList());
-        new PickPhase(jda, players, maps, 2, 2);
+        jda.removeEventListener(this);
+        jda.addEventListener(new PickPhase(jda, players, maps, channel, 2, 2));
     }
 
     private void start() {
         if (players.isThereMoreWillingToCaptain(2)) {
             captainsVote = new Vote(players.getPlayersWillingToCaptain());
-            sendVoteEmbedded(captainsVote, "Players:");
+            sendVoteEmbedded(captainsVote, "Players:", "_Vote for captains by clicking the smileys._");
         } else {
             captainsVote = new Vote(players.getPlayers());
-            sendVoteEmbedded(captainsVote, "Players:");
+            sendVoteEmbedded(captainsVote, "Players:", "_Vote for captains by clicking the smileys._");
         }
 
         mapsVote = new Vote(Utils.readMapsFromJson().getMaps());
-        sendVoteEmbedded(mapsVote, "Maps:");
+        sendVoteEmbedded(mapsVote, "Maps:", "_Vote for maps by clicking the smileys._");
 
         Optional.of(jda.getGuilds().get(0).getPublicRole())
                 .ifPresent(role -> channel.putPermissionOverride(role).setDeny(Permission.MESSAGE_WRITE).queue());
 
-        channel.sendMessage("`Channel is muted during voting for 30seconds.`");
+        channel.sendMessage("`Channel is muted during voting for 30seconds.`").queue();
 
-        Observable.timer(10, TimeUnit.SECONDS)
+        Observable.timer(30, TimeUnit.SECONDS)
                 .subscribe(
                         onNext -> {
                             Optional.of(jda.getGuilds().get(0).getPublicRole())
@@ -122,15 +123,15 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
 
     private MessageEmbed determineVoteMessageToBeEdited(String messageId) {
         if ((mapsVote.isThisSameVote(messageId))) {
-            return PrettyPrints.voteableEmbedded(mapsVote.getVoteables(), "Maps:", miscEmojis);
+            return PrettyPrints.voteableEmbedded(mapsVote.getVoteables(), "Maps:", miscEmojis, "_Vote for maps by clicking the smileys._");
         } else if (captainsVote.isThisSameVote(messageId)) {
-            return PrettyPrints.voteableEmbedded(captainsVote.getVoteables(), "Players:", miscEmojis);
+            return PrettyPrints.voteableEmbedded(captainsVote.getVoteables(), "Players:", miscEmojis, "_Vote for captains by clicking the smileys._");
         }
         return null;
     }
 
-    private void sendVoteEmbedded(Vote vote, String fieldname) {
-        channel.sendMessage(PrettyPrints.voteableEmbedded(vote.getVoteables(), fieldname, miscEmojis)).queue(mes -> {
+    private void sendVoteEmbedded(Vote vote, String fieldname, String title) {
+        channel.sendMessage(PrettyPrints.voteableEmbedded(vote.getVoteables(), fieldname, miscEmojis, title)).queue(mes -> {
             vote.getVoteables()
                     .forEach((key, value) -> numberEmojis.getEmoteForNumber(key.intValue())
                             .ifPresent(emote -> mes.addReaction(emote).queue()));

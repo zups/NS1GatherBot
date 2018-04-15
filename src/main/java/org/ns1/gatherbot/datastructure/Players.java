@@ -5,8 +5,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.User;
+import org.ns1.gatherbot.util.TestiUser;
 
 public class Players {
     private final HashSet<Player> players = new HashSet<>();
@@ -14,6 +16,7 @@ public class Players {
 
     public Players(int maxSize) {
         this.maxPlayers = maxSize;
+        IntStream.range(0, 10).forEachOrdered(i -> players.add(new Player(new TestiUser(i))));
     }
 
     public Optional<Player> addPlayer(Player player) {

@@ -28,4 +28,9 @@ public class Captain {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return captain.toString();
+    }
 }
