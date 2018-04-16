@@ -20,7 +20,7 @@ import org.ns1.gatherbot.util.PrettyPrints;
 
 public class JoinPhase extends ListenerAdapter implements GatherPhase {
     private final String PREFIX = ".";
-    private final Players players = new Players(12);
+    private final Players players = new Players(11);
     private final LifeformEmojis lifeformEmojisEmojis;
     private final Commands commands;
     private final TextChannel channel;

@@ -64,36 +64,15 @@ public class PrettyPrints {
         return joiner.toString();
     }
 
-    /**
-     *             if (value.getVotes() > 0) {
-     *                 IntStream.range(0, value.getVotes())
-     *                         .forEach(i -> voteAmount.add(emojis.getEmote("vote").get().getAsMention()));
-     *             } else {
-     *                 voteAmount.add(emojis.getEmote("empty").get().getAsMention());
-     *             }
-     * @param voteable
-     * @param voteableFieldName
-     * @param emojis
-     * @param description
-     * @return
-     */
     public static MessageEmbed voteableEmbedded(Map<Integer,Voteable> voteable, String voteableFieldName, MiscEmojis emojis, String description) {
         EmbedBuilder embed = new EmbedBuilder();
         StringJoiner voteables = new StringJoiner("\n");
         StringJoiner voteAmount = new StringJoiner("\n");
-        StringBuilder voteEmotes = new StringBuilder();
 
 
         voteable.forEach((key, value) -> {
             voteables.add("**" + key + ")** " + value.toString() +  emojis.getEmote("empty").get().getAsMention());
-            if (value.getVotes() > 0) {
-                IntStream.range(0, value.getVotes())
-                        .forEach(i -> voteEmotes.append(emojis.getEmote("vote").get().getAsMention()));
-                voteAmount.add(voteEmotes.toString());
-                voteEmotes.setLength(0);
-            } else {
-                voteAmount.add(emojis.getEmote("empty").get().getAsMention());
-            }
+            voteAmount.add(voteEmojis(value.getVotes(), emojis));
         });
 
 
@@ -102,6 +81,15 @@ public class PrettyPrints {
                 .addField(voteableFieldName, voteables.toString(), true)
                 .addField("Votes:", voteAmount.toString(), true)
                 .build();
+    }
+
+    public static String voteEmojis(int amount, MiscEmojis emojis) {
+        StringBuilder voteEmotes = new StringBuilder();
+
+        IntStream.range(0, amount)
+                .forEach(i -> voteEmotes.append(emojis.getEmote("vote").get().getAsMention()));
+
+        return voteEmotes.length() > 0 ? voteEmotes.toString() : emojis.getEmote("empty").get().getAsMention();
     }
 
     public static String printStatus(List<Player> players, int maxPlayers) {

@@ -16,27 +16,20 @@ public class Players {
 
     public Players(int maxSize) {
         this.maxPlayers = maxSize;
-        IntStream.range(0, 10).forEachOrdered(i -> players.add(new Player(new TestiUser(i))));
+        IntStream.range(0, 10).forEachOrdered(i -> addPlayer(new Player(new TestiUser(i))));
     }
 
     public Optional<Player> addPlayer(Player player) {
+        boolean added = false;
         if (players.size() < maxPlayers) {
-            boolean added = players.add(player);
-            if (added) {
-                return Optional.of(player);
-            } else {
-                return Optional.empty();
-            }
+            added = players.add(player);
         }
-        return Optional.empty();
+
+        return added ? Optional.of(player) : Optional.empty();
     }
 
     public Optional<Player> removePlayer(Player player) {
-        boolean removed = players.remove(player);
-        if (removed) {
-            return Optional.of(player);
-        }
-        return Optional.empty();
+        return players.remove(player) ? Optional.of(player) : Optional.empty();
     }
 
     public List<Player> getPlayers() {

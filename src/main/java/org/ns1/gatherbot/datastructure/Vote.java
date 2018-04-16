@@ -38,11 +38,7 @@ public class Vote {
             return Optional.empty();
         }
 
-        if (votedPlayers.remove(voter, key)) {
-            return Optional.of(voteables.get(key).unvote());
-        }
-
-        return Optional.empty();
+        return votedPlayers.remove(voter, key) ? Optional.of(voteables.get(key).unvote()) : Optional.empty();
     }
 
     private boolean doesPlayerHaveVotesLeft(Player voter) {
