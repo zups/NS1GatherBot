@@ -1,6 +1,7 @@
 package org.ns1.gatherbot.datastructure;
 
 import java.util.Optional;
+import java.util.StringJoiner;
 
 public class Team {
     private Players players;
@@ -10,10 +11,9 @@ public class Team {
     public Team(int teamSize, Captain captain) {
         this.players = new Players(teamSize);
         this.captain = captain;
-        this.players.addPlayer(captain.getCaptain());
     }
 
-    public Optional<Player> addPlayer(Player player) {
+    public Optional<Player> pickPlayer(Player player) {
             return players.addPlayer(player);
     }
 
@@ -23,5 +23,17 @@ public class Team {
 
     public Players getPlayers() {
         return players;
+    }
+
+    @Override
+    public String toString() {
+        StringJoiner team = new StringJoiner("\n");
+        team.add("**" + captain.toString() + "**");
+
+        players.getPlayers().forEach(player -> {
+            team.add(player.toString());
+        });
+
+        return team.toString();
     }
 }

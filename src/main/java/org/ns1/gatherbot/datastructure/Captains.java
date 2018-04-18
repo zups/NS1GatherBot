@@ -1,40 +1,54 @@
 package org.ns1.gatherbot.datastructure;
 
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
 
 public class Captains {
-    private HashSet<Captain> captains = new HashSet<>();
+    private List<Captain> captains = new ArrayList<>();
     private final int maxCaptains;
 
     public Captains(int maxCaptains) {
         this.maxCaptains = maxCaptains;
     }
 
-    public Optional<Captain> addCaptain(Player player) {
+    public Optional<Captain> addCaptain(Captain captain) {
+        boolean added = false;
         if (captains.size() < maxCaptains) {
-            Captain captain = new Captain(player);
-            boolean added = captains.add(captain);
-            if (added) {
-                return Optional.of(captain);
-            }
-            else {
-                return Optional.empty();
-            }
+            added = captains.add(captain);
         }
-        return Optional.empty();
+        return added ? Optional.of(captain) : Optional.empty();
     }
 
-    public Optional<String> removeCaptain(Captain captain) {
-        boolean removed = captains.remove(captain);
-        if (removed) {
-            return Optional.of("Removed " + captain.getCaptain().getName() + " as captain.");
-        }
-        return Optional.empty();
+    public Optional<Captain> removeCaptain(Captain captain) {
+        return captains.remove(captain) ? Optional.of(captain) : Optional.empty();
     }
 
-    public HashSet<Captain> getCaptains() {
+    public void setPickingTurn(Captain captain) {
+
+    }
+
+    public List<Captain> getCaptains() {
         return captains;
+    }
+
+    public Optional<Captain> getCaptain(Captain captain) {
+
+        for (Captain captainLooking : captains) {
+            if (captainLooking.equals(captain)) {
+                return Optional.of(captainLooking);
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    public String getCaptainsAsMention() {
+        StringBuilder string = new StringBuilder();
+
+        captains.forEach(capt -> {
+            string.append(capt.getCaptain().getAsMention() + " ");
+        });
+
+        return string.toString();
     }
 
 

@@ -2,7 +2,6 @@ package org.ns1.gatherbot.gather;
 
 import io.reactivex.Observable;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -57,7 +56,7 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
         List<Player> players = captainsVote.getVoteables().values().stream().map(voteable -> (Player) voteable).collect(Collectors.toList());
         List<Map> maps = mapsVote.getVoteables().values().stream().map(voteable -> (Map) voteable).collect(Collectors.toList());
         jda.removeEventListener(this);
-        jda.addEventListener(new PickPhase(jda, players, maps, channel, 2, 2));
+        jda.addEventListener(new PickPhase(jda, players, maps, channel, 2, 2, 6));
     }
 
     private void start() {
@@ -77,7 +76,7 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
 
         channel.sendMessage("`Channel is muted during voting for 30seconds.`").queue();
 
-        Observable.timer(30, TimeUnit.SECONDS)
+        Observable.timer(15, TimeUnit.SECONDS)
                 .subscribe(
                         onNext -> {
                             Optional.of(jda.getGuilds().get(0).getPublicRole())
@@ -123,15 +122,15 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
 
     private MessageEmbed determineVoteMessageToBeEdited(String messageId) {
         if ((mapsVote.isThisSameVote(messageId))) {
-            return PrettyPrints.voteableEmbedded(mapsVote.getVoteables(), "Maps:", miscEmojis, "_Vote for maps by clicking the smileys._");
+            return PrettyPrints.voteEmbedded(mapsVote.getVoteables(), "Maps:", miscEmojis, "_Vote for maps by clicking the smileys._");
         } else if (captainsVote.isThisSameVote(messageId)) {
-            return PrettyPrints.voteableEmbedded(captainsVote.getVoteables(), "Players:", miscEmojis, "_Vote for captains by clicking the smileys._");
+            return PrettyPrints.voteEmbedded(captainsVote.getVoteables(), "Players:", miscEmojis, "_Vote for captains by clicking the smileys._");
         }
         return null;
     }
 
-    private void sendVoteEmbedded(Vote vote, String fieldname, String title) {
-        channel.sendMessage(PrettyPrints.voteableEmbedded(vote.getVoteables(), fieldname, miscEmojis, title)).queue(mes -> {
+    private void sendVoteEmbedded(Vote vote, String fieldname, String description) {
+        channel.sendMessage(PrettyPrints.voteEmbedded(vote.getVoteables(), fieldname, miscEmojis, description)).queue(mes -> {
             vote.getVoteables()
                     .forEach((key, value) -> numberEmojis.getEmoteForNumber(key.intValue())
                             .ifPresent(emote -> mes.addReaction(emote).queue()));

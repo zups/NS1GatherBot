@@ -1,9 +1,6 @@
 package org.ns1.gatherbot.datastructure;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import net.dv8tion.jda.core.entities.Emote;
@@ -11,10 +8,14 @@ import net.dv8tion.jda.core.entities.User;
 import org.ns1.gatherbot.util.TestiUser;
 
 public class Players {
-    private final HashSet<Player> players = new HashSet<>();
+    private final HashSet<Player> players = new LinkedHashSet<>();
     private final int maxPlayers;
 
     public Players(int maxSize) {
+        this.maxPlayers = maxSize;
+    }
+
+    public Players(int maxSize, boolean kissa) {
         this.maxPlayers = maxSize;
         IntStream.range(0, 10).forEachOrdered(i -> addPlayer(new Player(new TestiUser(i))));
     }

@@ -15,8 +15,12 @@ public class Teams {
 
     public Optional<Player> addPlayerToTeam(Captain captain, Player player) {
         return teams.stream().filter(team -> team.isItMyTeam(captain))
-                .findFirst().get().addPlayer(player);
+                .findFirst().get().pickPlayer(player);
 
+    }
+
+    public List<Team> getTeams() {
+        return new ArrayList<>(teams);
     }
 
 }

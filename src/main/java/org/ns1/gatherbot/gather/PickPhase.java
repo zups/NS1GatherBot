@@ -1,58 +1,102 @@
 package org.ns1.gatherbot.gather;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Emote;
+import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import org.ns1.gatherbot.datastructure.Captain;
-import org.ns1.gatherbot.datastructure.Map;
-import org.ns1.gatherbot.datastructure.Player;
+import org.ns1.gatherbot.command.Commands;
+import org.ns1.gatherbot.command.PickCommand;
+import org.ns1.gatherbot.datastructure.*;
+import org.ns1.gatherbot.emoji.NumberEmojis;
+import org.ns1.gatherbot.util.MessageId;
+import org.ns1.gatherbot.util.ParameterWrapper;
 import org.ns1.gatherbot.util.PrettyPrints;
 
 public class PickPhase extends ListenerAdapter implements GatherPhase {
+    private final NumberEmojis numberEmojis;
     private JDA jda;
-    private List<Player> players;
-    private List<Map> maps;
+    private List<Map> mostVotedMaps = new ArrayList<>();
     private TextChannel channel;
-    private HashSet<Captain> captains = new HashSet<>();
+    private Captains captains;
+    private List<Player> players;
+    private Pick pick;
+    private Commands commands;
 
-    public PickPhase(JDA jda, List<Player> players, List<Map> maps, TextChannel channel, int captainAmount, int mapAmount) {
+    public PickPhase(JDA jda, List<Player> players, List<Map> maps, TextChannel channel, int captainAmount, int mapAmount, int teamSize) {
         this.jda = jda;
         this.players = players;
-        this.maps = maps;
         this.channel = channel;
+        this.captains = new Captains(captainAmount);
+        this.numberEmojis = new NumberEmojis(jda);
 
-        setCaptains(captainAmount);
-        this.maps = getMostVotedMaps(2);
+        start(captainAmount, mapAmount, teamSize, maps, players);
 
-        channel.sendMessage("Let the picking begin!").queue();
-
-        channel.sendMessage("Captains: " + PrettyPrints.printCaptains(new ArrayList<>(captains))).queue();
-
-        channel.sendMessage("Maps: " + PrettyPrints.printMaps(this.maps)).queue();
-
+        this.commands = new Commands(Arrays.asList(new PickCommand(pick, new NumberEmojis(jda))));
     }
 
-    private void start() {
-
+    private void start(int captainAmount, int mapAmount, int teamSize, List<Map> maps, List<Player> players) {
+        setCaptains(captainAmount, teamSize, players);
+        setMostVotedMaps(mapAmount, maps);
+        this.pick = new Pick(this.players, captains);
+        sendVoteEmbedded();
     }
 
-    private void setCaptains(int howMany) {
-        List<Player> mostVotedPlayers = players.stream()
+
+    @Override
+    public void onMessageReactionAdd(MessageReactionAddEvent event) {
+        User user = event.getUser();
+        Emote emote = event.getReactionEmote().getEmote();
+        MessageChannel channel = event.getChannel();
+        String messageId = event.getMessageId();
+        if (user.isBot() || !channel.getName().equals(this.channel.getName())) return;
+
+        commands.findCommand("pick")
+                .ifPresent(command ->
+                        command.run(new ParameterWrapper(Arrays.asList(emote, new Captain(new Player(user), 0), new MessageId(messageId))))
+                                .ifPresent(didTheCommandRun ->
+                                        this.channel.getMessageById(messageId).queue(messageToBeEdited -> {
+                                            messageToBeEdited.editMessage(PrettyPrints.pickEmbedded(pick)).queue();
+                                            messageToBeEdited.getReactions().forEach(react -> {
+                                                if (react.getReactionEmote().getName().equals(emote.getName()))
+                                                    react.getUsers().forEach(userReact -> {
+                                                        react.removeReaction(userReact).queue();
+                                                    });
+                                            });
+                                        })));
+    }
+
+
+    private void setCaptains(int howMany, int teamSize, List<Player> players) {
+        players.stream()
                 .sorted(Comparator.comparingInt(Player::getVotes).reversed())
-        .collect(Collectors.toList()).subList(0,howMany);
-
-        mostVotedPlayers.forEach(player -> captains.add(new Captain(player)));
+                .limit(howMany)
+                .forEachOrdered(player -> {
+                    captains.addCaptain(new Captain(player, teamSize));
+                    this.players.remove(player);
+                });
     }
 
-    private List<Map> getMostVotedMaps(int howMany) {
-        return   maps.stream()
+    private void setMostVotedMaps(int howMany, List<Map> maps) {
+        maps.stream()
                 .sorted(Comparator.comparingInt(Map::getVotes).reversed())
-                .collect(Collectors.toList()).subList(0,howMany);
+                .limit(howMany)
+                .forEachOrdered(map -> mostVotedMaps.add(map));
+    }
+
+    private void sendVoteEmbedded() {
+        channel.sendMessage(PrettyPrints.pickEmbedded(pick)).queue(mes -> {
+            pick.getPickables()
+                    .forEach((key, value) -> numberEmojis.getEmoteForNumber(key.intValue())
+                            .ifPresent(emote -> mes.addReaction(emote).queue()));
+            pick.setPickMessageId(mes.getId());
+        });
     }
 
     @Override
