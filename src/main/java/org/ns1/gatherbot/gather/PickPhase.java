@@ -19,7 +19,6 @@ import org.ns1.gatherbot.datastructure.Captain;
 import org.ns1.gatherbot.datastructure.Map;
 import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.emoji.Emojis;
-import org.ns1.gatherbot.emoji.NumberEmojis;
 import org.ns1.gatherbot.util.MessageId;
 import org.ns1.gatherbot.util.ParameterWrapper;
 import org.ns1.gatherbot.util.PrettyPrints;

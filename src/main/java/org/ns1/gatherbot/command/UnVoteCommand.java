@@ -23,17 +23,15 @@ public class UnVoteCommand extends AbstractCommand {
         this.playerController = playerController;
     }
 
-    private String unvote(Emote numberEmote, String messageid, Player voter) {
+    private void unvote(Emote numberEmote, String messageid, Player voter) {
         StringBuilder voteamount = new StringBuilder();
 
         voteControllers.forEach(voteController -> {
             if (voteController.isThisSameVote(messageid)) {
                 numberEmojis.getNumberForEmote(numberEmote)
-                        .ifPresent(number -> voteController.unvote(number, voter).ifPresent(num -> voteamount.append(num)));
+                        .ifPresent(number -> voteController.unvote(number, voter));
             }
         });
-
-        return voteamount.toString();
     }
 
     @Override
@@ -43,7 +41,7 @@ public class UnVoteCommand extends AbstractCommand {
         if (isUserInThisGather(parameters.getUser())) {
             parameters.getEmote()
                     .ifPresent(numberEmote -> {
-                        result.setMessage(unvote(numberEmote, parameters.getMessageId(), parameters.getPlayer()));
+                        unvote(numberEmote, parameters.getMessageId(), parameters.getPlayer());
                         result.setRunSuccessful(true);
                     });
         }

@@ -3,8 +3,6 @@ package org.ns1.gatherbot.controllers;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.PeekingIterator;
 import java.util.*;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;

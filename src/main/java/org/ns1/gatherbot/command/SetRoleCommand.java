@@ -18,8 +18,6 @@ public class SetRoleCommand extends AbstractCommand {
 
     @Override
     public Optional<CommandResult> run(ParameterWrapper parameters) {
-
-
         parameters.getEmote().ifPresent(emote -> {
             lifeformEmojis.getEmote(parameters.getEmote().get().getName())
                     .ifPresent(emo -> playerController.updateRoles(parameters.getUser(), parameters.getEmote().get(), parameters.getMessageId()));

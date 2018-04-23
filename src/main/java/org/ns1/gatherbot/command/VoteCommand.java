@@ -23,17 +23,13 @@ public class VoteCommand extends AbstractCommand {
         this.numberEmojis = Emojis.getNumberEmojis();
     }
 
-    private String vote(Emote numberEmote, String messageid, Player voter) {
-        StringBuilder voteamount = new StringBuilder();
-
+    private void vote(Emote numberEmote, String messageid, Player voter) {
         voteControllers.forEach(voteController -> {
             if (voteController.isThisSameVote(messageid)) {
                 numberEmojis.getNumberForEmote(numberEmote)
-                        .ifPresent(number -> voteController.vote(number, voter).ifPresent(num -> voteamount.append(num)));
+                        .ifPresent(number -> voteController.vote(number, voter));
             }
         });
-
-        return voteamount.toString();
     }
 
     @Override
@@ -43,7 +39,7 @@ public class VoteCommand extends AbstractCommand {
         if (isUserInThisGather(parameters.getUser())) {
             parameters.getEmote()
                     .ifPresent(numberEmote -> {
-                        result.setMessage(vote(numberEmote, parameters.getMessageId(), parameters.getPlayer()));
+                        vote(numberEmote, parameters.getMessageId(), parameters.getPlayer());
                         result.setRunSuccessful(true);
                     });
         }
