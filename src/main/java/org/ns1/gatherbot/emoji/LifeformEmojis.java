@@ -20,8 +20,6 @@ public class LifeformEmojis {
                 jda.getEmotesByName("marine", true).get(0),
                 jda.getEmotesByName("captain", true).get(0)
         );
-
-
     }
 
     public Optional<Emote> getEmote(String alias) {

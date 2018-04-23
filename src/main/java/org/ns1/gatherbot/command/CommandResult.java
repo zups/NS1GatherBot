@@ -19,6 +19,10 @@ public class CommandResult {
 
     }
 
+    public void setMessage(String message) {
+        this.message = Optional.of(message);
+    }
+
     public Optional<String> getMessage() {
         return message;
     }

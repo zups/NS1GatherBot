@@ -21,19 +21,17 @@ import org.ns1.gatherbot.util.PrettyPrints;
 public class JoinPhase extends ListenerAdapter implements GatherPhase {
     private final String PREFIX = ".";
     private final PlayerController playerController = new PlayerController(12, true);
-    private final LifeformEmojis lifeformEmojisEmojis;
     private final Commands commands;
     private final TextChannel channel;
     private boolean nextPhaseStarting = false;
 
-    public JoinPhase(LifeformEmojis lifeformEmojis, TextChannel channel) {
-        this.lifeformEmojisEmojis = lifeformEmojis;
+    public JoinPhase(TextChannel channel) {
         this.channel = channel;
         this.commands = new Commands(Arrays.asList(
-                new JoinCommand(lifeformEmojisEmojis, playerController),
+                new JoinCommand(playerController),
                 new LeaveCommand(playerController),
                 new ListCommand(playerController),
-                new SetRoleCommand(playerController, lifeformEmojisEmojis)
+                new SetRoleCommand(playerController)
         ));
     }
 

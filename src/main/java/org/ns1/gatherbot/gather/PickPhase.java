@@ -15,14 +15,16 @@ import org.ns1.gatherbot.command.Commands;
 import org.ns1.gatherbot.command.PickCommand;
 import org.ns1.gatherbot.controllers.CaptainController;
 import org.ns1.gatherbot.controllers.PickController;
-import org.ns1.gatherbot.datastructure.*;
+import org.ns1.gatherbot.datastructure.Captain;
+import org.ns1.gatherbot.datastructure.Map;
+import org.ns1.gatherbot.datastructure.Player;
+import org.ns1.gatherbot.emoji.Emojis;
 import org.ns1.gatherbot.emoji.NumberEmojis;
 import org.ns1.gatherbot.util.MessageId;
 import org.ns1.gatherbot.util.ParameterWrapper;
 import org.ns1.gatherbot.util.PrettyPrints;
 
 public class PickPhase extends ListenerAdapter implements GatherPhase {
-    private final NumberEmojis numberEmojis;
     private JDA jda;
     private List<Map> mostVotedMaps = new ArrayList<>();
     private TextChannel channel;
@@ -36,11 +38,10 @@ public class PickPhase extends ListenerAdapter implements GatherPhase {
         this.players = players;
         this.channel = channel;
         this.captainController = new CaptainController(captainAmount);
-        this.numberEmojis = new NumberEmojis(jda);
 
         start(captainAmount, mapAmount, teamSize, maps, players);
 
-        this.commands = new Commands(Arrays.asList(new PickCommand(pickController, new NumberEmojis(jda))));
+        this.commands = new Commands(Arrays.asList(new PickCommand(pickController)));
     }
 
     private void start(int captainAmount, int mapAmount, int teamSize, List<Map> maps, List<Player> players) {
@@ -62,16 +63,20 @@ public class PickPhase extends ListenerAdapter implements GatherPhase {
         commands.findCommand("pick")
                 .ifPresent(command ->
                         command.run(new ParameterWrapper(Arrays.asList(emote, new Captain(new Player(user), 0), new MessageId(messageId))))
-                                .ifPresent(didTheCommandRun ->
-                                        this.channel.getMessageById(messageId).queue(messageToBeEdited -> {
-                                            messageToBeEdited.editMessage(PrettyPrints.pickEmbedded(pickController)).queue();
-                                            messageToBeEdited.getReactions().forEach(react -> {
-                                                if (react.getReactionEmote().getName().equals(emote.getName()))
-                                                    react.getUsers().forEach(userReact -> {
-                                                        react.removeReaction(userReact).queue();
+                                .ifPresent(result -> {
+                                            if (result.getRunSuccessful()) {
+                                                this.channel.getMessageById(messageId).queue(messageToBeEdited -> {
+                                                    messageToBeEdited.editMessage(PrettyPrints.pickEmbedded(pickController)).queue();
+                                                    messageToBeEdited.getReactions().forEach(react -> {
+                                                        if (react.getReactionEmote().getName().equals(emote.getName()))
+                                                            react.getUsers().forEach(userReact ->
+                                                                    react.removeReaction(userReact).queue()
+                                                            );
                                                     });
-                                            });
-                                        })));
+                                                });
+                                            }
+                                        }
+                                ));
     }
 
 
@@ -95,7 +100,7 @@ public class PickPhase extends ListenerAdapter implements GatherPhase {
     private void sendVoteEmbedded() {
         channel.sendMessage(PrettyPrints.pickEmbedded(pickController)).queue(mes -> {
             pickController.getPickables()
-                    .forEach((key, value) -> numberEmojis.getEmoteForNumber(key.intValue())
+                    .forEach((key, value) -> Emojis.getNumberEmojis().getEmoteForNumber(key.intValue())
                             .ifPresent(emote -> mes.addReaction(emote).queue()));
             pickController.setPickMessageId(mes.getId());
         });

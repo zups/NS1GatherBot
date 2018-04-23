@@ -19,6 +19,7 @@ import org.ns1.gatherbot.datastructure.Map;
 import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.controllers.PlayerController;
 import org.ns1.gatherbot.controllers.VoteController;
+import org.ns1.gatherbot.emoji.Emojis;
 import org.ns1.gatherbot.emoji.MiscEmojis;
 import org.ns1.gatherbot.emoji.NumberEmojis;
 import org.ns1.gatherbot.util.MessageId;
@@ -30,8 +31,6 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
     private final TextChannel channel;
     private final PlayerController playerController;
     private final JDA jda;
-    private final NumberEmojis numberEmojis;
-    private final MiscEmojis miscEmojis;
     private Commands commands;
     private VoteController mapsVoteController;
     private VoteController captainsVoteController;
@@ -40,14 +39,12 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
         this.jda = jda;
         this.playerController = playerController;
         this.channel = channel;
-        this.numberEmojis = new NumberEmojis(jda);
-        this.miscEmojis = new MiscEmojis(jda);
 
         start();
 
         this.commands = new Commands(Arrays.asList(
-                new VoteCommand(Arrays.asList(captainsVoteController, mapsVoteController), numberEmojis, playerController),
-                new UnVoteCommand(Arrays.asList(captainsVoteController, mapsVoteController), numberEmojis, playerController)
+                new VoteCommand(Arrays.asList(captainsVoteController, mapsVoteController), playerController),
+                new UnVoteCommand(Arrays.asList(captainsVoteController, mapsVoteController), playerController)
         ));
     }
 
@@ -60,7 +57,7 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
     }
 
     private void start() {
-        if (playerController.isThereMoreWillingToCaptain(2)) {
+        if (playerController.howManyWillingToCaptain() > 2) {
             captainsVoteController = new VoteController(playerController.getPlayersWillingToCaptain());
             sendVoteEmbedded(captainsVoteController, "Players:", "_Vote for captains by clicking the smileys._");
         } else {
@@ -122,17 +119,17 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
 
     private MessageEmbed determineVoteMessageToBeEdited(String messageId) {
         if ((mapsVoteController.isThisSameVote(messageId))) {
-            return PrettyPrints.voteEmbedded(mapsVoteController.getVoteables(), "Maps:", miscEmojis, "_Vote for maps by clicking the smileys._");
+            return PrettyPrints.voteEmbedded(mapsVoteController.getVoteables(), "Maps:",  "_Vote for maps by clicking the smileys._");
         } else if (captainsVoteController.isThisSameVote(messageId)) {
-            return PrettyPrints.voteEmbedded(captainsVoteController.getVoteables(), "Players:", miscEmojis, "_Vote for captains by clicking the smileys._");
+            return PrettyPrints.voteEmbedded(captainsVoteController.getVoteables(), "Players:", "_Vote for captains by clicking the smileys._");
         }
         return null;
     }
 
     private void sendVoteEmbedded(VoteController voteController, String fieldname, String description) {
-        channel.sendMessage(PrettyPrints.voteEmbedded(voteController.getVoteables(), fieldname, miscEmojis, description)).queue(mes -> {
+        channel.sendMessage(PrettyPrints.voteEmbedded(voteController.getVoteables(), fieldname, description)).queue(mes -> {
             voteController.getVoteables()
-                    .forEach((key, value) -> numberEmojis.getEmoteForNumber(key.intValue())
+                    .forEach((key, value) -> Emojis.getNumberEmojis().getEmoteForNumber(key.intValue())
                             .ifPresent(emote -> mes.addReaction(emote).queue()));
             voteController.setVoteMessageId(mes.getId());
         });

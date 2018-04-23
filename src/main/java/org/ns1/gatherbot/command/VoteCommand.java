@@ -7,6 +7,7 @@ import net.dv8tion.jda.core.entities.User;
 import org.ns1.gatherbot.controllers.PlayerController;
 import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.controllers.VoteController;
+import org.ns1.gatherbot.emoji.Emojis;
 import org.ns1.gatherbot.emoji.NumberEmojis;
 import org.ns1.gatherbot.util.ParameterWrapper;
 
@@ -15,11 +16,11 @@ public class VoteCommand extends AbstractCommand {
     private final NumberEmojis numberEmojis;
     private final PlayerController playerController;
 
-    public VoteCommand(List<VoteController> voteControllers, NumberEmojis numberEmojis, PlayerController playerController) {
+    public VoteCommand(List<VoteController> voteControllers, PlayerController playerController) {
         super("vote");
         this.playerController = playerController;
         this.voteControllers = voteControllers;
-        this.numberEmojis = numberEmojis;
+        this.numberEmojis = Emojis.getNumberEmojis();
     }
 
     private String vote(Emote numberEmote, String messageid, Player voter) {
@@ -37,14 +38,17 @@ public class VoteCommand extends AbstractCommand {
 
     @Override
     public Optional<CommandResult> run(ParameterWrapper parameters) {
-        StringBuilder voteamount = new StringBuilder();
+        CommandResult result = new CommandResult();
 
         if (isUserInThisGather(parameters.getUser())) {
             parameters.getEmote()
-                    .ifPresent(numberEmote -> voteamount.append(vote(numberEmote, parameters.getMessageId(), parameters.getPlayer())));
+                    .ifPresent(numberEmote -> {
+                        result.setMessage(vote(numberEmote, parameters.getMessageId(), parameters.getPlayer()));
+                        result.setRunSuccessful(true);
+                    });
         }
 
-        return voteamount.length() > 0 ? Optional.of(new CommandResult(voteamount.toString(), true)) : Optional.empty();
+        return Optional.of(result);
     }
 
     private boolean isUserInThisGather(User user) {

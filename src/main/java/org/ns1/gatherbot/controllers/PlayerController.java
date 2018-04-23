@@ -1,6 +1,7 @@
 package org.ns1.gatherbot.controllers;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import net.dv8tion.jda.core.entities.Emote;
@@ -40,11 +41,12 @@ public class PlayerController {
 
     public List<Player> getPlayersWillingToCaptain() {
         return players.stream()
-                .filter(player -> player.isWillingToCaptain()).collect(Collectors.toList());
+                .filter(Player::isWillingToCaptain)
+                .collect(Collectors.toList());
     }
 
-    public boolean isThereMoreWillingToCaptain(int amount) {
-        return getPlayersWillingToCaptain().size() >= amount;
+    public int howManyWillingToCaptain() {
+        return getPlayersWillingToCaptain().size();
     }
 
     public void updateRoles(User user, Emote role, String messageId) {

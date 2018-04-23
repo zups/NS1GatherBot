@@ -12,6 +12,7 @@ import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.ns1.gatherbot.controllers.PickController;
 import org.ns1.gatherbot.datastructure.*;
+import org.ns1.gatherbot.emoji.Emojis;
 import org.ns1.gatherbot.emoji.MiscEmojis;
 
 public class PrettyPrints {
@@ -83,10 +84,11 @@ public class PrettyPrints {
         return embed.setDescription("_Pick players by cliking the smileys._").build();
     }
 
-    public static MessageEmbed voteEmbedded(Map<Integer,Voteable> voteable, String voteableFieldName, MiscEmojis emojis, String description) {
+    public static MessageEmbed voteEmbedded(Map<Integer,Voteable> voteable, String voteableFieldName, String description) {
         EmbedBuilder embed = new EmbedBuilder();
         StringJoiner voteables = new StringJoiner("\n");
         StringJoiner voteAmount = new StringJoiner("\n");
+        MiscEmojis emojis = Emojis.getMiscEmojis();
 
 
         voteable.forEach((key, value) -> {
