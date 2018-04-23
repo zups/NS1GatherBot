@@ -62,14 +62,14 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
     private void start() {
         if (playerController.isThereMoreWillingToCaptain(2)) {
             captainsVoteController = new VoteController(playerController.getPlayersWillingToCaptain());
-            sendVoteEmbedded(captainsVoteController, "PlayerController:", "_Vote for captains by clicking the smileys._");
+            sendVoteEmbedded(captainsVoteController, "Players:", "_Vote for captains by clicking the smileys._");
         } else {
             captainsVoteController = new VoteController(playerController.getPlayers());
-            sendVoteEmbedded(captainsVoteController, "PlayerController:", "_Vote for captains by clicking the smileys._");
+            sendVoteEmbedded(captainsVoteController, "Players:", "_Vote for captains by clicking the smileys._");
         }
 
         mapsVoteController = new VoteController(Utils.readMapsFromJson().getMaps());
-        sendVoteEmbedded(mapsVoteController, "MapController:", "_Vote for maps by clicking the smileys._");
+        sendVoteEmbedded(mapsVoteController, "Maps:", "_Vote for maps by clicking the smileys._");
 
         Optional.of(jda.getGuilds().get(0).getPublicRole())
                 .ifPresent(role -> channel.putPermissionOverride(role).setDeny(Permission.MESSAGE_WRITE).queue());
@@ -122,9 +122,9 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
 
     private MessageEmbed determineVoteMessageToBeEdited(String messageId) {
         if ((mapsVoteController.isThisSameVote(messageId))) {
-            return PrettyPrints.voteEmbedded(mapsVoteController.getVoteables(), "MapController:", miscEmojis, "_Vote for maps by clicking the smileys._");
+            return PrettyPrints.voteEmbedded(mapsVoteController.getVoteables(), "Maps:", miscEmojis, "_Vote for maps by clicking the smileys._");
         } else if (captainsVoteController.isThisSameVote(messageId)) {
-            return PrettyPrints.voteEmbedded(captainsVoteController.getVoteables(), "PlayerController:", miscEmojis, "_Vote for captains by clicking the smileys._");
+            return PrettyPrints.voteEmbedded(captainsVoteController.getVoteables(), "Players:", miscEmojis, "_Vote for captains by clicking the smileys._");
         }
         return null;
     }
