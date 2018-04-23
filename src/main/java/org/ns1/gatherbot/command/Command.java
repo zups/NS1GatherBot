@@ -7,6 +7,6 @@ public interface Command {
 
     boolean isItMe(String name);
 
-    Optional<String> run(ParameterWrapper parameters);
+    Optional<CommandResult> run(ParameterWrapper parameters);
 
 }

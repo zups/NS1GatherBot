@@ -1,4 +1,4 @@
-package org.ns1.gatherbot.datastructure;
+package org.ns1.gatherbot.controllers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,11 +6,12 @@ import java.util.List;
 import java.util.StringJoiner;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.json.simple.JSONArray;
+import org.ns1.gatherbot.datastructure.Map;
 
-public class Maps {
+public class MapController {
     private final List<Map> maps = new ArrayList<>();
 
-    public Maps(HashMap<String, JSONArray> maps) {
+    public MapController(HashMap<String, JSONArray> maps) {
         parseMaps(maps.get("maps"));
     }
 

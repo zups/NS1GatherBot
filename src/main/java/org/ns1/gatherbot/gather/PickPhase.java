@@ -13,6 +13,8 @@ import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.ns1.gatherbot.command.Commands;
 import org.ns1.gatherbot.command.PickCommand;
+import org.ns1.gatherbot.controllers.CaptainController;
+import org.ns1.gatherbot.controllers.PickController;
 import org.ns1.gatherbot.datastructure.*;
 import org.ns1.gatherbot.emoji.NumberEmojis;
 import org.ns1.gatherbot.util.MessageId;
@@ -24,27 +26,27 @@ public class PickPhase extends ListenerAdapter implements GatherPhase {
     private JDA jda;
     private List<Map> mostVotedMaps = new ArrayList<>();
     private TextChannel channel;
-    private Captains captains;
+    private CaptainController captainController;
     private List<Player> players;
-    private Pick pick;
+    private PickController pickController;
     private Commands commands;
 
     public PickPhase(JDA jda, List<Player> players, List<Map> maps, TextChannel channel, int captainAmount, int mapAmount, int teamSize) {
         this.jda = jda;
         this.players = players;
         this.channel = channel;
-        this.captains = new Captains(captainAmount);
+        this.captainController = new CaptainController(captainAmount);
         this.numberEmojis = new NumberEmojis(jda);
 
         start(captainAmount, mapAmount, teamSize, maps, players);
 
-        this.commands = new Commands(Arrays.asList(new PickCommand(pick, new NumberEmojis(jda))));
+        this.commands = new Commands(Arrays.asList(new PickCommand(pickController, new NumberEmojis(jda))));
     }
 
     private void start(int captainAmount, int mapAmount, int teamSize, List<Map> maps, List<Player> players) {
         setCaptains(captainAmount, teamSize, players);
         setMostVotedMaps(mapAmount, maps);
-        this.pick = new Pick(this.players, captains);
+        this.pickController = new PickController(this.players, captainController);
         sendVoteEmbedded();
     }
 
@@ -62,7 +64,7 @@ public class PickPhase extends ListenerAdapter implements GatherPhase {
                         command.run(new ParameterWrapper(Arrays.asList(emote, new Captain(new Player(user), 0), new MessageId(messageId))))
                                 .ifPresent(didTheCommandRun ->
                                         this.channel.getMessageById(messageId).queue(messageToBeEdited -> {
-                                            messageToBeEdited.editMessage(PrettyPrints.pickEmbedded(pick)).queue();
+                                            messageToBeEdited.editMessage(PrettyPrints.pickEmbedded(pickController)).queue();
                                             messageToBeEdited.getReactions().forEach(react -> {
                                                 if (react.getReactionEmote().getName().equals(emote.getName()))
                                                     react.getUsers().forEach(userReact -> {
@@ -78,7 +80,7 @@ public class PickPhase extends ListenerAdapter implements GatherPhase {
                 .sorted(Comparator.comparingInt(Player::getVotes).reversed())
                 .limit(howMany)
                 .forEachOrdered(player -> {
-                    captains.addCaptain(new Captain(player, teamSize));
+                    captainController.addCaptain(new Captain(player, teamSize));
                     this.players.remove(player);
                 });
     }
@@ -91,11 +93,11 @@ public class PickPhase extends ListenerAdapter implements GatherPhase {
     }
 
     private void sendVoteEmbedded() {
-        channel.sendMessage(PrettyPrints.pickEmbedded(pick)).queue(mes -> {
-            pick.getPickables()
+        channel.sendMessage(PrettyPrints.pickEmbedded(pickController)).queue(mes -> {
+            pickController.getPickables()
                     .forEach((key, value) -> numberEmojis.getEmoteForNumber(key.intValue())
                             .ifPresent(emote -> mes.addReaction(emote).queue()));
-            pick.setPickMessageId(mes.getId());
+            pickController.setPickMessageId(mes.getId());
         });
     }
 

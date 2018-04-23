@@ -1,20 +1,22 @@
 package org.ns1.gatherbot.command;
 
 import java.util.Optional;
-import org.ns1.gatherbot.datastructure.Players;
+import org.ns1.gatherbot.controllers.PlayerController;
 import org.ns1.gatherbot.util.ParameterWrapper;
 import org.ns1.gatherbot.util.PrettyPrints;
 
 public class ListCommand extends AbstractCommand {
-    private final Players players;
+    private final PlayerController playerController;
 
-    public ListCommand(Players players) {
+    public ListCommand(PlayerController playerController) {
         super("list");
-        this.players = players;
+        this.playerController = playerController;
     }
 
     @Override
-    public Optional<String> run(ParameterWrapper parameters) {
-        return Optional.of(PrettyPrints.printStatusAndPlayers(players.getPlayers(), players.getMaxPlayers()));
+    public Optional<CommandResult> run(ParameterWrapper parameters) {
+        return Optional.of(new CommandResult(
+                PrettyPrints.printStatusAndPlayers(playerController.getPlayers(), playerController.getMaxPlayers())
+                ,true));
     }
 }

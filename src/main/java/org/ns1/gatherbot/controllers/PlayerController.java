@@ -1,21 +1,22 @@
-package org.ns1.gatherbot.datastructure;
+package org.ns1.gatherbot.controllers;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.User;
+import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.util.TestiUser;
 
-public class Players {
+public class PlayerController {
     private final HashSet<Player> players = new LinkedHashSet<>();
     private final int maxPlayers;
 
-    public Players(int maxSize) {
+    public PlayerController(int maxSize) {
         this.maxPlayers = maxSize;
     }
 
-    public Players(int maxSize, boolean kissa) {
+    public PlayerController(int maxSize, boolean kissa) {
         this.maxPlayers = maxSize;
         IntStream.range(0, 10).forEachOrdered(i -> addPlayer(new Player(new TestiUser(i))));
     }

@@ -1,12 +1,13 @@
-package org.ns1.gatherbot.datastructure;
+package org.ns1.gatherbot.controllers;
 
 import java.util.*;
+import org.ns1.gatherbot.datastructure.Captain;
 
-public class Captains {
+public class CaptainController {
     private List<Captain> captains = new ArrayList<>();
     private final int maxCaptains;
 
-    public Captains(int maxCaptains) {
+    public CaptainController(int maxCaptains) {
         this.maxCaptains = maxCaptains;
     }
 

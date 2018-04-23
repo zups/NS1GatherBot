@@ -2,27 +2,27 @@ package org.ns1.gatherbot.datastructure;
 
 import java.util.Optional;
 import java.util.StringJoiner;
+import org.ns1.gatherbot.controllers.PlayerController;
 
 public class Team {
-    private Players players;
+    private PlayerController playerController;
     private Captain captain;
-    private boolean isMarine;
 
     public Team(int teamSize, Captain captain) {
-        this.players = new Players(teamSize);
+        this.playerController = new PlayerController(teamSize);
         this.captain = captain;
     }
 
     public Optional<Player> pickPlayer(Player player) {
-            return players.addPlayer(player);
+            return playerController.addPlayer(player);
     }
 
     public boolean isItMyTeam(Captain captain) {
         return this.captain.equals(captain);
     }
 
-    public Players getPlayers() {
-        return players;
+    public PlayerController getPlayerController() {
+        return playerController;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class Team {
         StringJoiner team = new StringJoiner("\n");
         team.add("**" + captain.toString() + "**");
 
-        players.getPlayers().forEach(player -> {
+        playerController.getPlayers().forEach(player -> {
             team.add(player.toString());
         });
 

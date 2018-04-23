@@ -2,16 +2,16 @@ package org.ns1.gatherbot.util;
 
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.MessageEmbed;
+import org.ns1.gatherbot.controllers.PickController;
 import org.ns1.gatherbot.datastructure.*;
-import org.ns1.gatherbot.emoji.LifeformEmojis;
 import org.ns1.gatherbot.emoji.MiscEmojis;
 
 public class PrettyPrints {
@@ -64,20 +64,20 @@ public class PrettyPrints {
         return joiner.toString();
     }
 
-    public static MessageEmbed pickEmbedded(Pick pick) {
+    public static MessageEmbed pickEmbedded(PickController pickController) {
         EmbedBuilder embed = new EmbedBuilder();
         StringJoiner pickables = new StringJoiner("\n");
         AtomicInteger teamNumber = new AtomicInteger(1);
 
-        pick.getPickables().forEach((number, player) -> {
+        pickController.getPickables().forEach((number, player) -> {
             pickables.add("**" + number + ")** " + player.toString());
         });
 
         if (pickables.length() > 0 )
             embed.addField("Players:", pickables.toString(), true);
 
-        pick.getCaptains().forEach(captain -> {
-            embed.addField("Team" + teamNumber.getAndIncrement(), captain.getTeam().toString(), true);
+        pickController.getTeamController().teams.forEach(team -> {
+            embed.addField("Team" + teamNumber.getAndIncrement(), team.toString(), true);
         });
 
         return embed.setDescription("_Pick players by cliking the smileys._").build();

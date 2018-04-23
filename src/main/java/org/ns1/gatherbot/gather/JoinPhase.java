@@ -12,7 +12,7 @@ import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.core.events.user.update.UserUpdateOnlineStatusEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.ns1.gatherbot.command.*;
-import org.ns1.gatherbot.datastructure.Players;
+import org.ns1.gatherbot.controllers.PlayerController;
 import org.ns1.gatherbot.emoji.LifeformEmojis;
 import org.ns1.gatherbot.util.MessageId;
 import org.ns1.gatherbot.util.ParameterWrapper;
@@ -20,7 +20,7 @@ import org.ns1.gatherbot.util.PrettyPrints;
 
 public class JoinPhase extends ListenerAdapter implements GatherPhase {
     private final String PREFIX = ".";
-    private final Players players = new Players(12, true);
+    private final PlayerController playerController = new PlayerController(12, true);
     private final LifeformEmojis lifeformEmojisEmojis;
     private final Commands commands;
     private final TextChannel channel;
@@ -30,16 +30,16 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
         this.lifeformEmojisEmojis = lifeformEmojis;
         this.channel = channel;
         this.commands = new Commands(Arrays.asList(
-                new JoinCommand(lifeformEmojisEmojis, players),
-                new LeaveCommand(players),
-                new ListCommand(players),
-                new PickRoleCommand(players, lifeformEmojisEmojis)
+                new JoinCommand(lifeformEmojisEmojis, playerController),
+                new LeaveCommand(playerController),
+                new ListCommand(playerController),
+                new SetRoleCommand(playerController, lifeformEmojisEmojis)
         ));
     }
 
     @Override
     public void nextPhase(JDA jda) {
-        this.channel.sendMessage("**Gather is starting!**\n" + PrettyPrints.printPlayersHighlight(players.getPlayers())).queue();
+        this.channel.sendMessage("**Gather is starting!**\n" + PrettyPrints.printPlayersHighlight(playerController.getPlayers())).queue();
         this.channel.sendMessage("_`Voting for captains and maps starts in 15seconds!`_").queue();
         this.nextPhaseStarting = true;
         //tässä kohtaa timeri, että vika pelaaja kerkeää laittaa
@@ -47,9 +47,9 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
         Observable.timer(15, TimeUnit.SECONDS)
                 .subscribe(
                         onNext -> {
-                            if (players.isFull()) {
+                            if (playerController.isFull()) {
                                 jda.removeEventListener(this);
-                                jda.addEventListener(new VotePhase(jda, players, channel));
+                                jda.addEventListener(new VotePhase(jda, playerController, channel));
                             } else {
                                 nextPhaseStarting = false;
                                 channel.sendMessage("Moving on to voting canceled because somebody left.").queue();
@@ -66,7 +66,7 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
             commands.findCommand("leave")
                     .ifPresent(command -> {
                         command.run(new ParameterWrapper(Arrays.asList(user, channel)))
-                                .ifPresent(mes -> channel.sendMessage(mes).queue());
+                                .ifPresent(result -> result.getMessage().ifPresent(mes -> channel.sendMessage(mes).queue()));
                     });
         }
     }
@@ -84,11 +84,11 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
             commands.findCommand(commandName.substring(1))
                     .ifPresent(command -> {
                         command.run(new ParameterWrapper(Arrays.asList(message, user, channel)))
-                                .ifPresent(mes -> channel.sendMessage(mes).queue());
+                                .ifPresent(result -> result.getMessage().ifPresent(mes -> channel.sendMessage(mes).queue()));
                     });
         }
 
-        if (!nextPhaseStarting && players.isFull()) {
+        if (!nextPhaseStarting && playerController.isFull()) {
             nextPhase(event.getJDA());
         }
     }

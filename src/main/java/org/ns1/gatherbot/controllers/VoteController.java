@@ -1,4 +1,4 @@
-package org.ns1.gatherbot.datastructure;
+package org.ns1.gatherbot.controllers;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -8,15 +8,17 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.ns1.gatherbot.datastructure.Player;
+import org.ns1.gatherbot.datastructure.Voteable;
 
-public class Vote {
+public class VoteController {
     private String voteMessageId = "";
     private final int votesPerPlayer = 2;
     private final Map<Integer,Voteable> voteables = new TreeMap();
     private final Multimap<Player, Integer> votedPlayers = HashMultimap.create();
 
 
-    public Vote(List<? extends Voteable> voteables) {
+    public VoteController(List<? extends Voteable> voteables) {
         AtomicInteger i = new AtomicInteger(1);
         voteables.forEach(vote -> {
             this.voteables.put(i.getAndIncrement(), vote);

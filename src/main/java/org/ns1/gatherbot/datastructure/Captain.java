@@ -1,22 +1,17 @@
 package org.ns1.gatherbot.datastructure;
 
+import java.util.Objects;
+
 public class Captain {
     private final Player captain;
-    private Team team;
     private boolean pickingRight = false;
-    private int howManyPicked = 0;
 
     public Captain(Player player, int teamSize) {
         this.captain = player;
-        this.team = new Team(teamSize, this);
     }
 
     public Player getCaptain() {
         return captain;
-    }
-
-    public Team getTeam() {
-        return team;
     }
 
     public boolean setPickingRight() {
@@ -27,15 +22,6 @@ public class Captain {
         }
         return pickingRight;
     }
-
-    public int getHowManyPicked() {
-        return howManyPicked;
-    }
-
-    public void increaseHowManyPicked() {
-        howManyPicked++;
-    }
-
     public boolean hasPickingRight() {
         return pickingRight;
     }
@@ -46,20 +32,12 @@ public class Captain {
 
     @Override
     public int hashCode() {
-        return captain.hashCode();
-    }
-
-    public long getId() {
-        return captain.getId();
+        return Objects.hashCode(captain.hashCode());
     }
 
     @Override
     public boolean equals(Object obj) {
-        Captain captain = (Captain) obj;
-        if (captain.getId() == this.captain.getId()) {
-            return true;
-        }
-        return false;
+        return Objects.equals(obj.hashCode(), captain.hashCode());
     }
 
     @Override

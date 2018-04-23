@@ -12,7 +12,7 @@ import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.ns1.gatherbot.datastructure.Maps;
+import org.ns1.gatherbot.controllers.MapController;
 import org.ns1.gatherbot.emoji.LifeformEmojis;
 
 
@@ -49,12 +49,12 @@ public class Utils {
         return jsonObject;
     }
 
-    public static Maps readMapsFromJson() {
+    public static MapController readMapsFromJson() {
         EmbedBuilder embed = new EmbedBuilder();
 
         Optional<JSONObject> mapsJson = readJson("src\\main\\resources\\maps.json");
 
-        return new Maps(mapsJson.get());
+        return new MapController(mapsJson.get());
     }
 
     public static MessageEmbed coolEmbed(JDA jda) {

@@ -17,8 +17,8 @@ import org.ns1.gatherbot.command.UnVoteCommand;
 import org.ns1.gatherbot.command.VoteCommand;
 import org.ns1.gatherbot.datastructure.Map;
 import org.ns1.gatherbot.datastructure.Player;
-import org.ns1.gatherbot.datastructure.Players;
-import org.ns1.gatherbot.datastructure.Vote;
+import org.ns1.gatherbot.controllers.PlayerController;
+import org.ns1.gatherbot.controllers.VoteController;
 import org.ns1.gatherbot.emoji.MiscEmojis;
 import org.ns1.gatherbot.emoji.NumberEmojis;
 import org.ns1.gatherbot.util.MessageId;
@@ -28,17 +28,17 @@ import org.ns1.gatherbot.util.Utils;
 
 public class VotePhase extends ListenerAdapter implements GatherPhase {
     private final TextChannel channel;
-    private final Players players;
+    private final PlayerController playerController;
     private final JDA jda;
     private final NumberEmojis numberEmojis;
     private final MiscEmojis miscEmojis;
     private Commands commands;
-    private Vote mapsVote;
-    private Vote captainsVote;
+    private VoteController mapsVoteController;
+    private VoteController captainsVoteController;
 
-    public VotePhase(JDA jda, Players players, TextChannel channel) {
+    public VotePhase(JDA jda, PlayerController playerController, TextChannel channel) {
         this.jda = jda;
-        this.players = players;
+        this.playerController = playerController;
         this.channel = channel;
         this.numberEmojis = new NumberEmojis(jda);
         this.miscEmojis = new MiscEmojis(jda);
@@ -46,30 +46,30 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
         start();
 
         this.commands = new Commands(Arrays.asList(
-                new VoteCommand(Arrays.asList(captainsVote, mapsVote), numberEmojis, players),
-                new UnVoteCommand(Arrays.asList(captainsVote, mapsVote), numberEmojis, players)
+                new VoteCommand(Arrays.asList(captainsVoteController, mapsVoteController), numberEmojis, playerController),
+                new UnVoteCommand(Arrays.asList(captainsVoteController, mapsVoteController), numberEmojis, playerController)
         ));
     }
 
     @Override
     public void nextPhase(JDA jda) {
-        List<Player> players = captainsVote.getVoteables().values().stream().map(voteable -> (Player) voteable).collect(Collectors.toList());
-        List<Map> maps = mapsVote.getVoteables().values().stream().map(voteable -> (Map) voteable).collect(Collectors.toList());
+        List<Player> players = captainsVoteController.getVoteables().values().stream().map(voteable -> (Player) voteable).collect(Collectors.toList());
+        List<Map> maps = mapsVoteController.getVoteables().values().stream().map(voteable -> (Map) voteable).collect(Collectors.toList());
         jda.removeEventListener(this);
         jda.addEventListener(new PickPhase(jda, players, maps, channel, 2, 2, 6));
     }
 
     private void start() {
-        if (players.isThereMoreWillingToCaptain(2)) {
-            captainsVote = new Vote(players.getPlayersWillingToCaptain());
-            sendVoteEmbedded(captainsVote, "Players:", "_Vote for captains by clicking the smileys._");
+        if (playerController.isThereMoreWillingToCaptain(2)) {
+            captainsVoteController = new VoteController(playerController.getPlayersWillingToCaptain());
+            sendVoteEmbedded(captainsVoteController, "PlayerController:", "_Vote for captains by clicking the smileys._");
         } else {
-            captainsVote = new Vote(players.getPlayers());
-            sendVoteEmbedded(captainsVote, "Players:", "_Vote for captains by clicking the smileys._");
+            captainsVoteController = new VoteController(playerController.getPlayers());
+            sendVoteEmbedded(captainsVoteController, "PlayerController:", "_Vote for captains by clicking the smileys._");
         }
 
-        mapsVote = new Vote(Utils.readMapsFromJson().getMaps());
-        sendVoteEmbedded(mapsVote, "Maps:", "_Vote for maps by clicking the smileys._");
+        mapsVoteController = new VoteController(Utils.readMapsFromJson().getMaps());
+        sendVoteEmbedded(mapsVoteController, "MapController:", "_Vote for maps by clicking the smileys._");
 
         Optional.of(jda.getGuilds().get(0).getPublicRole())
                 .ifPresent(role -> channel.putPermissionOverride(role).setDeny(Permission.MESSAGE_WRITE).queue());
@@ -98,7 +98,7 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
         commands.findCommand("vote")
                 .ifPresent(command ->
                         command.run(new ParameterWrapper(Arrays.asList(emote, user, new MessageId(messageId))))
-                                .ifPresent(didTheCommandRun ->
+                                .ifPresent(result ->
                                         this.channel.getMessageById(messageId).queue(messageToBeEdited ->
                                                 messageToBeEdited.editMessage(determineVoteMessageToBeEdited(messageToBeEdited.getId())).queue())));
     }
@@ -115,26 +115,26 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
         commands.findCommand("unvote")
                 .ifPresent(command ->
                         command.run(new ParameterWrapper(Arrays.asList(emote, user, new MessageId(messageId))))
-                                .ifPresent(didTheCommandRun ->
+                                .ifPresent(result ->
                                         this.channel.getMessageById(messageId).queue(messageToBeEdited ->
                                                 messageToBeEdited.editMessage(determineVoteMessageToBeEdited(messageToBeEdited.getId())).queue())));
     }
 
     private MessageEmbed determineVoteMessageToBeEdited(String messageId) {
-        if ((mapsVote.isThisSameVote(messageId))) {
-            return PrettyPrints.voteEmbedded(mapsVote.getVoteables(), "Maps:", miscEmojis, "_Vote for maps by clicking the smileys._");
-        } else if (captainsVote.isThisSameVote(messageId)) {
-            return PrettyPrints.voteEmbedded(captainsVote.getVoteables(), "Players:", miscEmojis, "_Vote for captains by clicking the smileys._");
+        if ((mapsVoteController.isThisSameVote(messageId))) {
+            return PrettyPrints.voteEmbedded(mapsVoteController.getVoteables(), "MapController:", miscEmojis, "_Vote for maps by clicking the smileys._");
+        } else if (captainsVoteController.isThisSameVote(messageId)) {
+            return PrettyPrints.voteEmbedded(captainsVoteController.getVoteables(), "PlayerController:", miscEmojis, "_Vote for captains by clicking the smileys._");
         }
         return null;
     }
 
-    private void sendVoteEmbedded(Vote vote, String fieldname, String description) {
-        channel.sendMessage(PrettyPrints.voteEmbedded(vote.getVoteables(), fieldname, miscEmojis, description)).queue(mes -> {
-            vote.getVoteables()
+    private void sendVoteEmbedded(VoteController voteController, String fieldname, String description) {
+        channel.sendMessage(PrettyPrints.voteEmbedded(voteController.getVoteables(), fieldname, miscEmojis, description)).queue(mes -> {
+            voteController.getVoteables()
                     .forEach((key, value) -> numberEmojis.getEmoteForNumber(key.intValue())
                             .ifPresent(emote -> mes.addReaction(emote).queue()));
-            vote.setVoteMessageId(mes.getId());
+            voteController.setVoteMessageId(mes.getId());
         });
     }
 }

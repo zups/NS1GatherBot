@@ -1,9 +1,9 @@
 package org.ns1.gatherbot.datastructure;
 
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 import net.dv8tion.jda.core.entities.Emote;
-import net.dv8tion.jda.core.entities.ISnowflake;
 import net.dv8tion.jda.core.entities.User;
 
 
@@ -41,10 +41,6 @@ public class Player extends Voteable {
         return user.getName();
     }
 
-    public long getId() {
-        return user.getIdLong();
-    }
-
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -57,15 +53,11 @@ public class Player extends Voteable {
 
     @Override
     public int hashCode() {
-        return user.hashCode();
+        return Objects.hashCode(user.getId());
     }
 
     @Override
     public boolean equals(Object obj) {
-        Player player = (Player) obj;
-        if (player.getId() == user.getIdLong()) {
-            return true;
-        }
-        return false;
+        return Objects.equals(obj.hashCode(), this.hashCode());
     }
 }

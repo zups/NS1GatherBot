@@ -1,29 +1,34 @@
 package org.ns1.gatherbot.command;
 
 import java.util.Optional;
-import org.ns1.gatherbot.datastructure.Pick;
+import org.ns1.gatherbot.controllers.PickController;
 import org.ns1.gatherbot.emoji.NumberEmojis;
 import org.ns1.gatherbot.util.ParameterWrapper;
 
 public class PickCommand extends AbstractCommand {
-    private Pick pick;
+    private PickController pickController;
     private final NumberEmojis numberEmojis;
 
-    public PickCommand(Pick pick, NumberEmojis numberEmojis) {
+    public PickCommand(PickController pickController, NumberEmojis numberEmojis) {
         super("pick");
-        this.pick = pick;
+        this.pickController = pickController;
         this.numberEmojis = numberEmojis;
     }
 
     @Override
-    public Optional<String> run(ParameterWrapper parameters) {
-        if (parameters.getMessageId().equals(pick.getPickMessageId())) {
+    public Optional<CommandResult> run(ParameterWrapper parameters) {
+        CommandResult result = new CommandResult();
+        if (parameters.getMessageId().equals(pickController.getPickMessageId())) {
             numberEmojis.getNumberForEmote(parameters.getEmote().get())
-                    .ifPresent(number -> pick.pick(number, parameters.getCaptain()));
-            return Optional.of("koira");
+                    .ifPresent(number -> {
+                        if (pickController.pickContainsKey(number)) {
+                            pickController.pick(number, parameters.getCaptain())
+                                    .ifPresent(pickedPlayer -> result.setRunSuccessful(true));
+                        }
+                    });
         }
 
-        return Optional.empty();
+        return result.getRunSuccessful() ? Optional.of(result) : Optional.empty();
     }
 
 }

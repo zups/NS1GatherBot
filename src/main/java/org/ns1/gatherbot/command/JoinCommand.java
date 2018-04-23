@@ -1,24 +1,24 @@
 package org.ns1.gatherbot.command;
 
 import java.util.Optional;
+import org.ns1.gatherbot.controllers.PlayerController;
 import org.ns1.gatherbot.emoji.LifeformEmojis;
 import org.ns1.gatherbot.util.ParameterWrapper;
 import org.ns1.gatherbot.datastructure.Player;
-import org.ns1.gatherbot.datastructure.Players;
 
 public class JoinCommand extends AbstractCommand {
     private final LifeformEmojis lifeformEmojis;
-    private final Players players;
+    private final PlayerController playerController;
 
-    public JoinCommand(LifeformEmojis lifeformEmojis, Players players) {
+    public JoinCommand(LifeformEmojis lifeformEmojis, PlayerController playerController) {
         super("join");
         this.lifeformEmojis = lifeformEmojis;
-        this.players = players;
+        this.playerController = playerController;
     }
 
     @Override
-    public Optional<String> run(ParameterWrapper parameters) {
-        Optional<Player> player = players.addPlayer(new Player(parameters.getUser()));
+    public Optional<CommandResult> run(ParameterWrapper parameters) {
+        Optional<Player> player = playerController.addPlayer(new Player(parameters.getUser()));
 
         if (player.isPresent()) {
             parameters.getChannel().sendMessage(parameters.getUser().getAsMention() + " please select what you'd wanna do by clicking the emotes!")
@@ -27,6 +27,6 @@ public class JoinCommand extends AbstractCommand {
                         player.get().initializeRoles(mes.getId());
                     });
         }
-        return Optional.empty();
+        return Optional.of(new CommandResult(true));
     }
 }
