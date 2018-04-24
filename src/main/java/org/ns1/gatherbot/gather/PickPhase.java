@@ -45,7 +45,13 @@ public class PickPhase extends ListenerAdapter implements GatherPhase {
         sendVoteEmbedded();
     }
 
-
+    /**
+     * TODO: bugs: bugaa joskus kun spämmii numeroita;
+     * koko pickkaus jotenkin jämähtää :e
+     *
+     * Bugi votephasessa: kun kaks kapua ja kukaa ei votea kukaa nii playereissä ei oo ketään pickattavana hmm
+     * @param event
+     */
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent event) {
         User user = event.getUser();
@@ -62,11 +68,11 @@ public class PickPhase extends ListenerAdapter implements GatherPhase {
                                             if (result.getRunSuccessful()) {
                                                 this.channel.getMessageById(messageId).queue(messageToBeEdited -> {
                                                     messageToBeEdited.editMessage(PrettyPrints.pickEmbedded(pickController)).queue();
-                                                    Utils.removeEmoteFromMessage(messageToBeEdited, emote.getName());
+                                                    Utils.removeEmotesFromMessage(messageToBeEdited, emote.getName());
                                                 });
-                                            } if (result.getRemovableEmote()) {
+                                            } else {
                                                 this.channel.getMessageById(messageId).queue(messageToBeEdited -> {
-                                                    Utils.removeEmoteFromMessage(messageToBeEdited, reactionEmote.getName());
+                                                    Utils.removeEmoteFromMessageUser(messageToBeEdited, user, reactionEmote.getName());
                                                 });
                                             }
                                         }

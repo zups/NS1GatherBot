@@ -10,6 +10,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.entities.User;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -50,12 +51,19 @@ public class Utils {
         return jsonObject;
     }
 
-    public static void removeEmoteFromMessage(Message message, String emoteName) {
+    public static void removeEmotesFromMessage(Message message, String emoteName) {
         message.getReactions().forEach(react -> {
             if (react.getReactionEmote().getName().equals(emoteName))
                 react.getUsers().forEach(userReact ->
                         react.removeReaction(userReact).queue()
                 );
+        });
+    }
+
+    public static void removeEmoteFromMessageUser(Message message, User user, String emoteName) {
+        message.getReactions().forEach(react -> {
+            if (react.getReactionEmote().getName().equals(emoteName))
+                react.removeReaction(user).queue();
         });
     }
 

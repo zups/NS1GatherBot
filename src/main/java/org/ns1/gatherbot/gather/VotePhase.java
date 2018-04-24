@@ -57,6 +57,8 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
                 }
             }
         });
+
+
         jda.removeEventListener(this);
         jda.addEventListener(new PickPhase(jda, players, maps, channel));
     }

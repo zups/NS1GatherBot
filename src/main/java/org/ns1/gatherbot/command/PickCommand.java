@@ -19,20 +19,18 @@ public class PickCommand extends AbstractCommand {
     @Override
     public Optional<CommandResult> run(ParameterWrapper parameters) {
         CommandResult result = new CommandResult();
+
         if (parameters.getMessageId().equals(pickController.getPickMessageId())) {
             if (!parameters.getEmote().isPresent()) {
-                result.setRemovableEmote(true);
                 return Optional.of(result);
             }
             numberEmojis.getNumberForEmote(parameters.getEmote().get())
-                    .ifPresentOrElse(number -> {
+                    .ifPresent(number -> {
                         if (pickController.pickContainsKey(number)) {
                             pickController.pick(number, parameters.getCaptain())
-                                    .ifPresent(pickedPlayer -> result.setRunSuccessful(true));
-                        } else {
-                            result.setRemovableEmote(true);
-                        }
-                    }, () -> result.setRemovableEmote(true));
+                                    .ifPresent(pickedPlayer ->
+                                        result.setRunSuccessful(true));
+                        }});
         }
 
         return Optional.of(result);
