@@ -8,6 +8,7 @@ import java.io.Reader;
 import java.util.Optional;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -47,6 +48,15 @@ public class Utils {
         }
 
         return jsonObject;
+    }
+
+    public static void removeEmoteFromMessage(Message message, String emoteName) {
+        message.getReactions().forEach(react -> {
+            if (react.getReactionEmote().getName().equals(emoteName))
+                react.getUsers().forEach(userReact ->
+                        react.removeReaction(userReact).queue()
+                );
+        });
     }
 
     public static MapController readMapsFromJson() {

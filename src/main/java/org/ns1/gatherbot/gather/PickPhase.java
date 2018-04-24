@@ -5,10 +5,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.Emote;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.ns1.gatherbot.command.Commands;
@@ -19,9 +16,7 @@ import org.ns1.gatherbot.datastructure.Captain;
 import org.ns1.gatherbot.datastructure.Map;
 import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.emoji.Emojis;
-import org.ns1.gatherbot.util.MessageId;
-import org.ns1.gatherbot.util.ParameterWrapper;
-import org.ns1.gatherbot.util.PrettyPrints;
+import org.ns1.gatherbot.util.*;
 
 public class PickPhase extends ListenerAdapter implements GatherPhase {
     private JDA jda;
@@ -32,20 +27,20 @@ public class PickPhase extends ListenerAdapter implements GatherPhase {
     private PickController pickController;
     private Commands commands;
 
-    public PickPhase(JDA jda, List<Player> players, List<Map> maps, TextChannel channel, int captainAmount, int mapAmount, int teamSize) {
+    public PickPhase(JDA jda, List<Player> players, List<Map> maps, TextChannel channel) {
         this.jda = jda;
         this.players = players;
         this.channel = channel;
-        this.captainController = new CaptainController(captainAmount);
+        this.captainController = new CaptainController(GatherRules.getRules().getMaxCaptains());
 
-        start(captainAmount, mapAmount, teamSize, maps, players);
+        start(maps, players);
 
         this.commands = new Commands(Arrays.asList(new PickCommand(pickController)));
     }
 
-    private void start(int captainAmount, int mapAmount, int teamSize, List<Map> maps, List<Player> players) {
-        setCaptains(captainAmount, teamSize, players);
-        setMostVotedMaps(mapAmount, maps);
+    private void start(List<Map> maps, List<Player> players) {
+        setCaptains(players);
+        setMostVotedMaps(maps);
         this.pickController = new PickController(this.players, captainController);
         sendVoteEmbedded();
     }
@@ -55,44 +50,43 @@ public class PickPhase extends ListenerAdapter implements GatherPhase {
     public void onMessageReactionAdd(MessageReactionAddEvent event) {
         User user = event.getUser();
         Emote emote = event.getReactionEmote().getEmote();
+        MessageReaction.ReactionEmote reactionEmote = event.getReactionEmote();
         MessageChannel channel = event.getChannel();
         String messageId = event.getMessageId();
         if (user.isBot() || !channel.getName().equals(this.channel.getName())) return;
 
         commands.findCommand("pick")
                 .ifPresent(command ->
-                        command.run(new ParameterWrapper(Arrays.asList(emote, new Captain(new Player(user), 0), new MessageId(messageId))))
+                        command.run(new ParameterWrapper(Arrays.asList(reactionEmote, emote, new Captain(new Player(user)), new MessageId(messageId))))
                                 .ifPresent(result -> {
                                             if (result.getRunSuccessful()) {
                                                 this.channel.getMessageById(messageId).queue(messageToBeEdited -> {
                                                     messageToBeEdited.editMessage(PrettyPrints.pickEmbedded(pickController)).queue();
-                                                    messageToBeEdited.getReactions().forEach(react -> {
-                                                        if (react.getReactionEmote().getName().equals(emote.getName()))
-                                                            react.getUsers().forEach(userReact ->
-                                                                    react.removeReaction(userReact).queue()
-                                                            );
-                                                    });
+                                                    Utils.removeEmoteFromMessage(messageToBeEdited, emote.getName());
+                                                });
+                                            } if (result.getRemovableEmote()) {
+                                                this.channel.getMessageById(messageId).queue(messageToBeEdited -> {
+                                                    Utils.removeEmoteFromMessage(messageToBeEdited, reactionEmote.getName());
                                                 });
                                             }
                                         }
                                 ));
     }
 
-
-    private void setCaptains(int howMany, int teamSize, List<Player> players) {
+    private void setCaptains(List<Player> players) {
         players.stream()
                 .sorted(Comparator.comparingInt(Player::getVotes).reversed())
-                .limit(howMany)
+                .limit(GatherRules.getRules().getMaxCaptains())
                 .forEachOrdered(player -> {
-                    captainController.addCaptain(new Captain(player, teamSize));
+                    captainController.addCaptain(new Captain(player));
                     this.players.remove(player);
                 });
     }
 
-    private void setMostVotedMaps(int howMany, List<Map> maps) {
+    private void setMostVotedMaps(List<Map> maps) {
         maps.stream()
                 .sorted(Comparator.comparingInt(Map::getVotes).reversed())
-                .limit(howMany)
+                .limit(GatherRules.getRules().getHowManyMaps())
                 .forEachOrdered(map -> mostVotedMaps.add(map));
     }
 

@@ -1,6 +1,7 @@
 package org.ns1.gatherbot.gather;
 
 import io.reactivex.Observable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -17,10 +18,13 @@ import org.ns1.gatherbot.command.UnVoteCommand;
 import org.ns1.gatherbot.command.VoteCommand;
 import org.ns1.gatherbot.controllers.PlayerController;
 import org.ns1.gatherbot.controllers.VoteController;
+import org.ns1.gatherbot.datastructure.Map;
+import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.emoji.Emojis;
 import org.ns1.gatherbot.util.MessageId;
 import org.ns1.gatherbot.util.ParameterWrapper;
 import org.ns1.gatherbot.util.PrettyPrints;
+import org.ns1.gatherbot.util.Utils;
 
 public class VotePhase extends ListenerAdapter implements GatherPhase {
     private final TextChannel channel;
@@ -42,10 +46,19 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
 
     @Override
     public void nextPhase(JDA jda) {
-//        List<Player> players = captainsVoteController.getVoteables().values().stream().map(voteable -> (Player) voteable).collect(Collectors.toList());
-//        List<Map> maps = mapsVoteController.getVoteables().values().stream().map(voteable -> (Map) voteable).collect(Collectors.toList());
-//        jda.removeEventListener(this);
-//        jda.addEventListener(new PickPhase(jda, players, maps, channel, 2, 2, 6));
+        List<Map> maps = new ArrayList<>();
+        List<Player> players = new ArrayList<>();
+        votes.forEach(vote -> {
+            if (!vote.getVoteables().isEmpty()) {
+                if (vote.getVoteables().get(1) instanceof Player) {
+                    vote.getVoteables().values().stream().forEach(voteable -> players.add((Player) voteable));
+                } else if (vote.getVoteables().get(1) instanceof Map) {
+                    vote.getVoteables().values().stream().forEach(voteable -> maps.add((Map) voteable));
+                }
+            }
+        });
+        jda.removeEventListener(this);
+        jda.addEventListener(new PickPhase(jda, players, maps, channel));
     }
 
     private void start() {
@@ -78,9 +91,12 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
         commands.findCommand("vote")
                 .ifPresent(command ->
                         command.run(new ParameterWrapper(Arrays.asList(emote, user, new MessageId(messageId))))
-                                .ifPresent(result ->
+                                .ifPresent(result -> {
+                                    if (result.getRunSuccessful()) {
                                         this.channel.getMessageById(messageId).queue(messageToBeEdited ->
-                                                messageToBeEdited.editMessage(determineVoteMessageToBeEdited(messageToBeEdited.getId())).queue())));
+                                                messageToBeEdited.editMessage(determineVoteMessageToBeEdited(messageToBeEdited.getId())).queue());
+                                    }
+                                }));
     }
 
     @Override

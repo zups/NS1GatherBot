@@ -10,10 +10,11 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.datastructure.Voteable;
+import org.ns1.gatherbot.util.GatherRules;
 
 public class VoteController {
     private String voteMessageId = "";
-    private final int votesPerPlayer = 2;
+    private final int votesPerPlayer = GatherRules.getRules().getVotesPerPlayer();
     private final Map<Integer,Voteable> voteables = new TreeMap();
     private final Multimap<Player, Integer> votedPlayers = HashMultimap.create();
     private String voteName;

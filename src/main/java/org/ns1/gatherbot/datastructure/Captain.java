@@ -6,7 +6,7 @@ public class Captain {
     private final Player captain;
     private boolean pickingRight = false;
 
-    public Captain(Player player, int teamSize) {
+    public Captain(Player player) {
         this.captain = player;
     }
 

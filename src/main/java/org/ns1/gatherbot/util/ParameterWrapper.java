@@ -2,10 +2,7 @@ package org.ns1.gatherbot.util;
 
 import java.util.List;
 import java.util.Optional;
-import net.dv8tion.jda.core.entities.Emote;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.*;
 import org.ns1.gatherbot.datastructure.Captain;
 import org.ns1.gatherbot.datastructure.Player;
 
@@ -16,6 +13,7 @@ public class ParameterWrapper {
     private Optional<Emote> emote = Optional.empty();
     private MessageId messageId;
     private Captain captain;
+    private MessageReaction.ReactionEmote reactionEmote;
 
     public ParameterWrapper(List<Object> objects) {
         objects.forEach(obj -> {
@@ -31,6 +29,9 @@ public class ParameterWrapper {
                 captain = (Captain) obj;
             else if (obj instanceof MessageId)
                 messageId = (MessageId) obj;
+            else if (obj instanceof MessageReaction.ReactionEmote) {
+                this.reactionEmote = (MessageReaction.ReactionEmote) obj;
+            }
         });
     }
 
@@ -60,5 +61,9 @@ public class ParameterWrapper {
 
     public Captain getCaptain() {
         return captain;
+    }
+
+    public MessageReaction.ReactionEmote getReactionEmote() {
+        return reactionEmote;
     }
 }
