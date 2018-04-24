@@ -16,9 +16,13 @@ public class VoteController {
     private final int votesPerPlayer = 2;
     private final Map<Integer,Voteable> voteables = new TreeMap();
     private final Multimap<Player, Integer> votedPlayers = HashMultimap.create();
+    private String voteName;
+    private String description;
 
 
-    public VoteController(List<? extends Voteable> voteables) {
+    public VoteController(List<? extends Voteable> voteables, String voteName, String description) {
+        this.voteName = voteName;
+        this.description = description;
         AtomicInteger i = new AtomicInteger(1);
         voteables.forEach(vote -> {
             this.voteables.put(i.getAndIncrement(), vote);
@@ -65,4 +69,11 @@ public class VoteController {
         return voteMessageId;
     }
 
+    public String getVoteName() {
+        return voteName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 }

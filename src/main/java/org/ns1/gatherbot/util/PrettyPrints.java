@@ -11,6 +11,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.ns1.gatherbot.controllers.PickController;
+import org.ns1.gatherbot.controllers.VoteController;
 import org.ns1.gatherbot.datastructure.*;
 import org.ns1.gatherbot.emoji.Emojis;
 import org.ns1.gatherbot.emoji.MiscEmojis;
@@ -84,22 +85,22 @@ public class PrettyPrints {
         return embed.setDescription("_Pick players by cliking the smileys._").build();
     }
 
-    public static MessageEmbed voteEmbedded(Map<Integer,Voteable> voteable, String voteableFieldName, String description) {
+    public static MessageEmbed voteEmbedded(VoteController vote) {
         EmbedBuilder embed = new EmbedBuilder();
         StringJoiner voteables = new StringJoiner("\n");
         StringJoiner voteAmount = new StringJoiner("\n");
         MiscEmojis emojis = Emojis.getMiscEmojis();
 
 
-        voteable.forEach((key, value) -> {
+        vote.getVoteables().forEach((key, value) -> {
             voteables.add("**" + key + ")** " + value.toString() +  emojis.getEmote("empty").get().getAsMention());
             voteAmount.add(voteEmojis(value.getVotes(), emojis));
         });
 
 
         return embed
-                .setDescription(description)
-                .addField(voteableFieldName, voteables.toString(), true)
+                .setDescription(vote.getDescription())
+                .addField(vote.getVoteName(), voteables.toString(), true)
                 .addField("Votes:", voteAmount.toString(), true)
                 .build();
     }

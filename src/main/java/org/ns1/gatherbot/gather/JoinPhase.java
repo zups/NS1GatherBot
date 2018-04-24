@@ -13,13 +13,12 @@ import net.dv8tion.jda.core.events.user.update.UserUpdateOnlineStatusEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.ns1.gatherbot.command.*;
 import org.ns1.gatherbot.controllers.PlayerController;
-import org.ns1.gatherbot.util.MessageId;
-import org.ns1.gatherbot.util.ParameterWrapper;
-import org.ns1.gatherbot.util.PrettyPrints;
+import org.ns1.gatherbot.controllers.VoteController;
+import org.ns1.gatherbot.util.*;
 
 public class JoinPhase extends ListenerAdapter implements GatherPhase {
     private final String PREFIX = ".";
-    private final PlayerController playerController = new PlayerController(12, true);
+    private final PlayerController players = new PlayerController(GatherRules.getRules().getMaxPlayers(), true);
     private final Commands commands;
     private final TextChannel channel;
     private boolean nextPhaseStarting = false;
@@ -27,16 +26,16 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
     public JoinPhase(TextChannel channel) {
         this.channel = channel;
         this.commands = new Commands(Arrays.asList(
-                new JoinCommand(playerController),
-                new LeaveCommand(playerController),
-                new ListCommand(playerController),
-                new SetRoleCommand(playerController)
+                new JoinCommand(players),
+                new LeaveCommand(players),
+                new ListCommand(players),
+                new SetRoleCommand(players)
         ));
     }
 
     @Override
     public void nextPhase(JDA jda) {
-        this.channel.sendMessage("**Gather is starting!**\n" + PrettyPrints.printPlayersHighlight(playerController.getPlayers())).queue();
+        this.channel.sendMessage("**Gather is starting!**\n" + PrettyPrints.printPlayersHighlight(players.getPlayers())).queue();
         this.channel.sendMessage("_`Voting for captains and maps starts in 15seconds!`_").queue();
         this.nextPhaseStarting = true;
         //tässä kohtaa timeri, että vika pelaaja kerkeää laittaa
@@ -44,9 +43,11 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
         Observable.timer(15, TimeUnit.SECONDS)
                 .subscribe(
                         onNext -> {
-                            if (playerController.isFull()) {
+                            if (players.isFull()) {
                                 jda.removeEventListener(this);
-                                jda.addEventListener(new VotePhase(jda, playerController, channel));
+                                VoteController captainVote = determineCaptainVote();
+                                VoteController mapVote = new VoteController(Utils.readMapsFromJson().getMaps(), "Maps:", "_Vote for maps by clicking the smileys._");
+                                jda.addEventListener(new VotePhase(jda, Arrays.asList(captainVote, mapVote), channel, players));
                             } else {
                                 nextPhaseStarting = false;
                                 channel.sendMessage("Moving on to voting canceled because somebody left.").queue();
@@ -85,7 +86,7 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
                     });
         }
 
-        if (!nextPhaseStarting && playerController.isFull()) {
+        if (!nextPhaseStarting && players.isFull()) {
             nextPhase(event.getJDA());
         }
     }
@@ -112,6 +113,16 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
                 .ifPresent(command -> {
                     command.run(new ParameterWrapper(Arrays.asList(new MessageId(messageId), user, channel, emote)));
                 });
+    }
+
+    private VoteController determineCaptainVote() {
+        if (players.howManyWillingToCaptain() == GatherRules.getRules().getMaxCaptains()) {
+            //Should not even return any vote; just add captains automatically, hmmm.
+            return new VoteController(players.getPlayersWillingToCaptain(), "Players:", "_Vote for captains by clicking the smileys._");
+        } else if (players.howManyWillingToCaptain() > GatherRules.getRules().getMaxCaptains()) {
+            return new VoteController(players.getPlayersWillingToCaptain(), "Players:", "_Vote for captains by clicking the smileys._");
+        }
+        return new VoteController(players.getPlayers(), "Players:", "_Vote for captains by clicking the smileys._");
     }
 
 }
