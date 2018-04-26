@@ -1,19 +1,15 @@
 package org.ns1.gatherbot.datastructure;
 
-import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.User;
 
-
+@RequiredArgsConstructor
 public class Player extends Voteable {
     private final User user;
     private Optional<Roles> roles = Optional.empty();
-
-    public Player(User user) {
-        this.user = user;
-    }
 
     public void initializeRoles(String messageId) {
         if (!roles.isPresent()) {
@@ -26,11 +22,7 @@ public class Player extends Voteable {
     }
 
     public boolean isWillingToCaptain() {
-        if (roles.isPresent()) {
-            return roles.get().getRoles().stream()
-                    .anyMatch(role -> role.getName().equals("captain"));
-        }
-        return false;
+        return roles.isPresent() ? roles.get().isWillingToCaptain() : false;
     }
 
     public String getAsMention() {
@@ -43,12 +35,7 @@ public class Player extends Voteable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        roles.ifPresent( roles -> roles.getRoles().stream()
-                .sorted(Comparator.comparing(Emote::getName))
-                .forEach(role -> builder.append(role.getAsMention())));
-
-        return user.getName() + builder.toString();
+        return roles.isPresent() ? user.getName() + roles.get().toString() : user.getName();
     }
 
     @Override

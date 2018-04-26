@@ -1,6 +1,7 @@
 package org.ns1.gatherbot.gather;
 
 import io.reactivex.Observable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.core.JDA;
@@ -18,7 +19,7 @@ import org.ns1.gatherbot.util.*;
 
 public class JoinPhase extends ListenerAdapter implements GatherPhase {
     private final String PREFIX = ".";
-    private final PlayerController players = new PlayerController(GatherRules.getRules().getMaxPlayers(), true);
+    private final PlayerController players = new PlayerController(true);
     private final Commands commands;
     private final TextChannel channel;
     private boolean nextPhaseStarting = false;

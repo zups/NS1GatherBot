@@ -1,15 +1,15 @@
 package org.ns1.gatherbot.controllers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import lombok.Getter;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.ns1.gatherbot.datastructure.Map;
+import org.ns1.gatherbot.util.Utils;
 
 public class MapController {
-    private final List<Map> maps = new ArrayList<>();
+    @Getter private final List<Map> maps = new ArrayList<>();
 
     public MapController(HashMap<String, JSONArray> maps) {
         parseMaps(maps.get("maps"));
@@ -20,10 +20,6 @@ public class MapController {
         maps.forEach(map -> {
             this.maps.add(new Map(map.toString(), i.getAndIncrement()));
         });
-    }
-
-    public List<Map> getMaps() {
-        return maps;
     }
 
     @Override

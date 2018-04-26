@@ -1,11 +1,10 @@
 package org.ns1.gatherbot.util;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class MessageId {
     private final String messageId;
-
-    public MessageId(String messageId) {
-        this.messageId = messageId;
-    }
 
     @Override
     public String toString() {

@@ -20,11 +20,10 @@ import org.ns1.gatherbot.controllers.PlayerController;
 import org.ns1.gatherbot.controllers.VoteController;
 import org.ns1.gatherbot.datastructure.Map;
 import org.ns1.gatherbot.datastructure.Player;
-import org.ns1.gatherbot.emoji.Emojis;
+import org.ns1.gatherbot.emoji.NumberEmojis;
 import org.ns1.gatherbot.util.MessageId;
 import org.ns1.gatherbot.util.ParameterWrapper;
 import org.ns1.gatherbot.util.PrettyPrints;
-import org.ns1.gatherbot.util.Utils;
 
 public class VotePhase extends ListenerAdapter implements GatherPhase {
     private final TextChannel channel;
@@ -94,7 +93,7 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
                 .ifPresent(command ->
                         command.run(new ParameterWrapper(Arrays.asList(emote, user, new MessageId(messageId))))
                                 .ifPresent(result -> {
-                                    if (result.getRunSuccessful()) {
+                                    if (result.isRunSuccessful()) {
                                         this.channel.getMessageById(messageId).queue(messageToBeEdited ->
                                                 messageToBeEdited.editMessage(determineVoteMessageToBeEdited(messageToBeEdited.getId())).queue());
                                     }
@@ -134,7 +133,7 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
         votes.forEach(vote -> {
             channel.sendMessage(PrettyPrints.voteEmbedded(vote)).queue(mes -> {
                 vote.getVoteables()
-                        .forEach((key, value) -> Emojis.getNumberEmojis().getEmoteForNumber(key.intValue())
+                        .forEach((key, value) -> NumberEmojis.getEmojis().getEmoteForNumber(key.intValue())
                                 .ifPresent(emote -> mes.addReaction(emote).queue()));
                 vote.setVoteMessageId(mes.getId());
             });

@@ -7,20 +7,18 @@ import net.dv8tion.jda.core.entities.User;
 import org.ns1.gatherbot.controllers.PlayerController;
 import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.controllers.VoteController;
-import org.ns1.gatherbot.emoji.Emojis;
 import org.ns1.gatherbot.emoji.NumberEmojis;
 import org.ns1.gatherbot.util.ParameterWrapper;
 
 public class VoteCommand extends AbstractCommand {
     private final List<VoteController> voteControllers;
-    private final NumberEmojis numberEmojis;
+    private final NumberEmojis numberEmojis = NumberEmojis.getEmojis();
     private final PlayerController playerController;
 
     public VoteCommand(List<VoteController> voteControllers, PlayerController playerController) {
         super("vote");
         this.playerController = playerController;
         this.voteControllers = voteControllers;
-        this.numberEmojis = Emojis.getNumberEmojis();
     }
 
     private void vote(Emote numberEmote, String messageid, Player voter) {

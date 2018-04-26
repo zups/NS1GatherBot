@@ -1,5 +1,10 @@
 package org.ns1.gatherbot.util;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter(AccessLevel.PRIVATE)
 public class GatherRules {
     private int maxPlayers = 12;
     private int maxCaptains = 2;
@@ -22,45 +27,5 @@ public class GatherRules {
             rules = new GatherRules();
         }
         return rules;
-    }
-
-    public int getMaxPlayers() {
-        return maxPlayers;
-    }
-
-    private void setMaxPlayers(int maxPlayers) {
-        this.maxPlayers = maxPlayers;
-    }
-
-    public int getMaxCaptains() {
-        return maxCaptains;
-    }
-
-    private void setMaxCaptains(int maxCaptains) {
-        this.maxCaptains = maxCaptains;
-    }
-
-    public int getTeamSize() {
-        return teamSize;
-    }
-
-    private void setTeamSize(int teamSize) {
-        this.teamSize = teamSize;
-    }
-
-    public int getHowManyMaps() {
-        return howManyMaps;
-    }
-
-    private void setHowManyMaps(int howManyMaps) {
-        this.howManyMaps = howManyMaps;
-    }
-
-    public int getVotesPerPlayer() {
-        return votesPerPlayer;
-    }
-
-    private void setVotesPerPlayer(int votesPerPlayer) {
-        this.votesPerPlayer = votesPerPlayer;
     }
 }

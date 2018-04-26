@@ -3,13 +3,17 @@ package org.ns1.gatherbot.emoji;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Emote;
 
+@NoArgsConstructor
 public class NumberEmojis {
-    private final List<Emote> numberEmojis;
+    @Getter private List<Emote> numberEmojis;
+    private static NumberEmojis emojis;
 
-    public NumberEmojis(JDA jda) {
+    public void initialize(JDA jda) {
         this.numberEmojis = Arrays.asList(
                 jda.getEmotesByName("n0", true).get(0),
                 jda.getEmotesByName("n1", true).get(0),
@@ -26,8 +30,13 @@ public class NumberEmojis {
                 jda.getEmotesByName("n12", true).get(0),
                 jda.getEmotesByName("n13", true).get(0)
         );
+    }
 
-
+    public static NumberEmojis getEmojis() {
+        if (emojis == null) {
+            emojis = new NumberEmojis();
+        }
+        return emojis;
     }
 
     public Optional<Emote> getEmoteForNumber(int number) {
@@ -47,10 +56,4 @@ public class NumberEmojis {
             return Optional.empty();
         }
     }
-
-    public List<Emote> getAllEmotes() {
-        return numberEmojis;
-    }
-
-
 }

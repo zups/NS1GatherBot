@@ -1,19 +1,18 @@
 package org.ns1.gatherbot.controllers;
 
 import java.util.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.ns1.gatherbot.datastructure.Captain;
+import org.ns1.gatherbot.util.GatherRules;
 
+@NoArgsConstructor
 public class CaptainController {
     private List<Captain> captains = new ArrayList<>();
-    private final int maxCaptains;
-
-    public CaptainController(int maxCaptains) {
-        this.maxCaptains = maxCaptains;
-    }
 
     public Optional<Captain> addCaptain(Captain captain) {
         boolean added = false;
-        if (captains.size() < maxCaptains) {
+        if (captains.size() < GatherRules.getRules().getMaxCaptains()) {
             added = captains.add(captain);
         }
         return added ? Optional.of(captain) : Optional.empty();
@@ -23,12 +22,12 @@ public class CaptainController {
         return captains.remove(captain) ? Optional.of(captain) : Optional.empty();
     }
 
-    public void setPickingTurn(Captain captain) {
-
+    public List<Captain> getCaptains() {
+        return new ArrayList<>(captains);
     }
 
-    public List<Captain> getCaptains() {
-        return captains;
+    public void setPickingTurn(Captain captain) {
+
     }
 
     public Optional<Captain> getCaptain(Captain captain) {

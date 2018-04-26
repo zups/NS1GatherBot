@@ -1,11 +1,10 @@
 package org.ns1.gatherbot.command;
 
-public abstract class AbstractCommand implements Command {
-    private String name;
+import lombok.RequiredArgsConstructor;
 
-    public AbstractCommand(String name) {
-        this.name = name;
-    }
+@RequiredArgsConstructor
+public abstract class AbstractCommand implements Command {
+    private final String name;
 
     public boolean isItMe(String name) {
         if (this.name.equalsIgnoreCase(name)) {

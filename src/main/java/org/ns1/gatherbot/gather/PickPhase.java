@@ -15,7 +15,7 @@ import org.ns1.gatherbot.controllers.PickController;
 import org.ns1.gatherbot.datastructure.Captain;
 import org.ns1.gatherbot.datastructure.Map;
 import org.ns1.gatherbot.datastructure.Player;
-import org.ns1.gatherbot.emoji.Emojis;
+import org.ns1.gatherbot.emoji.NumberEmojis;
 import org.ns1.gatherbot.util.*;
 
 public class PickPhase extends ListenerAdapter implements GatherPhase {
@@ -31,7 +31,7 @@ public class PickPhase extends ListenerAdapter implements GatherPhase {
         this.jda = jda;
         this.players = players;
         this.channel = channel;
-        this.captainController = new CaptainController(GatherRules.getRules().getMaxCaptains());
+        this.captainController = new CaptainController();
 
         start(maps, players);
 
@@ -65,7 +65,7 @@ public class PickPhase extends ListenerAdapter implements GatherPhase {
                 .ifPresent(command ->
                         command.run(new ParameterWrapper(Arrays.asList(reactionEmote, emote, new Captain(new Player(user)), new MessageId(messageId))))
                                 .ifPresent(result -> {
-                                            if (result.getRunSuccessful()) {
+                                            if (result.isRunSuccessful()) {
                                                 this.channel.getMessageById(messageId).queue(messageToBeEdited -> {
                                                     messageToBeEdited.editMessage(PrettyPrints.pickEmbedded(pickController)).queue();
                                                     Utils.removeEmotesFromMessage(messageToBeEdited, emote.getName());
@@ -99,7 +99,7 @@ public class PickPhase extends ListenerAdapter implements GatherPhase {
     private void sendVoteEmbedded() {
         channel.sendMessage(PrettyPrints.pickEmbedded(pickController)).queue(mes -> {
             pickController.getPickables()
-                    .forEach((key, value) -> Emojis.getNumberEmojis().getEmoteForNumber(key.intValue())
+                    .forEach((key, value) -> NumberEmojis.getEmojis().getEmoteForNumber(key.intValue())
                             .ifPresent(emote -> mes.addReaction(emote).queue()));
             pickController.setPickMessageId(mes.getId());
         });

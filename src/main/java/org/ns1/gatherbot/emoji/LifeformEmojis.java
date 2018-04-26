@@ -3,14 +3,18 @@ package org.ns1.gatherbot.emoji;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Emote;
 
+@NoArgsConstructor
 public class LifeformEmojis {
-    private final List<Emote> lifeformEmotes;
+    @Getter private List<Emote> lifeformEmotes;
+    private static LifeformEmojis emojis;
 
-    public LifeformEmojis(JDA jda) {
-        this.lifeformEmotes = Arrays.asList(
+    public void initialize(JDA jda) {
+        lifeformEmotes = Arrays.asList(
                 jda.getEmotesByName("commander", true).get(0),
                 jda.getEmotesByName("skulk", true).get(0),
                 jda.getEmotesByName("gorge", true).get(0),
@@ -22,14 +26,16 @@ public class LifeformEmojis {
         );
     }
 
+    public static LifeformEmojis getEmojis() {
+        if (emojis == null) {
+            emojis = new LifeformEmojis();
+        }
+        return emojis;
+    }
+
     public Optional<Emote> getEmote(String alias) {
         return lifeformEmotes.stream()
                 .filter(emoji -> emoji.getName().equals(alias))
                 .findFirst();
     }
-
-    public List<Emote> getAllEmotes() {
-        return lifeformEmotes;
-    }
-
 }

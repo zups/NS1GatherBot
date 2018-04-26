@@ -1,18 +1,13 @@
 package org.ns1.gatherbot.datastructure;
 
 import java.util.Objects;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class Captain {
-    private final Player captain;
+    @Getter private final Player captain;
     private boolean pickingRight = false;
-
-    public Captain(Player player) {
-        this.captain = player;
-    }
-
-    public Player getCaptain() {
-        return captain;
-    }
 
     public boolean setPickingRight() {
         if (pickingRight) {

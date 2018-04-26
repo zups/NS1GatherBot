@@ -28,15 +28,11 @@ public class PickController {
     public Optional<Player> pick(int key, Captain captain) {
         AtomicReference<Optional<Player>> pickedPlayer = new AtomicReference<>(Optional.empty());
         if (pickingNow.peek().equals(captain)) {
-           teamController.getTeams().forEach(team -> {
-               if (team.isItMyTeam(captain)) {
-                   team.pickPlayer(pickables.remove(key))
-                           .ifPresent(player -> {
-                               pickedPlayer.set(Optional.of(player));
-                               pickingNow.next();
-                           });
-               }
-            });
+            teamController.pickPlayerToTeam(captain,pickables.remove(key))
+                    .ifPresent(picked -> {
+                        pickedPlayer.set(Optional.of(picked));
+                        pickingNow.next();
+                    });
         }
         return pickedPlayer.get().isPresent() ? Optional.of(pickedPlayer.get().get()) : Optional.empty();
     }

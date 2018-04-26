@@ -68,15 +68,13 @@ public class Utils {
     }
 
     public static MapController readMapsFromJson() {
-        EmbedBuilder embed = new EmbedBuilder();
-
         Optional<JSONObject> mapsJson = readJson("src\\main\\resources\\maps.json");
 
         return new MapController(mapsJson.get());
     }
 
     public static MessageEmbed coolEmbed(JDA jda) {
-        LifeformEmojis lifeformEmojis = new LifeformEmojis(jda);
+        LifeformEmojis lifeformEmojis = LifeformEmojis.getEmojis();
         EmbedBuilder embed = new EmbedBuilder();
         String tyhja = "\u200B";
 

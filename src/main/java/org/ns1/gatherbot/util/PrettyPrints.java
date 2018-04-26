@@ -3,17 +3,14 @@ package org.ns1.gatherbot.util;
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
 import java.util.List;
-import java.util.Map;
 import java.util.StringJoiner;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.ns1.gatherbot.controllers.PickController;
 import org.ns1.gatherbot.controllers.VoteController;
 import org.ns1.gatherbot.datastructure.*;
-import org.ns1.gatherbot.emoji.Emojis;
 import org.ns1.gatherbot.emoji.MiscEmojis;
 
 public class PrettyPrints {
@@ -89,7 +86,7 @@ public class PrettyPrints {
         EmbedBuilder embed = new EmbedBuilder();
         StringJoiner voteables = new StringJoiner("\n");
         StringJoiner voteAmount = new StringJoiner("\n");
-        MiscEmojis emojis = Emojis.getMiscEmojis();
+        MiscEmojis emojis = MiscEmojis.getEmojis();
 
 
         vote.getVoteables().forEach((key, value) -> {

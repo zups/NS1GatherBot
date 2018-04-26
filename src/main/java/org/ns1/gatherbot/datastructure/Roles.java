@@ -1,15 +1,17 @@
 package org.ns1.gatherbot.datastructure;
 
+import java.util.Comparator;
 import java.util.HashSet;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import net.dv8tion.jda.core.entities.Emote;
 
+@Getter @Setter
+@RequiredArgsConstructor
 public class Roles {
     private final HashSet<Emote> roles = new HashSet<>();
     private final String roleMessageId;
-
-    public Roles(String roleMessageId) {
-        this.roleMessageId = roleMessageId;
-    }
 
     public void updateRoles(Emote role, String messageId) {
         if (messageId.equals(roleMessageId)) {
@@ -21,12 +23,19 @@ public class Roles {
         }
     }
 
-    public HashSet<Emote> getRoles() {
-        return roles;
+    public boolean isWillingToCaptain() {
+            return roles.stream()
+                    .anyMatch(role -> role.getName().equals("captain"));
     }
 
-    public String getRoleMessageId() {
-        return roleMessageId;
-    }
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
 
+        roles.stream()
+                .sorted(Comparator.comparing(Emote::getName))
+                .forEach(role -> builder.append(role.getAsMention()));
+
+        return builder.toString();
+    }
 }

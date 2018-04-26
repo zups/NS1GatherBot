@@ -19,7 +19,7 @@ public class LeaveCommand extends AbstractCommand {
 
         playerController.removePlayer(new Player(parameters.getUser()))
                 .ifPresent(player -> {
-                    result.setMessage(player.getName() + " left.");
+                    result.setMessage(Optional.of(player.getName() + " left."));
                     result.setRunSuccessful(true);
                 });
 

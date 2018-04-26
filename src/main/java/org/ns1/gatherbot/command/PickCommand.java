@@ -2,18 +2,16 @@ package org.ns1.gatherbot.command;
 
 import java.util.Optional;
 import org.ns1.gatherbot.controllers.PickController;
-import org.ns1.gatherbot.emoji.Emojis;
 import org.ns1.gatherbot.emoji.NumberEmojis;
 import org.ns1.gatherbot.util.ParameterWrapper;
 
 public class PickCommand extends AbstractCommand {
-    private final NumberEmojis numberEmojis;
+    private final NumberEmojis numberEmojis = NumberEmojis.getEmojis();
     private PickController pickController;
 
     public PickCommand(PickController pickController) {
         super("pick");
         this.pickController = pickController;
-        this.numberEmojis = Emojis.getNumberEmojis();
     }
 
     @Override

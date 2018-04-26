@@ -8,17 +8,19 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import lombok.Getter;
+import lombok.Setter;
 import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.datastructure.Voteable;
 import org.ns1.gatherbot.util.GatherRules;
 
 public class VoteController {
-    private String voteMessageId = "";
+    @Getter @Setter private String voteMessageId = "";
     private final int votesPerPlayer = GatherRules.getRules().getVotesPerPlayer();
-    private final Map<Integer,Voteable> voteables = new TreeMap();
+    @Getter private final Map<Integer,Voteable> voteables = new TreeMap();
     private final Multimap<Player, Integer> votedPlayers = HashMultimap.create();
-    private String voteName;
-    private String description;
+    @Getter private String voteName;
+    @Getter private String description;
 
 
     public VoteController(List<? extends Voteable> voteables, String voteName, String description) {
@@ -54,27 +56,5 @@ public class VoteController {
 
     public boolean isThisSameVote(String messageId) {
         return messageId.equals(voteMessageId);
-    }
-
-    public void setVoteMessageId(String voteMessageId) {
-        if (this.voteMessageId.isEmpty()) {
-            this.voteMessageId = voteMessageId;
-        }
-    }
-
-    public Map<Integer, Voteable> getVoteables() {
-        return voteables;
-    }
-
-    public String getVoteMessageId() {
-        return voteMessageId;
-    }
-
-    public String getVoteName() {
-        return voteName;
-    }
-
-    public String getDescription() {
-        return description;
     }
 }

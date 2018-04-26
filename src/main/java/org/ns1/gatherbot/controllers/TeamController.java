@@ -13,11 +13,11 @@ public class TeamController {
 
     public TeamController(CaptainController captainController) {
         captainController.getCaptains().forEach(captain -> {
-            teams.add(new Team(GatherRules.getRules().getTeamSize(), captain));
+            teams.add(new Team(captain));
         });
     }
 
-    public Optional<Player> addPlayerToTeam(Captain captain, Player player) {
+    public Optional<Player> pickPlayerToTeam(Captain captain, Player player) {
         return teams.stream().filter(team -> team.isItMyTeam(captain))
                 .findFirst().get().pickPlayer(player);
 
