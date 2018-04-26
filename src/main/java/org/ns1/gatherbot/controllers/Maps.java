@@ -9,11 +9,12 @@ import org.ns1.gatherbot.datastructure.Map;
 import org.ns1.gatherbot.util.Utils;
 
 public class Maps {
+    private final String mapsPath = "src\\main\\resources\\maps.json";
     @Getter private final List<Map> maps = new ArrayList<>();
     private static Maps instance;
 
     private Maps() {
-        Optional<JSONObject> mapsJson = Utils.readJson("src\\main\\resources\\maps.json");
+        Optional<JSONObject> mapsJson = Utils.readJson(mapsPath);
         if (mapsJson.isPresent()) {
             HashMap<String, JSONArray> mapsFromJson = mapsJson.get();
             AtomicInteger i = new AtomicInteger(1);
