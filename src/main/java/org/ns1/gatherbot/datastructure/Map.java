@@ -1,11 +1,12 @@
 package org.ns1.gatherbot.datastructure;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class Map extends Voteable {
-    private final String name;
-    private final int mapNumber;
+    @Getter private final String name;
+    @Getter private final int mapNumber;
 
     @Override
     public String toString() {

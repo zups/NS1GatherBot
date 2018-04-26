@@ -12,6 +12,7 @@ import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.core.events.user.update.UserUpdateOnlineStatusEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.ns1.gatherbot.command.*;
+import org.ns1.gatherbot.controllers.Maps;
 import org.ns1.gatherbot.controllers.Players;
 import org.ns1.gatherbot.controllers.Vote;
 import org.ns1.gatherbot.util.*;
@@ -46,7 +47,7 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
                             if (players.isFull()) {
                                 jda.removeEventListener(this);
                                 Vote captainVote = determineCaptainVote();
-                                Vote mapVote = new Vote(Utils.readMapsFromJson().getMaps(), "Maps:", "_Vote for maps by clicking the smileys._");
+                                Vote mapVote = new Vote(Maps.getInstance().getMaps(), "Maps:", "_Vote for maps by clicking the smileys._");
                                 jda.addEventListener(new VotePhase(jda, Arrays.asList(captainVote, mapVote), channel, players));
                             } else {
                                 nextPhaseStarting = false;

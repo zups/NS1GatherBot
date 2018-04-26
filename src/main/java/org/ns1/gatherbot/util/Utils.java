@@ -28,7 +28,6 @@ public class Utils {
             Object obj = parser.parse(is);
             JSONObject jsonObject = (JSONObject) obj;
             field = Optional.of((String) jsonObject.get(fieldName));
-
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
@@ -38,7 +37,6 @@ public class Utils {
 
     public static Optional<JSONObject> readJson(String filepath) {
         JSONParser parser = new JSONParser();
-        Optional<String> token = Optional.empty();
         Optional<JSONObject> jsonObject = Optional.empty();
 
         try (Reader is = new FileReader(filepath)) {
@@ -65,12 +63,6 @@ public class Utils {
             if (react.getReactionEmote().getName().equals(emoteName))
                 react.removeReaction(user).queue();
         });
-    }
-
-    public static Maps readMapsFromJson() {
-        Optional<JSONObject> mapsJson = readJson("src\\main\\resources\\maps.json");
-
-        return new Maps(mapsJson.get());
     }
 
     public static MessageEmbed coolEmbed(JDA jda) {
