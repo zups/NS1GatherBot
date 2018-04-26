@@ -10,8 +10,8 @@ import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.ns1.gatherbot.command.Commands;
 import org.ns1.gatherbot.command.PickCommand;
-import org.ns1.gatherbot.controllers.CaptainController;
-import org.ns1.gatherbot.controllers.PickController;
+import org.ns1.gatherbot.controllers.Captains;
+import org.ns1.gatherbot.controllers.Pick;
 import org.ns1.gatherbot.datastructure.Captain;
 import org.ns1.gatherbot.datastructure.Map;
 import org.ns1.gatherbot.datastructure.Player;
@@ -22,26 +22,26 @@ public class PickPhase extends ListenerAdapter implements GatherPhase {
     private JDA jda;
     private List<Map> mostVotedMaps = new ArrayList<>();
     private TextChannel channel;
-    private CaptainController captainController;
+    private Captains captains;
     private List<Player> players;
-    private PickController pickController;
+    private Pick pick;
     private Commands commands;
 
     public PickPhase(JDA jda, List<Player> players, List<Map> maps, TextChannel channel) {
         this.jda = jda;
         this.players = players;
         this.channel = channel;
-        this.captainController = new CaptainController();
+        this.captains = new Captains();
 
         start(maps, players);
 
-        this.commands = new Commands(Arrays.asList(new PickCommand(pickController)));
+        this.commands = new Commands(Arrays.asList(new PickCommand(pick)));
     }
 
     private void start(List<Map> maps, List<Player> players) {
         setCaptains(players);
         setMostVotedMaps(maps);
-        this.pickController = new PickController(this.players, captainController);
+        this.pick = new Pick(this.players, captains);
         sendVoteEmbedded();
     }
 
@@ -67,7 +67,7 @@ public class PickPhase extends ListenerAdapter implements GatherPhase {
                                 .ifPresent(result -> {
                                             if (result.isRunSuccessful()) {
                                                 this.channel.getMessageById(messageId).queue(messageToBeEdited -> {
-                                                    messageToBeEdited.editMessage(PrettyPrints.pickEmbedded(pickController)).queue();
+                                                    messageToBeEdited.editMessage(PrettyPrints.pickEmbedded(pick)).queue();
                                                     Utils.removeEmotesFromMessage(messageToBeEdited, emote.getName());
                                                 });
                                             } else {
@@ -84,7 +84,7 @@ public class PickPhase extends ListenerAdapter implements GatherPhase {
                 .sorted(Comparator.comparingInt(Player::getVotes).reversed())
                 .limit(GatherRules.getRules().getMaxCaptains())
                 .forEachOrdered(player -> {
-                    captainController.addCaptain(new Captain(player));
+                    captains.addCaptain(new Captain(player));
                     this.players.remove(player);
                 });
     }
@@ -97,11 +97,11 @@ public class PickPhase extends ListenerAdapter implements GatherPhase {
     }
 
     private void sendVoteEmbedded() {
-        channel.sendMessage(PrettyPrints.pickEmbedded(pickController)).queue(mes -> {
-            pickController.getPickables()
+        channel.sendMessage(PrettyPrints.pickEmbedded(pick)).queue(mes -> {
+            pick.getPickables()
                     .forEach((key, value) -> NumberEmojis.getEmojis().getEmoteForNumber(key.intValue())
                             .ifPresent(emote -> mes.addReaction(emote).queue()));
-            pickController.setPickMessageId(mes.getId());
+            pick.setPickMessageId(mes.getId());
         });
     }
 

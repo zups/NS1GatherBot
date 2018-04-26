@@ -14,7 +14,7 @@ import net.dv8tion.jda.core.entities.User;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.ns1.gatherbot.controllers.MapController;
+import org.ns1.gatherbot.controllers.Maps;
 import org.ns1.gatherbot.emoji.LifeformEmojis;
 
 
@@ -67,10 +67,10 @@ public class Utils {
         });
     }
 
-    public static MapController readMapsFromJson() {
+    public static Maps readMapsFromJson() {
         Optional<JSONObject> mapsJson = readJson("src\\main\\resources\\maps.json");
 
-        return new MapController(mapsJson.get());
+        return new Maps(mapsJson.get());
     }
 
     public static MessageEmbed coolEmbed(JDA jda) {

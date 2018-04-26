@@ -5,8 +5,6 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.StringJoiner;
 import lombok.AllArgsConstructor;
-import org.ns1.gatherbot.controllers.PlayerController;
-import org.ns1.gatherbot.util.GatherRules;
 
 @AllArgsConstructor
 public class Team {

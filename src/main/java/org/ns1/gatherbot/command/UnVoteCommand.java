@@ -2,28 +2,27 @@ package org.ns1.gatherbot.command;
 
 import java.util.List;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.User;
-import org.ns1.gatherbot.controllers.PlayerController;
+import org.ns1.gatherbot.controllers.Players;
 import org.ns1.gatherbot.datastructure.Player;
-import org.ns1.gatherbot.controllers.VoteController;
+import org.ns1.gatherbot.controllers.Vote;
 import org.ns1.gatherbot.emoji.NumberEmojis;
 import org.ns1.gatherbot.util.ParameterWrapper;
 
 public class UnVoteCommand extends AbstractCommand {
-    private final List<VoteController> voteControllers;
+    private final List<Vote> votes;
     private final NumberEmojis numberEmojis = NumberEmojis.getEmojis();
-    private final PlayerController playerController;
+    private final Players players;
 
-    public UnVoteCommand(List<VoteController> voteControllers, PlayerController playerController) {
+    public UnVoteCommand(List<Vote> votes, Players players) {
         super("unvote");
-        this.voteControllers = voteControllers;
-        this.playerController = playerController;
+        this.votes = votes;
+        this.players = players;
     }
 
     private void unvote(Emote numberEmote, String messageid, Player voter) {
-        voteControllers.forEach(voteController -> {
+        votes.forEach(voteController -> {
             if (voteController.isThisSameVote(messageid)) {
                 numberEmojis.getNumberForEmote(numberEmote)
                         .ifPresent(number -> voteController.unvote(number, voter));
@@ -47,6 +46,6 @@ public class UnVoteCommand extends AbstractCommand {
     }
 
     private boolean isUserInThisGather(User user) {
-        return playerController.getPlayers().contains(new Player(user));
+        return players.getPlayers().contains(new Player(user));
     }
 }

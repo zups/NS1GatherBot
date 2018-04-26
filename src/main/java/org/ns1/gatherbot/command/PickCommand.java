@@ -1,31 +1,31 @@
 package org.ns1.gatherbot.command;
 
 import java.util.Optional;
-import org.ns1.gatherbot.controllers.PickController;
+import org.ns1.gatherbot.controllers.Pick;
 import org.ns1.gatherbot.emoji.NumberEmojis;
 import org.ns1.gatherbot.util.ParameterWrapper;
 
 public class PickCommand extends AbstractCommand {
     private final NumberEmojis numberEmojis = NumberEmojis.getEmojis();
-    private PickController pickController;
+    private Pick pick;
 
-    public PickCommand(PickController pickController) {
+    public PickCommand(Pick pick) {
         super("pick");
-        this.pickController = pickController;
+        this.pick = pick;
     }
 
     @Override
     public Optional<CommandResult> run(ParameterWrapper parameters) {
         CommandResult result = new CommandResult();
 
-        if (parameters.getMessageId().equals(pickController.getPickMessageId())) {
+        if (parameters.getMessageId().equals(pick.getPickMessageId())) {
             if (!parameters.getEmote().isPresent()) {
                 return Optional.of(result);
             }
             numberEmojis.getNumberForEmote(parameters.getEmote().get())
                     .ifPresent(number -> {
-                        if (pickController.pickContainsKey(number)) {
-                            pickController.pick(number, parameters.getCaptain())
+                        if (pick.pickContainsKey(number)) {
+                            pick.pick(number, parameters.getCaptain())
                                     .ifPresent(pickedPlayer ->
                                         result.setRunSuccessful(true));
                         }});

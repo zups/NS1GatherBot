@@ -1,23 +1,23 @@
 package org.ns1.gatherbot.command;
 
 import java.util.Optional;
-import org.ns1.gatherbot.controllers.PlayerController;
+import org.ns1.gatherbot.controllers.Players;
+import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.emoji.LifeformEmojis;
 import org.ns1.gatherbot.util.ParameterWrapper;
-import org.ns1.gatherbot.datastructure.Player;
 
 public class JoinCommand extends AbstractCommand {
     private final LifeformEmojis lifeformEmojis = LifeformEmojis.getEmojis();
-    private final PlayerController playerController;
+    private final Players players;
 
-    public JoinCommand(PlayerController playerController) {
+    public JoinCommand(Players players) {
         super("join");
-        this.playerController = playerController;
+        this.players = players;
     }
 
     @Override
     public Optional<CommandResult> run(ParameterWrapper parameters) {
-        Optional<Player> player = playerController.addPlayer(new Player(parameters.getUser()));
+        Optional<Player> player = players.addPlayer(new Player(parameters.getUser()));
         CommandResult result = new CommandResult();
 
         if (player.isPresent()) {

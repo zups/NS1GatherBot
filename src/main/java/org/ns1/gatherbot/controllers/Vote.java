@@ -14,7 +14,7 @@ import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.datastructure.Voteable;
 import org.ns1.gatherbot.util.GatherRules;
 
-public class VoteController {
+public class Vote {
     @Getter @Setter private String voteMessageId = "";
     private final int votesPerPlayer = GatherRules.getRules().getVotesPerPlayer();
     @Getter private final Map<Integer,Voteable> voteables = new TreeMap();
@@ -23,7 +23,7 @@ public class VoteController {
     @Getter private String description;
 
 
-    public VoteController(List<? extends Voteable> voteables, String voteName, String description) {
+    public Vote(List<? extends Voteable> voteables, String voteName, String description) {
         this.voteName = voteName;
         this.description = description;
         AtomicInteger i = new AtomicInteger(1);

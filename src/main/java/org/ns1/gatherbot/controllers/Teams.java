@@ -6,13 +6,12 @@ import java.util.Optional;
 import org.ns1.gatherbot.datastructure.Captain;
 import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.datastructure.Team;
-import org.ns1.gatherbot.util.GatherRules;
 
-public class TeamController {
+public class Teams {
     public List<Team> teams = new ArrayList<>();
 
-    public TeamController(CaptainController captainController) {
-        captainController.getCaptains().forEach(captain -> {
+    public Teams(Captains captains) {
+        captains.getCaptains().forEach(captain -> {
             teams.add(new Team(captain));
         });
     }

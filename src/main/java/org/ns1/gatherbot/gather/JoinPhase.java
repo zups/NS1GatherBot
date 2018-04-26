@@ -1,7 +1,6 @@
 package org.ns1.gatherbot.gather;
 
 import io.reactivex.Observable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.core.JDA;
@@ -13,13 +12,13 @@ import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.core.events.user.update.UserUpdateOnlineStatusEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.ns1.gatherbot.command.*;
-import org.ns1.gatherbot.controllers.PlayerController;
-import org.ns1.gatherbot.controllers.VoteController;
+import org.ns1.gatherbot.controllers.Players;
+import org.ns1.gatherbot.controllers.Vote;
 import org.ns1.gatherbot.util.*;
 
 public class JoinPhase extends ListenerAdapter implements GatherPhase {
     private final String PREFIX = ".";
-    private final PlayerController players = new PlayerController(true);
+    private final Players players = new Players(true);
     private final Commands commands;
     private final TextChannel channel;
     private boolean nextPhaseStarting = false;
@@ -46,8 +45,8 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
                         onNext -> {
                             if (players.isFull()) {
                                 jda.removeEventListener(this);
-                                VoteController captainVote = determineCaptainVote();
-                                VoteController mapVote = new VoteController(Utils.readMapsFromJson().getMaps(), "Maps:", "_Vote for maps by clicking the smileys._");
+                                Vote captainVote = determineCaptainVote();
+                                Vote mapVote = new Vote(Utils.readMapsFromJson().getMaps(), "Maps:", "_Vote for maps by clicking the smileys._");
                                 jda.addEventListener(new VotePhase(jda, Arrays.asList(captainVote, mapVote), channel, players));
                             } else {
                                 nextPhaseStarting = false;
@@ -116,14 +115,14 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
                 });
     }
 
-    private VoteController determineCaptainVote() {
+    private Vote determineCaptainVote() {
         if (players.howManyWillingToCaptain() == GatherRules.getRules().getMaxCaptains()) {
             //Should not even return any vote; just add captains automatically, hmmm.
-            return new VoteController(players.getPlayersWillingToCaptain(), "Players:", "_Vote for captains by clicking the smileys._");
+            return new Vote(players.getPlayersWillingToCaptain(), "Players:", "_Vote for captains by clicking the smileys._");
         } else if (players.howManyWillingToCaptain() > GatherRules.getRules().getMaxCaptains()) {
-            return new VoteController(players.getPlayersWillingToCaptain(), "Players:", "_Vote for captains by clicking the smileys._");
+            return new Vote(players.getPlayersWillingToCaptain(), "Players:", "_Vote for captains by clicking the smileys._");
         }
-        return new VoteController(players.getPlayers(), "Players:", "_Vote for captains by clicking the smileys._");
+        return new Vote(players.getPlayers(), "Players:", "_Vote for captains by clicking the smileys._");
     }
 
 }

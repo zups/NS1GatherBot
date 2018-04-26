@@ -8,10 +8,10 @@ import org.json.simple.JSONObject;
 import org.ns1.gatherbot.datastructure.Map;
 import org.ns1.gatherbot.util.Utils;
 
-public class MapController {
+public class Maps {
     @Getter private final List<Map> maps = new ArrayList<>();
 
-    public MapController(HashMap<String, JSONArray> maps) {
+    public Maps(HashMap<String, JSONArray> maps) {
         parseMaps(maps.get("maps"));
     }
 

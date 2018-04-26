@@ -16,8 +16,8 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.ns1.gatherbot.command.Commands;
 import org.ns1.gatherbot.command.UnVoteCommand;
 import org.ns1.gatherbot.command.VoteCommand;
-import org.ns1.gatherbot.controllers.PlayerController;
-import org.ns1.gatherbot.controllers.VoteController;
+import org.ns1.gatherbot.controllers.Players;
+import org.ns1.gatherbot.controllers.Vote;
 import org.ns1.gatherbot.datastructure.Map;
 import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.emoji.NumberEmojis;
@@ -29,9 +29,9 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
     private final TextChannel channel;
     private final JDA jda;
     private Commands commands;
-    private List<VoteController> votes;
+    private List<Vote> votes;
 
-    public VotePhase(JDA jda, List<VoteController> votes, TextChannel channel, PlayerController allowedToVote) {
+    public VotePhase(JDA jda, List<Vote> votes, TextChannel channel, Players allowedToVote) {
         this.jda = jda;
         this.channel = channel;
         this.votes = votes;
@@ -129,7 +129,7 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
         return embed.get();
     }
 
-    private void sendVotesEmbedded(List<VoteController> votes) {
+    private void sendVotesEmbedded(List<Vote> votes) {
         votes.forEach(vote -> {
             channel.sendMessage(PrettyPrints.voteEmbedded(vote)).queue(mes -> {
                 vote.getVoteables()

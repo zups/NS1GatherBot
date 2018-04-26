@@ -9,26 +9,26 @@ import java.util.stream.Stream;
 import org.ns1.gatherbot.datastructure.Captain;
 import org.ns1.gatherbot.datastructure.Player;
 
-public class PickController {
+public class Pick {
     private final Map<Integer, Player> pickables = new TreeMap();
-    private TeamController teamController;
+    private Teams teams;
     private String pickMessageId;
     private Stream<Captain> order;
     private PeekingIterator<Captain> pickingNow;
 
-    public PickController(List<Player> players, CaptainController captainController) {
+    public Pick(List<Player> players, Captains captains) {
         AtomicInteger index = new AtomicInteger(1);
         players.forEach(player -> {
             this.pickables.put(index.getAndIncrement(), player);
         });
-        this.teamController = new TeamController(captainController);
-        setOrder(captainController.getCaptains().get(0), captainController.getCaptains().get(1));
+        this.teams = new Teams(captains);
+        setOrder(captains.getCaptains().get(0), captains.getCaptains().get(1));
     }
 
     public Optional<Player> pick(int key, Captain captain) {
         AtomicReference<Optional<Player>> pickedPlayer = new AtomicReference<>(Optional.empty());
         if (pickingNow.peek().equals(captain)) {
-            teamController.pickPlayerToTeam(captain,pickables.remove(key))
+            teams.pickPlayerToTeam(captain,pickables.remove(key))
                     .ifPresent(picked -> {
                         pickedPlayer.set(Optional.of(picked));
                         pickingNow.next();
@@ -52,8 +52,8 @@ public class PickController {
         return pickables.containsKey(key);
     }
 
-    public TeamController getTeamController() {
-        return teamController;
+    public Teams getTeams() {
+        return teams;
     }
 
     public String getPickMessageId() {

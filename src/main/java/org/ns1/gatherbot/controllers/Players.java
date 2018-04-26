@@ -13,10 +13,10 @@ import org.ns1.gatherbot.util.GatherRules;
 import org.ns1.gatherbot.util.TestiUser;
 
 @NoArgsConstructor
-public class PlayerController {
+public class Players {
     private final HashSet<Player> players = new LinkedHashSet<>();
 
-    public PlayerController(boolean kissa) {
+    public Players(boolean kissa) {
         IntStream.range(0, 10).forEachOrdered(i -> addPlayer(new Player(new TestiUser(i))));
     }
 

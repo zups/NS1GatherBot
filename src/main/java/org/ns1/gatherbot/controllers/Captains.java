@@ -7,7 +7,7 @@ import org.ns1.gatherbot.datastructure.Captain;
 import org.ns1.gatherbot.util.GatherRules;
 
 @NoArgsConstructor
-public class CaptainController {
+public class Captains {
     private List<Captain> captains = new ArrayList<>();
 
     public Optional<Captain> addCaptain(Captain captain) {

@@ -8,8 +8,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.MessageEmbed;
-import org.ns1.gatherbot.controllers.PickController;
-import org.ns1.gatherbot.controllers.VoteController;
+import org.ns1.gatherbot.controllers.Pick;
+import org.ns1.gatherbot.controllers.Vote;
 import org.ns1.gatherbot.datastructure.*;
 import org.ns1.gatherbot.emoji.MiscEmojis;
 
@@ -63,26 +63,26 @@ public class PrettyPrints {
         return joiner.toString();
     }
 
-    public static MessageEmbed pickEmbedded(PickController pickController) {
+    public static MessageEmbed pickEmbedded(Pick pick) {
         EmbedBuilder embed = new EmbedBuilder();
         StringJoiner pickables = new StringJoiner("\n");
         AtomicInteger teamNumber = new AtomicInteger(1);
 
-        pickController.getPickables().forEach((number, player) -> {
+        pick.getPickables().forEach((number, player) -> {
             pickables.add("**" + number + ")** " + player.toString());
         });
 
         if (pickables.length() > 0 )
             embed.addField("Players:", pickables.toString(), true);
 
-        pickController.getTeamController().teams.forEach(team -> {
+        pick.getTeams().teams.forEach(team -> {
             embed.addField("Team" + teamNumber.getAndIncrement(), team.toString(), true);
         });
 
         return embed.setDescription("_Pick players by cliking the smileys._").build();
     }
 
-    public static MessageEmbed voteEmbedded(VoteController vote) {
+    public static MessageEmbed voteEmbedded(Vote vote) {
         EmbedBuilder embed = new EmbedBuilder();
         StringJoiner voteables = new StringJoiner("\n");
         StringJoiner voteAmount = new StringJoiner("\n");
