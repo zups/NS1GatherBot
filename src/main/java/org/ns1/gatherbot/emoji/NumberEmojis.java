@@ -8,11 +8,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Emote;
+import org.ns1.gatherbot.util.GatherRules;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NumberEmojis {
     @Getter private List<Emote> numberEmojis;
-    private static NumberEmojis emojis;
+    @Getter private static final NumberEmojis emojis = new NumberEmojis();
 
     public void initialize(JDA jda) {
         this.numberEmojis = Arrays.asList(
@@ -31,13 +32,6 @@ public class NumberEmojis {
                 jda.getEmotesByName("n12", true).get(0),
                 jda.getEmotesByName("n13", true).get(0)
         );
-    }
-
-    public static NumberEmojis getEmojis() {
-        if (emojis == null) {
-            emojis = new NumberEmojis();
-        }
-        return emojis;
     }
 
     public Optional<Emote> getEmoteForNumber(int number) {

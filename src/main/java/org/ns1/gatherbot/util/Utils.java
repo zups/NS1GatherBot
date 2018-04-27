@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Optional;
+import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Message;
@@ -14,10 +15,9 @@ import net.dv8tion.jda.core.entities.User;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.ns1.gatherbot.controllers.Maps;
 import org.ns1.gatherbot.emoji.LifeformEmojis;
 
-
+@UtilityClass
 public class Utils {
 
     public static Optional<String> readFieldFromJson(String filepath, String fieldName) {

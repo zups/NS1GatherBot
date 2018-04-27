@@ -1,7 +1,9 @@
 package org.ns1.gatherbot.datastructure;
 
+import lombok.Getter;
+
 public abstract class Voteable {
-    private int votes = 0;
+    @Getter private int votes = 0;
 
     public int vote() {
         return ++votes;
@@ -9,10 +11,6 @@ public abstract class Voteable {
 
     public int unvote() {
         return --votes;
-    }
-
-    public int getVotes() {
-        return votes;
     }
 
     @Override

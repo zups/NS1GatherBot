@@ -12,7 +12,7 @@ import net.dv8tion.jda.core.entities.Emote;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LifeformEmojis {
     @Getter private List<Emote> lifeformEmotes;
-    private static LifeformEmojis emojis;
+    @Getter private static final LifeformEmojis emojis = new LifeformEmojis();
 
     public void initialize(JDA jda) {
         lifeformEmotes = Arrays.asList(
@@ -25,13 +25,6 @@ public class LifeformEmojis {
                 jda.getEmotesByName("marine", true).get(0),
                 jda.getEmotesByName("captain", true).get(0)
         );
-    }
-
-    public static LifeformEmojis getEmojis() {
-        if (emojis == null) {
-            emojis = new LifeformEmojis();
-        }
-        return emojis;
     }
 
     public Optional<Emote> getEmote(String alias) {

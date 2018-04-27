@@ -14,7 +14,7 @@ public class GatherRules {
     private int howManyMaps = 2;
     private int votesPerPlayer = 2;
     private final String rulesPath = "src\\main\\resources\\rules.json";
-    private static GatherRules rules;
+    @Getter private static final GatherRules rules = new GatherRules();
 
     private GatherRules() {
         Optional<JSONObject> jsonObject = Utils.readJson(rulesPath);
@@ -26,12 +26,5 @@ public class GatherRules {
             setHowManyMaps(Integer.parseInt((String) json.get("howManyMaps")));
             setVotesPerPlayer(Integer.parseInt((String) json.get("votesPerPlayer")));
         }
- }
-
-    public static GatherRules getRules() {
-        if (rules == null) {
-            rules = new GatherRules();
-        }
-        return rules;
     }
 }

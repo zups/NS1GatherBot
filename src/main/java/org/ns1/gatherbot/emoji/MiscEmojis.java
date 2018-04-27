@@ -12,21 +12,13 @@ import net.dv8tion.jda.core.entities.Emote;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MiscEmojis {
     @Getter private List<Emote> miscEmojis;
-    private static MiscEmojis emojis;
+    @Getter private static final MiscEmojis emojis = new MiscEmojis();
 
     public void initialize(JDA jda) {
         this.miscEmojis = Arrays.asList(
                 jda.getEmotesByName("vote", true).get(0),
                 jda.getEmotesByName("empty", true).get(0)
         );
-    }
-
-
-    public static MiscEmojis getEmojis() {
-        if (emojis == null) {
-            emojis = new MiscEmojis();
-        }
-        return emojis;
     }
 
     public Optional<Emote> getEmote(String alias) {
