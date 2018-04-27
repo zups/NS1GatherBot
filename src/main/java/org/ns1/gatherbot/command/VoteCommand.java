@@ -38,9 +38,7 @@ public class VoteCommand extends AbstractCommand {
         parameters.getEmote()
                 .ifPresent(numberEmote ->
                         result.setRunSuccessful(
-                                vote(numberEmote, parameters.getMessageId(), parameters.getPlayer())
-                        )
-                );
+                                vote(numberEmote, parameters.getMessageId(), parameters.getPlayer())));
 
         return Optional.of(result);
     }

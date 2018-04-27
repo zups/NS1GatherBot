@@ -23,11 +23,10 @@ public class PickCommand extends AbstractCommand {
                 return Optional.of(result);
             }
             numberEmojis.getNumberForEmote(parameters.getEmote().get())
-                    .ifPresent(number -> {
+                    .ifPresent(number ->
                         pick.pick(number, parameters.getCaptain())
                                 .ifPresent(pickedPlayer ->
-                                        result.setRunSuccessful(true));
-                    });
+                                        result.setRunSuccessful(true)));
         }
 
         return Optional.of(result);

@@ -17,14 +17,14 @@ public class JoinCommand extends AbstractCommand {
 
     @Override
     public Optional<CommandResult> run(ParameterWrapper parameters) {
-        Optional<Player> player = players.addPlayer(new Player(parameters.getUser()));
+        Optional<Player> player = players.addPlayer(parameters.getPlayer());
         CommandResult result = new CommandResult();
 
         if (player.isPresent()) {
             parameters.getChannel().sendMessage(parameters.getUser().getAsMention() + " please select what you'd wanna do by clicking the emotes!")
                     .queue(mes -> {
                         lifeformEmojis.getLifeformEmotes().forEach(emote -> mes.addReaction(emote).queue());
-                        player.get().initializeRoles(mes.getId());
+                        player.get().setRoles(mes.getId());
                     });
             result.setRunSuccessful(true);
         }

@@ -1,22 +1,25 @@
 package org.ns1.gatherbot.gather;
 
 import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import lombok.extern.java.Log;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.events.message.react.GenericMessageReactionEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.ns1.gatherbot.command.Commands;
 import org.ns1.gatherbot.command.UnVoteCommand;
 import org.ns1.gatherbot.command.VoteCommand;
-import org.ns1.gatherbot.controllers.Players;
 import org.ns1.gatherbot.controllers.Vote;
 import org.ns1.gatherbot.datastructure.Map;
 import org.ns1.gatherbot.datastructure.Player;
@@ -70,38 +73,37 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
 
         channel.sendMessage("`Channel is muted during voting for 30seconds.`").queue();
 
+        Disposable messageEditSubscriber = Observable.interval(2, TimeUnit.SECONDS).subscribe(
+                onNext -> {
+                    votes.forEach(vote -> {
+                        this.channel.getMessageById(vote.getVoteMessageId()).queue(messageToBeEdited ->
+                                messageToBeEdited.editMessage(PrettyPrints.voteEmbedded(vote)).queue());
+                    });
+                }
+        );
+
         Observable.timer(30, TimeUnit.SECONDS)
                 .subscribe(
                         onNext -> {
                             Optional.of(jda.getGuilds().get(0).getPublicRole())
                                     .ifPresent(role -> channel.putPermissionOverride(role).setAllow(Permission.MESSAGE_WRITE).queue());
                             nextPhase(jda);
+                            messageEditSubscriber.dispose();
                         });
     }
 
 
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent event) {
-        User user = event.getUser();
-        Emote emote = event.getReactionEmote().getEmote();
-        MessageChannel channel = event.getChannel();
-        String messageId = event.getMessageId();
-
-        if (user.isBot() || !channel.getName().equals(this.channel.getName())) return;
-
-        commands.findCommand("vote")
-                .ifPresent(command ->
-                        command.run(new ParameterWrapper(Arrays.asList(emote, user, new MessageId(messageId))))
-                                .ifPresent(result -> {
-                                    if (result.isRunSuccessful()) {
-                                        this.channel.getMessageById(messageId).queue(messageToBeEdited ->
-                                                messageToBeEdited.editMessage(determineVoteMessageToBeEdited(messageToBeEdited.getId())).queue());
-                                    }
-                                }));
+        runCommand("vote", event);
     }
 
     @Override
     public void onMessageReactionRemove(MessageReactionRemoveEvent event) {
+        runCommand("unvote", event);
+    }
+
+    private void runCommand(String alias, GenericMessageReactionEvent event) {
         User user = event.getUser();
         Emote emote = event.getReactionEmote().getEmote();
         MessageChannel channel = event.getChannel();
@@ -109,24 +111,9 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
 
         if (user.isBot() || !channel.getName().equals(this.channel.getName())) return;
 
-        commands.findCommand("unvote")
+        commands.findCommand(alias)
                 .ifPresent(command ->
-                        command.run(new ParameterWrapper(Arrays.asList(emote, user, new MessageId(messageId))))
-                                .ifPresent(result ->
-                                        this.channel.getMessageById(messageId).queue(messageToBeEdited ->
-                                                messageToBeEdited.editMessage(determineVoteMessageToBeEdited(messageToBeEdited.getId())).queue())));
-    }
-
-    private MessageEmbed determineVoteMessageToBeEdited(String messageId) {
-        AtomicReference<MessageEmbed> embed = new AtomicReference<>(null);
-
-        votes.forEach(vote -> {
-            if (vote.isThisSameVote(messageId)) {
-                embed.set(PrettyPrints.voteEmbedded(vote));
-            }
-        });
-
-        return embed.get();
+                        command.run(new ParameterWrapper(Arrays.asList(emote, user, new MessageId(messageId)))));
     }
 
     private void sendVotesEmbedded(List<Vote> votes) {

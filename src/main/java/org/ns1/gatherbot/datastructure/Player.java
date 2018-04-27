@@ -11,7 +11,7 @@ public class Player extends Voteable {
     private final User user;
     private Optional<Roles> roles = Optional.empty();
 
-    public void initializeRoles(String messageId) {
+    public void setRoles(String messageId) {
         if (!roles.isPresent()) {
             roles = Optional.of(new Roles(messageId));
         }

@@ -33,7 +33,7 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
                 new JoinCommand(players),
                 new LeaveCommand(players),
                 new ListCommand(players),
-                new SetRoleCommand(players)
+                new UpdateRolesCommand(players)
         ));
     }
 
@@ -113,7 +113,7 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
 
         if (user.isBot() || !channel.getName().equals(this.channel.getName())) return;
 
-        commands.findCommand("roles")
+        commands.findCommand("updateRoles")
                 .ifPresent(command -> {
                     command.run(new ParameterWrapper(Arrays.asList(new MessageId(messageId), user, channel, emote)));
                 });

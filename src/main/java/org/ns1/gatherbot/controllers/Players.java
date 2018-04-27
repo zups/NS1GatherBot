@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.NoArgsConstructor;
 import net.dv8tion.jda.core.entities.Emote;
-import net.dv8tion.jda.core.entities.User;
 import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.util.GatherRules;
 import org.ns1.gatherbot.util.TestiUser;
@@ -45,9 +44,9 @@ public class Players {
         return getPlayersWillingToCaptain().size();
     }
 
-    public void updateRoles(User user, Emote role, String messageId) {
+    public void updateRoles(Player playerFromParameters, Emote role, String messageId) {
         players.stream()
-                .filter(player -> player.equals(new Player(user)))
+                .filter(player -> player.equals(playerFromParameters))
                 .findFirst()
                 .ifPresent(plr -> plr.updateRoles(role, messageId));
     }
