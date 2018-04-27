@@ -15,7 +15,10 @@ import org.ns1.gatherbot.command.*;
 import org.ns1.gatherbot.controllers.Maps;
 import org.ns1.gatherbot.controllers.Players;
 import org.ns1.gatherbot.controllers.Vote;
-import org.ns1.gatherbot.util.*;
+import org.ns1.gatherbot.util.GatherRules;
+import org.ns1.gatherbot.util.MessageId;
+import org.ns1.gatherbot.util.ParameterWrapper;
+import org.ns1.gatherbot.util.PrettyPrints;
 
 public class JoinPhase extends ListenerAdapter implements GatherPhase {
     private final String PREFIX = ".";
@@ -47,8 +50,8 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
                             if (players.isFull()) {
                                 jda.removeEventListener(this);
                                 Vote captainVote = determineCaptainVote();
-                                Vote mapVote = new Vote(Maps.getInstance().getMaps(), "Maps:", "_Vote for maps by clicking the smileys._");
-                                jda.addEventListener(new VotePhase(jda, Arrays.asList(captainVote, mapVote), channel, players));
+                                Vote mapVote = new Vote(Maps.getInstance().getMaps(), players.getPlayers(), "Maps:", "_Vote for maps by clicking the smileys._");
+                                jda.addEventListener(new VotePhase(jda, Arrays.asList(captainVote, mapVote), channel));
                             } else {
                                 nextPhaseStarting = false;
                                 channel.sendMessage("Moving on to voting canceled because somebody left.").queue();
@@ -108,7 +111,7 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
         MessageChannel channel = event.getChannel();
         String messageId = event.getMessageId();
 
-        if (user.isBot()|| !channel.getName().equals(this.channel.getName())) return;
+        if (user.isBot() || !channel.getName().equals(this.channel.getName())) return;
 
         commands.findCommand("roles")
                 .ifPresent(command -> {
@@ -119,11 +122,11 @@ public class JoinPhase extends ListenerAdapter implements GatherPhase {
     private Vote determineCaptainVote() {
         if (players.howManyWillingToCaptain() == GatherRules.getRules().getMaxCaptains()) {
             //Should not even return any vote; just add captains automatically, hmmm.
-            return new Vote(players.getPlayersWillingToCaptain(), "Players:", "_Vote for captains by clicking the smileys._");
+            return new Vote(players.getPlayersWillingToCaptain(), players.getPlayers(), "Players:", "_Vote for captains by clicking the smileys._");
         } else if (players.howManyWillingToCaptain() > GatherRules.getRules().getMaxCaptains()) {
-            return new Vote(players.getPlayersWillingToCaptain(), "Players:", "_Vote for captains by clicking the smileys._");
+            return new Vote(players.getPlayersWillingToCaptain(), players.getPlayers(), "Players:", "_Vote for captains by clicking the smileys._");
         }
-        return new Vote(players.getPlayers(), "Players:", "_Vote for captains by clicking the smileys._");
+        return new Vote(players.getPlayers(), players.getPlayers(), "Players:", "_Vote for captains by clicking the smileys._");
     }
 
 }

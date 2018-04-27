@@ -1,7 +1,8 @@
 package org.ns1.gatherbot.controllers;
 
-import java.util.*;
-import lombok.Getter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import lombok.NoArgsConstructor;
 import org.ns1.gatherbot.datastructure.Captain;
 import org.ns1.gatherbot.util.GatherRules;

@@ -3,12 +3,13 @@ package org.ns1.gatherbot.emoji;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Emote;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LifeformEmojis {
     @Getter private List<Emote> lifeformEmotes;
     private static LifeformEmojis emojis;

@@ -31,13 +31,13 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
     private Commands commands;
     private List<Vote> votes;
 
-    public VotePhase(JDA jda, List<Vote> votes, TextChannel channel, Players allowedToVote) {
+    public VotePhase(JDA jda, List<Vote> votes, TextChannel channel) {
         this.jda = jda;
         this.channel = channel;
         this.votes = votes;
         this.commands = new Commands(Arrays.asList(
-                new VoteCommand(votes, allowedToVote),
-                new UnVoteCommand(votes, allowedToVote)
+                new VoteCommand(votes),
+                new UnVoteCommand(votes)
         ));
 
         start();

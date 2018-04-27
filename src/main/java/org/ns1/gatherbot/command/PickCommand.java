@@ -24,11 +24,10 @@ public class PickCommand extends AbstractCommand {
             }
             numberEmojis.getNumberForEmote(parameters.getEmote().get())
                     .ifPresent(number -> {
-                        if (pick.pickContainsKey(number)) {
-                            pick.pick(number, parameters.getCaptain())
-                                    .ifPresent(pickedPlayer ->
+                        pick.pick(number, parameters.getCaptain())
+                                .ifPresent(pickedPlayer ->
                                         result.setRunSuccessful(true));
-                        }});
+                    });
         }
 
         return Optional.of(result);

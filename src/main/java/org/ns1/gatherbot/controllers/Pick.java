@@ -6,13 +6,14 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
+import lombok.Getter;
 import org.ns1.gatherbot.datastructure.Captain;
 import org.ns1.gatherbot.datastructure.Player;
 
 public class Pick {
-    private final Map<Integer, Player> pickables = new TreeMap();
-    private Teams teams;
-    private String pickMessageId;
+    @Getter private final Map<Integer, Player> pickables = new TreeMap();
+    @Getter private Teams teams;
+    @Getter private String pickMessageId;
     private Stream<Captain> order;
     private PeekingIterator<Captain> pickingNow;
 
@@ -27,7 +28,7 @@ public class Pick {
 
     public Optional<Player> pick(int key, Captain captain) {
         AtomicReference<Optional<Player>> pickedPlayer = new AtomicReference<>(Optional.empty());
-        if (pickingNow.peek().equals(captain)) {
+        if (pickables.containsKey(key) && pickingNow.peek().equals(captain)) {
             teams.pickPlayerToTeam(captain,pickables.remove(key))
                     .ifPresent(picked -> {
                         pickedPlayer.set(Optional.of(picked));
@@ -46,21 +47,5 @@ public class Pick {
         if (this.pickMessageId == null) {
             this.pickMessageId = pickMessageId;
         }
-    }
-
-    public boolean pickContainsKey(int key) {
-        return pickables.containsKey(key);
-    }
-
-    public Teams getTeams() {
-        return teams;
-    }
-
-    public String getPickMessageId() {
-        return pickMessageId;
-    }
-
-    public Map<Integer, Player> getPickables() {
-        return pickables;
     }
 }

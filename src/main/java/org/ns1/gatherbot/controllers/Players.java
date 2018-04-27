@@ -1,10 +1,8 @@
 package org.ns1.gatherbot.controllers;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.User;
