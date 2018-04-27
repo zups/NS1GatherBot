@@ -4,24 +4,27 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.Getter;
 import lombok.Setter;
-import net.dv8tion.jda.core.entities.User;
 import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.datastructure.Voteable;
 import org.ns1.gatherbot.util.GatherRules;
 
 public class Vote {
-    @Getter @Setter private String voteMessageId = "";
-    @Getter private final Map<Integer,Voteable> voteables = new TreeMap();
-    @Getter private String voteName;
-    @Getter private String description;
+    @Getter
+    private final Map<Integer, Voteable> voteables = new TreeMap();
     private final Multimap<Player, Integer> votedPlayers = HashMultimap.create();
     private final int votesPerPlayer = GatherRules.getRules().getVotesPerPlayer();
     private final List<Player> allowedToVote;
+    @Getter
+    @Setter
+    private String voteMessageId = "";
+    @Getter
+    private String voteName;
+    @Getter
+    private String description;
 
 
     public Vote(List<? extends Voteable> voteables, List<Player> allowedToVote, String voteName, String description) {
@@ -34,22 +37,27 @@ public class Vote {
         });
     }
 
-    public Optional<Integer> vote(int key, Player voter) {
+    public boolean vote(int key, Player voter) {
         if (!isPlayerAllowedToVote(voter) || key > voteables.size() || !doesPlayerHaveVotesLeft(voter)) {
-            return Optional.empty();
+            return false;
         }
 
         votedPlayers.put(voter, key);
+        voteables.get(key).vote();
 
-        return Optional.of(voteables.get(key).vote());
+        return true;
     }
 
-    public Optional<Integer> unvote(int key, Player voter) {
+    public boolean unvote(int key, Player voter) {
         if (!isPlayerAllowedToVote(voter) && key > voteables.size()) {
-            return Optional.empty();
+            return false;
         }
+        else if (votedPlayers.remove(voter, key)) {
+            voteables.get(key).unvote();
+            return true;
+         }
 
-        return votedPlayers.remove(voter, key) ? Optional.of(voteables.get(key).unvote()) : Optional.empty();
+        return false;
     }
 
     private boolean doesPlayerHaveVotesLeft(Player voter) {

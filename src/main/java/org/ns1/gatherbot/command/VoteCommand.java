@@ -24,8 +24,7 @@ public class VoteCommand extends AbstractCommand {
         votes.forEach(vote -> {
             if (vote.isThisSameVote(messageid)) {
                 numberEmojis.getNumberForEmote(numberEmote)
-                        .ifPresent(number -> vote.vote(number, voter)
-                                .ifPresent(num -> voteSuccessful.set(true)));
+                        .ifPresent(number -> voteSuccessful.set(vote.vote(number, voter)));
             }
         });
 

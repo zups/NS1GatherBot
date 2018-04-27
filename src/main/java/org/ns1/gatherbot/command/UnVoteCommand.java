@@ -24,10 +24,8 @@ public class UnVoteCommand extends AbstractCommand {
         votes.forEach(vote -> {
             if (vote.isThisSameVote(messageid)) {
                 numberEmojis.getNumberForEmote(numberEmote)
-                        .ifPresent(number -> {
-                            vote.unvote(number, voter)
-                                    .ifPresent(num -> voteSuccessful.set(true));
-                        });
+                        .ifPresent(number ->
+                                voteSuccessful.set(vote.unvote(number, voter)));
             }
         });
 

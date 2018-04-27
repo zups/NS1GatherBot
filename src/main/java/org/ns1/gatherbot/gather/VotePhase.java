@@ -70,7 +70,7 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
 
         channel.sendMessage("`Channel is muted during voting for 30seconds.`").queue();
 
-        Observable.timer(15, TimeUnit.SECONDS)
+        Observable.timer(30, TimeUnit.SECONDS)
                 .subscribe(
                         onNext -> {
                             Optional.of(jda.getGuilds().get(0).getPublicRole())
