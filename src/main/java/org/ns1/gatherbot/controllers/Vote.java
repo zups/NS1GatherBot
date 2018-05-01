@@ -6,15 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.java.Log;
 import org.ns1.gatherbot.datastructure.Player;
 import org.ns1.gatherbot.datastructure.Voteable;
 import org.ns1.gatherbot.util.GatherRules;
 
-@Log
 public class Vote {
     @Getter private final Map<Integer, Voteable> voteables = new TreeMap();
     private final Multimap<Player, Integer> votedPlayers = HashMultimap.create();
@@ -36,7 +33,6 @@ public class Vote {
     }
 
     public boolean vote(int key, Player voter) {
-        log.log(Level.INFO, "vote" + key);
         if (!isPlayerAllowedToVote(voter) || key > voteables.size() || !doesPlayerHaveVotesLeft(voter)) {
             return false;
         }

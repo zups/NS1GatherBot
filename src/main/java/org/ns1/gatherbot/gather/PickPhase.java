@@ -72,7 +72,7 @@ public class PickPhase extends ListenerAdapter implements GatherPhase {
                                                 });
                                             } else {
                                                 this.channel.getMessageById(messageId).queue(messageToBeEdited -> {
-                                                    Utils.removeEmoteFromMessageUser(messageToBeEdited, user, reactionEmote.getName());
+                                                    Utils.removeEmoteFromMessageByUser(messageToBeEdited, user, reactionEmote.getName());
                                                 });
                                             }
                                         }

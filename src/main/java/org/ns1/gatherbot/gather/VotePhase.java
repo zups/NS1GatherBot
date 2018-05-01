@@ -7,12 +7,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Level;
-import lombok.extern.java.Log;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.Emote;
+import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.react.GenericMessageReactionEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
@@ -103,7 +103,7 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
         runCommand("unvote", event);
     }
 
-    private void runCommand(String alias, GenericMessageReactionEvent event) {
+    private void runCommand(String commandName, GenericMessageReactionEvent event) {
         User user = event.getUser();
         Emote emote = event.getReactionEmote().getEmote();
         MessageChannel channel = event.getChannel();
@@ -111,7 +111,7 @@ public class VotePhase extends ListenerAdapter implements GatherPhase {
 
         if (user.isBot() || !channel.getName().equals(this.channel.getName())) return;
 
-        commands.findCommand(alias)
+        commands.findCommand(commandName)
                 .ifPresent(command ->
                         command.run(new ParameterWrapper(Arrays.asList(emote, user, new MessageId(messageId)))));
     }

@@ -58,7 +58,7 @@ public class Utils {
         });
     }
 
-    public static void removeEmoteFromMessageUser(Message message, User user, String emoteName) {
+    public static void removeEmoteFromMessageByUser(Message message, User user, String emoteName) {
         message.getReactions().forEach(react -> {
             if (react.getReactionEmote().getName().equals(emoteName))
                 react.removeReaction(user).queue();
